@@ -40,119 +40,141 @@
         .sphere-3 { width: 400px; height: 400px; top: 50%; left: 30%; background: linear-gradient(135deg, #4facfe, #00f2fe); }
 
         .glass-card {
-            background: rgba(20, 25, 35, 0.3);
+            background: rgba(20, 25, 35, 0.4);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 16px;
+            padding: 24px;
         }
 
         .header {
-            padding: 16px 20px;
-            margin-bottom: 20px;
+            padding: 24px 32px;
+            margin-bottom: 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 20px;
         }
 
         .header h1 {
-            font-size: 20px;
+            font-size: 28px;
+            font-weight: 700;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 28px;
         }
 
         .panel {
-            padding: 20px;
+            padding: 32px;
         }
 
         .panel h2 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 22px;
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
         }
 
         select, input, textarea {
             width: 100%;
-            padding: 14px 16px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
             color: white;
-            font-size: 14px;
-            margin-bottom: 12px;
+            font-size: 16px;
+            margin-bottom: 16px;
             font-family: inherit;
         }
 
         textarea {
-            min-height: 80px;
+            min-height: 100px;
             resize: vertical;
         }
 
         button {
             width: 100%;
-            padding: 14px;
-            background: rgba(108, 140, 255, 0.2);
-            border: 1px solid rgba(108, 140, 255, 0.3);
-            border-radius: 30px;
+            padding: 16px;
+            background: rgba(108, 140, 255, 0.25);
+            border: 1px solid rgba(108, 140, 255, 0.4);
+            border-radius: 32px;
             color: white;
             font-weight: 600;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        button:active {
-            transform: scale(0.98);
+        button:hover {
+            background: rgba(108, 140, 255, 0.35);
+            transform: translateY(-2px);
         }
 
         .template-item {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 14px;
-            border-radius: 20px;
-            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 18px 20px;
+            border-radius: 24px;
+            margin-bottom: 12px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .template-item:hover {
-            background: rgba(108, 140, 255, 0.1);
-            transform: translateX(5px);
+            background: rgba(108, 140, 255, 0.15);
+            transform: translateX(8px);
+        }
+
+        .template-item strong {
+            font-size: 17px;
         }
 
         .task-item {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 14px;
-            border-radius: 20px;
-            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 18px 20px;
+            border-radius: 24px;
+            margin-bottom: 12px;
         }
 
         .task-status {
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 500;
         }
 
         .status-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
         .status-completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            .header {
+                padding: 18px 20px;
+            }
+            .header h1 {
+                font-size: 22px;
+            }
             .grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
-            .container {
-                padding: 12px;
+            .panel {
+                padding: 24px;
+            }
+            .panel h2 {
+                font-size: 20px;
             }
         }
     </style>
@@ -168,7 +190,7 @@
     <div class="container">
         <div class="header glass-card">
             <h1>🎛️ Медиакоординатор</h1>
-            <div style="font-size: 13px; opacity: 0.6;">Управление задачами</div>
+            <div style="font-size: 15px; opacity: 0.6;">Управление задачами</div>
         </div>
 
         <div class="grid">
@@ -185,11 +207,13 @@
                 <select id="templateSelect">
                     <option value="">Выберите шаблон</option>
                 </select>
-                <select id="districtSelect">
-                    <option value="">Выберите округ (всем шефам)</option>
+                <select id="targetSelect">
+                    <option value="">Выберите кому отправить</option>
+                    <option value="district">🏛️ Всему местному отделению</option>
+                    <option value="primary">📌 Всем первичкам</option>
                 </select>
-                <select id="branchSelect">
-                    <option value="">Или конкретную первичку</option>
+                <select id="districtSelect">
+                    <option value="">Выберите местное отделение</option>
                 </select>
                 <input type="text" id="taskLink" placeholder="Ссылка (опционально)">
                 <textarea id="taskComment" placeholder="Комментарий"></textarea>
@@ -198,7 +222,7 @@
 
             <div class="panel glass-card">
                 <h2>📊 Активные задачи</h2>
-                <div id="activeTasksList" style="max-height: 500px; overflow-y: auto;"></div>
+                <div id="activeTasksList" style="max-height: 600px; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
@@ -211,10 +235,7 @@
 
         async function loadTemplates() {
             const { data, error } = await sb.from('task_templates').select('*').eq('is_active', true);
-            if (error) {
-                console.error('Ошибка загрузки шаблонов:', error);
-                return;
-            }
+            if (error) return;
             const container = document.getElementById('templatesList');
             const select = document.getElementById('templateSelect');
             
@@ -222,13 +243,13 @@
                 container.innerHTML = data.map(t => `
                     <div class="template-item" onclick="selectTemplate(${t.id})">
                         <strong>${t.title}</strong>
-                        <div style="font-size: 12px; opacity: 0.6;">${t.description || ''}</div>
+                        <div style="font-size: 13px; opacity: 0.6; margin-top: 6px;">${t.description || ''}</div>
                     </div>
                 `).join('');
                 select.innerHTML = '<option value="">Выберите шаблон</option>' + 
                     data.map(t => `<option value="${t.id}">${t.title}</option>`).join('');
             } else {
-                container.innerHTML = '<p style="opacity: 0.5;">Нет шаблонов</p>';
+                container.innerHTML = '<p style="opacity: 0.5; text-align: center; padding: 40px;">Нет шаблонов</p>';
             }
         }
 
@@ -236,22 +257,14 @@
             const { data, error } = await sb.from('districts').select('*').order('name');
             if (error) return;
             const select = document.getElementById('districtSelect');
-            select.innerHTML = '<option value="">Выберите округ (всем шефам)</option>' + 
+            select.innerHTML = '<option value="">Выберите местное отделение</option>' + 
                 (data || []).map(d => `<option value="${d.id}">${d.name}</option>`).join('');
-        }
-
-        async function loadBranches() {
-            const { data, error } = await sb.from('primary_branches').select('*, districts(name)');
-            if (error) return;
-            const select = document.getElementById('branchSelect');
-            select.innerHTML = '<option value="">Выберите первичку</option>' + 
-                (data || []).map(b => `<option value="${b.id}">${b.districts?.name} — ${b.name}</option>`).join('');
         }
 
         async function loadActiveTasks() {
             const { data, error } = await sb
                 .from('assignments')
-                .select('*, task_templates(*), chiefs(name)')
+                .select('*, task_templates(*), chiefs(name, primary_branch_id)')
                 .neq('status', 'completed')
                 .order('created_at', { ascending: false });
             
@@ -259,16 +272,18 @@
             
             const container = document.getElementById('activeTasksList');
             if (!data?.length) {
-                container.innerHTML = '<p style="opacity: 0.5; text-align: center; padding: 40px;">✅ Нет активных задач</p>';
+                container.innerHTML = '<p style="opacity: 0.5; text-align: center; padding: 60px;">✅ Нет активных задач</p>';
                 return;
             }
             
             container.innerHTML = data.map(task => `
                 <div class="task-item">
-                    <strong>${task.task_templates?.title || 'Задача'}</strong>
-                    <span class="task-status status-${task.status}">${task.status === 'pending' ? '⏳ Ожидает' : '🔄 В работе'}</span>
-                    <div style="font-size: 12px; opacity: 0.7; margin-top: 6px;">Шеф: ${task.chiefs?.name || 'Шеф'}</div>
-                    ${task.link ? `<a href="${task.link}" target="_blank" style="color: #6c8cff; font-size: 12px;">🔗 Ссылка</a>` : ''}
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <strong style="font-size: 16px;">${task.task_templates?.title || 'Задача'}</strong>
+                        <span class="task-status status-${task.status}">${task.status === 'pending' ? '⏳ Ожидает' : '🔄 В работе'}</span>
+                    </div>
+                    <div style="font-size: 13px; opacity: 0.7; margin-top: 8px;">Шеф: ${task.chiefs?.name || 'Шеф'} | ${task.chiefs?.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</div>
+                    ${task.link ? `<a href="${task.link}" target="_blank" style="color: #6c8cff; font-size: 13px; margin-top: 8px; display: inline-block;">🔗 Ссылка</a>` : ''}
                 </div>
             `).join('');
         }
@@ -291,30 +306,31 @@
 
         async function createAssignment() {
             const templateId = document.getElementById('templateSelect').value;
+            const targetType = document.getElementById('targetSelect').value;
             const districtId = document.getElementById('districtSelect').value;
-            const branchId = document.getElementById('branchSelect').value;
             const link = document.getElementById('taskLink').value;
             const comment = document.getElementById('taskComment').value;
             
             if (!templateId) { alert('Выберите шаблон'); return; }
+            if (!districtId) { alert('Выберите местное отделение'); return; }
+            if (!targetType) { alert('Выберите кому отправить (местное или первички)'); return; }
             
             let chiefs = [];
             
-            if (branchId) {
+            if (targetType === 'district') {
                 const { data } = await sb
                     .from('chiefs')
                     .select('id, district_id')
-                    .eq('primary_branch_id', parseInt(branchId));
+                    .eq('district_id', parseInt(districtId))
+                    .is('primary_branch_id', null);
                 chiefs = data || [];
-            } else if (districtId) {
+            } else if (targetType === 'primary') {
                 const { data } = await sb
                     .from('chiefs')
                     .select('id, district_id')
-                    .eq('district_id', parseInt(districtId));
+                    .eq('district_id', parseInt(districtId))
+                    .not('primary_branch_id', 'is', null);
                 chiefs = data || [];
-            } else {
-                alert('Выберите округ или первичку');
-                return;
             }
             
             if (chiefs.length === 0) {
@@ -333,7 +349,7 @@
                 }]);
             }
             
-            alert(`Задача отправлена ${chiefs.length} шефам!`);
+            alert(`✅ Задача отправлена ${chiefs.length} шефам!`);
             document.getElementById('taskLink').value = '';
             document.getElementById('taskComment').value = '';
             loadActiveTasks();
@@ -345,7 +361,6 @@
 
         loadTemplates();
         loadDistricts();
-        loadBranches();
         loadActiveTasks();
     </script>
 </body>
