@@ -229,6 +229,12 @@
                 font-size: 16px;
             }
         }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
@@ -273,86 +279,114 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const SUPABASE_URL = 'https://csvynjkhhlexbnwpziup.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        
-        let districtsList = [];
-        let selectedBranchType = 'main';
-
-        async function loadDistricts() {
-            const { data, error } = await supabaseClient.from('districts').select('*').order('name');
-            if (error) {
-                console.error('Ошибка загрузки округов:', error);
-                document.getElementById('districtSelect').innerHTML = '<option value="">Ошибка загрузки</option>';
+        // Ждём загрузки Supabase
+        document.addEventListener('DOMContentLoaded', function() {
+            const SUPABASE_URL = 'https://csvynjkhhlexbnwpziup.supabase.co';
+            const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
+            
+            // Проверяем что supabase загружен
+            if (typeof supabase === 'undefined') {
+                console.error('Supabase не загружен!');
+                document.getElementById('districtSelect').innerHTML = '<option value="">Ошибка загрузки Supabase</option>';
                 return;
             }
-            if (data) {
-                districtsList = data;
-                const select = document.getElementById('districtSelect');
-                select.innerHTML = '<option value="">Выберите местное отделение</option>' + 
-                    data.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
-            }
-        }
+            
+            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            
+            let districtsList = [];
+            let selectedBranchType = 'main';
 
-        document.querySelectorAll('.radio-option').forEach(opt => {
-            opt.addEventListener('click', () => {
-                document.querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
-                opt.classList.add('selected');
-                selectedBranchType = opt.dataset.branchType;
+            async function loadDistricts() {
+                try {
+                    const { data, error } = await supabaseClient.from('districts').select('*').order('name');
+                    if (error) {
+                        console.error('Ошибка загрузки округов:', error);
+                        document.getElementById('districtSelect').innerHTML = '<option value="">Ошибка загрузки</option>';
+                        return;
+                    }
+                    if (data && data.length > 0) {
+                        districtsList = data;
+                        const select = document.getElementById('districtSelect');
+                        select.innerHTML = '<option value="">Выберите местное отделение</option>' + 
+                            data.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+                    } else {
+                        document.getElementById('districtSelect').innerHTML = '<option value="">Нет округов</option>';
+                    }
+                } catch (err) {
+                    console.error('Ошибка:', err);
+                    document.getElementById('districtSelect').innerHTML = '<option value="">Ошибка подключения</option>';
+                }
+            }
+
+            document.querySelectorAll('.radio-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    document.querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    selectedBranchType = opt.dataset.branchType;
+                });
             });
-        });
 
-        document.getElementById('districtSelect').addEventListener('change', (e) => {
-            const branchGroup = document.getElementById('branchGroup');
-            if (e.target.value) {
-                branchGroup.classList.add('show');
-            } else {
-                branchGroup.classList.remove('show');
-            }
-        });
+            document.getElementById('districtSelect').addEventListener('change', (e) => {
+                const branchGroup = document.getElementById('branchGroup');
+                if (e.target.value) {
+                    branchGroup.classList.add('show');
+                } else {
+                    branchGroup.classList.remove('show');
+                }
+            });
 
-        document.getElementById('enterBtn').addEventListener('click', async () => {
-            const districtId = document.getElementById('districtSelect').value;
-            if (!districtId) {
-                alert('Выберите местное отделение');
-                return;
-            }
-            
-            const district = districtsList.find(d => d.id == districtId);
-            let chiefId = '';
-            
-            if (selectedBranchType === 'main') {
-                chiefId = 'chief_' + districtId + '_main';
-            } else {
-                chiefId = 'chief_' + districtId + '_primary';
-            }
-            
-            localStorage.setItem('chiefId', chiefId);
-            localStorage.setItem('chiefDistrictId', districtId);
-            localStorage.setItem('chiefDistrictName', district.name);
-            localStorage.setItem('chiefBranchType', selectedBranchType);
-            
-            // Проверяем существует ли шеф
-            const { data: existing } = await supabaseClient
-                .from('chiefs')
-                .select('id')
-                .eq('id', chiefId)
-                .single();
-            
-            if (!existing) {
-                await supabaseClient.from('chiefs').insert([{
-                    id: chiefId,
-                    name: `Шеф ${district.name}${selectedBranchType === 'primary' ? ' (Первичка)' : ''}`,
-                    district_id: parseInt(districtId),
-                    primary_branch_id: selectedBranchType === 'primary' ? 1 : null
-                }]);
-            }
-            
-            window.location.href = 'chief.html';
-        });
+            document.getElementById('enterBtn').addEventListener('click', async () => {
+                const districtId = document.getElementById('districtSelect').value;
+                if (!districtId) {
+                    alert('Выберите местное отделение');
+                    return;
+                }
+                
+                const district = districtsList.find(d => d.id == districtId);
+                if (!district) {
+                    alert('Ошибка: округ не найден');
+                    return;
+                }
+                
+                let chiefId = '';
+                
+                if (selectedBranchType === 'main') {
+                    chiefId = 'chief_' + districtId + '_main';
+                } else {
+                    chiefId = 'chief_' + districtId + '_primary';
+                }
+                
+                localStorage.setItem('chiefId', chiefId);
+                localStorage.setItem('chiefDistrictId', districtId);
+                localStorage.setItem('chiefDistrictName', district.name);
+                localStorage.setItem('chiefBranchType', selectedBranchType);
+                
+                try {
+                    // Проверяем существует ли шеф
+                    const { data: existing } = await supabaseClient
+                        .from('chiefs')
+                        .select('id')
+                        .eq('id', chiefId)
+                        .maybeSingle();
+                    
+                    if (!existing) {
+                        await supabaseClient.from('chiefs').insert([{
+                            id: chiefId,
+                            name: `Шеф ${district.name}${selectedBranchType === 'primary' ? ' (Первичка)' : ''}`,
+                            district_id: parseInt(districtId),
+                            primary_branch_id: selectedBranchType === 'primary' ? 1 : null
+                        }]);
+                    }
+                    
+                    window.location.href = 'chief.html';
+                } catch (err) {
+                    console.error('Ошибка при входе:', err);
+                    alert('Ошибка при входе: ' + err.message);
+                }
+            });
 
-        loadDistricts();
+            loadDistricts();
+        });
     </script>
 </body>
 </html>
