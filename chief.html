@@ -257,191 +257,169 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Ждём загрузки Supabase с повторными попытками
-        let supabaseClient = null;
-        let retryCount = 0;
+        // Прямая инициализация без ожидания
+        const SUPABASE_URL = 'https://csvynjkhhlexbnwpziup.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
-        function waitForSupabase() {
-            return new Promise((resolve) => {
-                function check() {
-                    if (typeof supabase !== 'undefined') {
-                        resolve(supabase);
-                    } else if (retryCount < 20) {
-                        retryCount++;
-                        setTimeout(check, 200);
-                    } else {
-                        resolve(null);
-                    }
-                }
-                check();
-            });
+        let chiefId = localStorage.getItem('chiefId');
+        let districtName = localStorage.getItem('chiefDistrictName');
+        let branchType = localStorage.getItem('chiefBranchType');
+        
+        if (!chiefId) {
+            document.getElementById('tasksList').innerHTML = '<div class="empty-state">⚠️ Не выбран округ. <a href="index.html" style="color:#6c8cff;">На главную</a></div>';
+            document.getElementById('districtDisplay').innerHTML = 'Ошибка';
+        } else {
+            document.getElementById('districtDisplay').innerHTML = '📍 ' + (districtName || 'Неизвестно') + (branchType === 'primary' ? ' • Первичка' : '');
         }
         
-        async function startApp() {
-            const sbLib = await waitForSupabase();
+        // Загрузка задач
+        async function loadTasks() {
+            if (!chiefId) return;
+            const container = document.getElementById('tasksList');
+            container.innerHTML = '<div class="empty-state">⏳ Загрузка...</div>';
             
-            if (!sbLib) {
-                document.getElementById('tasksList').innerHTML = '<div class="empty-state">⚠️ Ошибка загрузки. Проверьте интернет.</div>';
-                return;
-            }
-            
-            const SUPABASE_URL = 'https://csvynjkhhlexbnwpziup.supabase.co';
-            const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
-            const sb = sbLib.createClient(SUPABASE_URL, SUPABASE_KEY);
-            
-            let chiefId = localStorage.getItem('chiefId');
-            let districtName = localStorage.getItem('chiefDistrictName');
-            let branchType = localStorage.getItem('chiefBranchType');
-            
-            if (!chiefId) {
-                document.getElementById('tasksList').innerHTML = '<div class="empty-state">⚠️ Не выбран округ. <a href="index.html" style="color:#6c8cff;">На главную</a></div>';
-                document.getElementById('districtDisplay').innerHTML = 'Ошибка';
-                return;
-            }
-            
-            document.getElementById('districtDisplay').innerHTML = '📍 ' + (districtName || 'Неизвестно') + (branchType === 'primary' ? ' • Первичка' : '');
-            
-            // Загрузка задач
-            async function loadTasks() {
-                const container = document.getElementById('tasksList');
-                container.innerHTML = '<div class="empty-state">⏳ Загрузка...</div>';
+            try {
+                const { data, error } = await supabaseClient
+                    .from('assignments')
+                    .select('*, task_templates(*)')
+                    .eq('chief_id', chiefId)
+                    .order('created_at', { ascending: false });
                 
-                try {
-                    const { data, error } = await sb
-                        .from('assignments')
-                        .select('*, task_templates(*)')
-                        .eq('chief_id', chiefId)
-                        .order('created_at', { ascending: false });
-                    
-                    if (error) throw error;
-                    if (!data || data.length === 0) {
-                        container.innerHTML = '<div class="empty-state">📭 Нет задач</div>';
-                        return;
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">📭 Нет задач</div>';
+                    return;
+                }
+                
+                let html = '';
+                for (let i = 0; i < data.length; i++) {
+                    const task = data[i];
+                    let deadlineHtml = '';
+                    if (task.deadline) {
+                        const deadlineDate = new Date(task.deadline);
+                        const isExpired = deadlineDate < new Date();
+                        deadlineHtml = '<div class="deadline ' + (isExpired ? 'deadline-urgent' : 'deadline-normal') + '">⏰ Срок: ' + deadlineDate.toLocaleString() + (isExpired ? ' (просрочено!)' : '') + '</div>';
                     }
                     
-                    let html = '';
-                    for (let i = 0; i < data.length; i++) {
-                        const task = data[i];
-                        let deadlineHtml = '';
-                        if (task.deadline) {
-                            const deadlineDate = new Date(task.deadline);
-                            const isExpired = deadlineDate < new Date();
-                            deadlineHtml = '<div class="deadline ' + (isExpired ? 'deadline-urgent' : 'deadline-normal') + '">⏰ Срок: ' + deadlineDate.toLocaleString() + (isExpired ? ' (просрочено!)' : '') + '</div>';
-                        }
-                        
-                        html += '<div class="task-item">' +
-                            '<div class="task-title">' + (task.task_templates?.title || 'Задача') + '</div>' +
-                            '<div class="task-desc">' + (task.task_templates?.description || '') + '</div>' +
-                            deadlineHtml +
-                            (task.link ? '<a href="' + task.link + '" target="_blank" class="task-link">🔗 Ссылка</a>' : '') +
-                            (task.coordinator_comment ? '<div style="font-size:12px; margin-top:8px; color:#6c8cff;">💬 ' + task.coordinator_comment + '</div>' : '') +
-                            '<div><span class="task-status status-' + task.status + '">' + (task.status === 'pending' ? '⏳ Ожидает' : '✅ Выполнено') + '</span></div>';
-                        
-                        if (task.status === 'pending') {
-                            html += '<input type="text" id="link_' + task.id + '" class="link-input" placeholder="Вставьте ссылку (t.me или vk.com)">' +
-                                    '<button class="btn-complete" onclick="completeTask(' + task.id + ')">✅ Выполнить +1 балл</button>';
-                        }
-                        html += '</div>';
+                    html += '<div class="task-item">' +
+                        '<div class="task-title">' + (task.task_templates?.title || 'Задача') + '</div>' +
+                        '<div class="task-desc">' + (task.task_templates?.description || '') + '</div>' +
+                        deadlineHtml +
+                        (task.link ? '<a href="' + task.link + '" target="_blank" class="task-link">🔗 Ссылка</a>' : '') +
+                        (task.coordinator_comment ? '<div style="font-size:12px; margin-top:8px; color:#6c8cff;">💬 ' + task.coordinator_comment + '</div>' : '') +
+                        '<div><span class="task-status status-' + task.status + '">' + (task.status === 'pending' ? '⏳ Ожидает' : '✅ Выполнено') + '</span></div>';
+                    
+                    if (task.status === 'pending') {
+                        html += '<input type="text" id="link_' + task.id + '" class="link-input" placeholder="Вставьте ссылку (t.me или vk.com)">' +
+                                '<button class="btn-complete" onclick="completeTask(' + task.id + ')">✅ Выполнить +1 балл</button>';
                     }
-                    container.innerHTML = html;
-                } catch (err) {
-                    container.innerHTML = '<div class="empty-state">⚠️ Ошибка: ' + err.message + '</div>';
+                    html += '</div>';
                 }
+                container.innerHTML = html;
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div class="empty-state">⚠️ Ошибка: ' + err.message + '</div>';
             }
+        }
+        
+        window.completeTask = async function(taskId) {
+            const linkInput = document.getElementById('link_' + taskId);
+            const link = linkInput ? linkInput.value.trim() : '';
+            if (!link) { alert('Вставьте ссылку'); return; }
+            if (!link.includes('t.me') && !link.includes('vk.com')) { alert('Ссылка должна быть на t.me или vk.com'); return; }
             
-            window.completeTask = async function(taskId) {
-                const linkInput = document.getElementById('link_' + taskId);
-                const link = linkInput ? linkInput.value.trim() : '';
-                if (!link) { alert('Вставьте ссылку'); return; }
-                if (!link.includes('t.me') && !link.includes('vk.com')) { alert('Ссылка должна быть на t.me или vk.com'); return; }
+            try {
+                await supabaseClient.from('assignments').update({ status: 'completed', link: link, completed_at: new Date() }).eq('id', taskId);
+                await supabaseClient.from('operations_history').insert([{ chief_id: chiefId, assignment_id: taskId, action: 'Выполнена задача +1 балл' }]);
                 
-                try {
-                    await sb.from('assignments').update({ status: 'completed', link: link, completed_at: new Date() }).eq('id', taskId);
-                    await sb.from('operations_history').insert([{ chief_id: chiefId, assignment_id: taskId, action: 'Выполнена задача +1 балл' }]);
-                    
-                    const { data: current } = await sb.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
-                    const newScore = (current?.total_score || 0) + 1;
-                    await sb.from('chief_scores').upsert({ chief_id: chiefId, total_score: newScore, updated_at: new Date() });
-                    
-                    loadTasks(); loadStats(); loadHistory(); loadRating();
-                    showToast('✅ +1 балл');
-                } catch (err) {
-                    alert('Ошибка: ' + err.message);
+                const { data: current } = await supabaseClient.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
+                const newScore = (current?.total_score || 0) + 1;
+                await supabaseClient.from('chief_scores').upsert({ chief_id: chiefId, total_score: newScore, updated_at: new Date() });
+                
+                loadTasks(); loadStats(); loadHistory(); loadRating();
+                showToast('✅ +1 балл');
+            } catch (err) {
+                alert('Ошибка: ' + err.message);
+            }
+        };
+        
+        async function loadStats() {
+            if (!chiefId) return;
+            try {
+                const { data: tasks } = await supabaseClient.from('assignments').select('status').eq('chief_id', chiefId);
+                const { data: score } = await supabaseClient.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
+                document.getElementById('totalTasks').innerText = tasks?.length || 0;
+                document.getElementById('completedTasks').innerText = tasks ? tasks.filter(t => t.status === 'completed').length : 0;
+                document.getElementById('totalScore').innerText = score?.total_score || 0;
+            } catch (err) {}
+        }
+        
+        async function loadHistory() {
+            if (!chiefId) return;
+            const container = document.getElementById('historyList');
+            container.innerHTML = '<div class="empty-state">⏳ Загрузка...</div>';
+            try {
+                const { data } = await supabaseClient.from('operations_history').select('*').eq('chief_id', chiefId).order('created_at', { ascending: false }).limit(30);
+                if (!data || data.length === 0) { container.innerHTML = '<div class="empty-state">📭 История пуста</div>'; return; }
+                let html = '';
+                for (let i = 0; i < data.length; i++) {
+                    html += '<div class="history-item"><span>' + data[i].action + '</span><span style="opacity:0.5;">' + new Date(data[i].created_at).toLocaleString() + '</span></div>';
                 }
+                container.innerHTML = html;
+            } catch (err) { container.innerHTML = '<div class="empty-state">⚠️ Ошибка</div>'; }
+        }
+        
+        async function loadRating() {
+            if (!chiefId) return;
+            const container = document.getElementById('ratingList');
+            container.innerHTML = '<tr><td colspan="2" class="empty-state">⏳ Загрузка...</td></tr>';
+            try {
+                const { data: chiefs } = await supabaseClient.from('chiefs').select('id, district_id, districts(name)');
+                const { data: scores } = await supabaseClient.from('chief_scores').select('*');
+                const scoreMap = {};
+                if (scores) for (let s of scores) scoreMap[s.chief_id] = s.total_score || 0;
+                const districts = {};
+                if (chiefs) for (let c of chiefs) { const name = c.districts?.name || 'Неизвестно'; districts[name] = (districts[name] || 0) + (scoreMap[c.id] || 0); }
+                const sorted = Object.entries(districts).sort((a,b) => b[1] - a[1]);
+                if (sorted.length === 0) { container.innerHTML = '<tr><td colspan="2" class="empty-state">Нет данных</td></tr>'; return; }
+                let html = '';
+                for (let i = 0; i < sorted.length; i++) { html += '<tr><td style="font-weight:500;">' + sorted[i][0] + '</td><td style="color:#6c8cff;">' + sorted[i][1] + ' баллов</td></tr>'; }
+                container.innerHTML = html;
+            } catch (err) { container.innerHTML = '<tr><td colspan="2" class="empty-state">⚠️ Ошибка</td></tr>'; }
+        }
+        
+        function showToast(msg) {
+            const toast = document.createElement('div'); toast.className = 'toast'; toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+        
+        window.resetAndExit = function() { localStorage.clear(); window.location.href = 'index.html'; };
+        
+        // Меню
+        const btns = document.querySelectorAll('.menu-btn');
+        for (let i = 0; i < btns.length; i++) {
+            btns[i].onclick = function() {
+                for (let j = 0; j < btns.length; j++) btns[j].classList.remove('active');
+                this.classList.add('active');
+                for (let j = 0; j < document.querySelectorAll('.page').length; j++) document.querySelectorAll('.page')[j].classList.remove('active');
+                document.getElementById(this.dataset.page).classList.add('active');
+                if (this.dataset.page === 'rating') loadRating();
+                if (this.dataset.page === 'history') loadHistory();
             };
-            
-            async function loadStats() {
-                try {
-                    const { data: tasks } = await sb.from('assignments').select('status').eq('chief_id', chiefId);
-                    const { data: score } = await sb.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
-                    document.getElementById('totalTasks').innerText = tasks?.length || 0;
-                    document.getElementById('completedTasks').innerText = tasks ? tasks.filter(t => t.status === 'completed').length : 0;
-                    document.getElementById('totalScore').innerText = score?.total_score || 0;
-                } catch (err) {}
-            }
-            
-            async function loadHistory() {
-                const container = document.getElementById('historyList');
-                container.innerHTML = '<div class="empty-state">⏳ Загрузка...</div>';
-                try {
-                    const { data } = await sb.from('operations_history').select('*').eq('chief_id', chiefId).order('created_at', { ascending: false }).limit(30);
-                    if (!data || data.length === 0) { container.innerHTML = '<div class="empty-state">📭 История пуста</div>'; return; }
-                    let html = '';
-                    for (let i = 0; i < data.length; i++) {
-                        html += '<div class="history-item"><span>' + data[i].action + '</span><span style="opacity:0.5;">' + new Date(data[i].created_at).toLocaleString() + '</span></div>';
-                    }
-                    container.innerHTML = html;
-                } catch (err) { container.innerHTML = '<div class="empty-state">⚠️ Ошибка</div>'; }
-            }
-            
-            async function loadRating() {
-                const container = document.getElementById('ratingList');
-                container.innerHTML = '发展<td colspan="2" class="empty-state">⏳ Загрузка...<\/td><\/tr>';
-                try {
-                    const { data: chiefs } = await sb.from('chiefs').select('id, district_id, districts(name)');
-                    const { data: scores } = await sb.from('chief_scores').select('*');
-                    const scoreMap = {};
-                    if (scores) for (let s of scores) scoreMap[s.chief_id] = s.total_score || 0;
-                    const districts = {};
-                    if (chiefs) for (let c of chiefs) { const name = c.districts?.name || 'Неизвестно'; districts[name] = (districts[name] || 0) + (scoreMap[c.id] || 0); }
-                    const sorted = Object.entries(districts).sort((a,b) => b[1] - a[1]);
-                    if (sorted.length === 0) { container.innerHTML = '发展<td colspan="2" class="empty-state">Нет данных<\/td><\/tr>'; return; }
-                    let html = '';
-                    for (let i = 0; i < sorted.length; i++) { html += '发展<td style="font-weight:500;">' + sorted[i][0] + '<\/td><td style="color:#6c8cff;">' + sorted[i][1] + ' баллов<\/td><\/tr>'; }
-                    container.innerHTML = html;
-                } catch (err) { container.innerHTML = '发展<td colspan="2" class="empty-state">⚠️ Ошибка<\/td><\/tr>'; }
-            }
-            
-            function showToast(msg) {
-                const toast = document.createElement('div'); toast.className = 'toast'; toast.innerText = msg;
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 2500);
-            }
-            
-            window.resetAndExit = function() { localStorage.clear(); window.location.href = 'index.html'; };
-            
-            const btns = document.querySelectorAll('.menu-btn');
-            for (let i = 0; i < btns.length; i++) {
-                btns[i].onclick = function() {
-                    for (let j = 0; j < btns.length; j++) btns[j].classList.remove('active');
-                    this.classList.add('active');
-                    for (let j = 0; j < document.querySelectorAll('.page').length; j++) document.querySelectorAll('.page')[j].classList.remove('active');
-                    document.getElementById(this.dataset.page).classList.add('active');
-                    if (this.dataset.page === 'rating') loadRating();
-                    if (this.dataset.page === 'history') loadHistory();
-                };
-            }
-            
+        }
+        
+        // Запуск если есть chiefId
+        if (chiefId) {
             loadStats();
             loadTasks();
             loadHistory();
             loadRating();
             setInterval(loadTasks, 30000);
         }
-        
-        // Запускаем
-        startApp();
     </script>
 </body>
 </html>
