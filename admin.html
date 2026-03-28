@@ -35,29 +35,9 @@
             opacity: 0.4;
         }
 
-        .sphere-1 {
-            width: 600px;
-            height: 600px;
-            top: -200px;
-            right: -200px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        .sphere-2 {
-            width: 500px;
-            height: 500px;
-            bottom: -200px;
-            left: -100px;
-            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-        }
-
-        .sphere-3 {
-            width: 400px;
-            height: 400px;
-            top: 50%;
-            left: 30%;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-        }
+        .sphere-1 { width: 600px; height: 600px; top: -200px; right: -200px; background: linear-gradient(135deg, #667eea, #764ba2); }
+        .sphere-2 { width: 500px; height: 500px; bottom: -200px; left: -100px; background: linear-gradient(135deg, #ff6b6b, #ff8e53); }
+        .sphere-3 { width: 400px; height: 400px; top: 50%; left: 30%; background: linear-gradient(135deg, #4facfe, #00f2fe); }
 
         .glass-card {
             background: rgba(20, 25, 35, 0.4);
@@ -156,7 +136,7 @@
             opacity: 0.7;
         }
 
-        .delete-btn, .delete-all-btn, .add-points-btn, .remove-points-btn {
+        .delete-btn, .add-points-btn, .remove-points-btn {
             padding: 6px 14px;
             border: none;
             border-radius: 20px;
@@ -176,22 +156,9 @@
             background: rgba(239, 68, 68, 0.4);
         }
 
-        .delete-all-btn {
-            background: rgba(239, 68, 68, 0.3);
-            color: #f87171;
-        }
-
-        .delete-all-btn:hover {
-            background: rgba(239, 68, 68, 0.5);
-        }
-
         .add-points-btn {
             background: rgba(16, 185, 129, 0.2);
             color: #10b981;
-        }
-
-        .add-points-btn:hover {
-            background: rgba(16, 185, 129, 0.4);
         }
 
         .remove-points-btn {
@@ -218,12 +185,7 @@
             font-weight: 500;
         }
 
-        .status-pending {
-            background: rgba(245, 158, 11, 0.2);
-            color: #f59e0b;
-        }
-
-        .status-completed {
+        .status-active {
             background: rgba(16, 185, 129, 0.2);
             color: #10b981;
         }
@@ -244,24 +206,11 @@
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 16px;
-            }
-            .header {
-                padding: 18px 20px;
-            }
-            .panel {
-                padding: 20px;
-                overflow-x: auto;
-            }
-            th, td {
-                padding: 10px 8px;
-                font-size: 12px;
-            }
-            .toast {
-                white-space: normal;
-                max-width: 90%;
-            }
+            .container { padding: 16px; }
+            .header { padding: 18px 20px; }
+            .panel { padding: 20px; overflow-x: auto; }
+            th, td { padding: 10px 8px; font-size: 12px; }
+            .toast { white-space: normal; max-width: 90%; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -280,24 +229,25 @@
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" data-tab="tasks">Все задачи</button>
+            <button class="tab-btn active" data-tab="tasks">Задачи</button>
             <button class="tab-btn" data-tab="chiefs">Шефы</button>
-            <button class="tab-btn" data-tab="rating">Рейтинг округов</button>
+            <button class="tab-btn" data-tab="ratingMain">Рейтинг местных</button>
+            <button class="tab-btn" data-tab="ratingPrimary">Рейтинг первичек</button>
             <button class="tab-btn" data-tab="templates">Шаблоны</button>
         </div>
 
+        <!-- Панель задач (уникальные задачи) -->
         <div id="tasks-panel" class="panel active">
-            <h2>Управление задачами</h2>
-            <input type="text" id="taskSearch" class="search-input" placeholder="Поиск по задаче, шефу, округу...">
+            <h2>Управление задачами (уникальные)</h2>
+            <input type="text" id="taskSearch" class="search-input" placeholder="Поиск по названию...">
             <div style="overflow-x: auto;">
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Задача</th>
-                            <th>Шеф</th>
-                            <th>Округ</th>
-                            <th>Ссылка</th>
+                            <th>Описание</th>
+                            <th>Кому отправлено</th>
                             <th>Статус</th>
                             <th>Действия</th>
                         </tr>
@@ -307,6 +257,7 @@
             </div>
         </div>
 
+        <!-- Панель шефов -->
         <div id="chiefs-panel" class="panel">
             <h2>Управление баллами шефов</h2>
             <input type="text" id="chiefSearch" class="search-input" placeholder="Поиск по имени или округу...">
@@ -314,7 +265,6 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Шеф</th>
                             <th>Округ</th>
                             <th>Тип</th>
@@ -327,8 +277,9 @@
             </div>
         </div>
 
-        <div id="rating-panel" class="panel">
-            <h2>Рейтинг по округам</h2>
+        <!-- Рейтинг местных отделений -->
+        <div id="ratingMain-panel" class="panel">
+            <h2>Рейтинг местных отделений</h2>
             <div style="overflow-x: auto;">
                 <table>
                     <thead>
@@ -339,11 +290,30 @@
                             <th>Средний балл</th>
                         </tr>
                     </thead>
-                    <tbody id="ratingTable"></tbody>
+                    <tbody id="ratingMainTable"></tbody>
                 </table>
             </div>
         </div>
 
+        <!-- Рейтинг первичек -->
+        <div id="ratingPrimary-panel" class="panel">
+            <h2>Рейтинг первичных отделений</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Округ</th>
+                            <th>Всего баллов</th>
+                            <th>Количество первичек</th>
+                            <th>Средний балл</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ratingPrimaryTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Панель шаблонов -->
         <div id="templates-panel" class="panel">
             <h2>Шаблоны задач</h2>
             <div style="overflow-x: auto;">
@@ -368,14 +338,11 @@
         const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let allTasks = [];
-        let allChiefs = [];
+        let allTemplates = [];
+        let allAssignments = [];
 
         async function checkConnection() {
-            const { data, error } = await supabaseClient
-                .from('districts')
-                .select('count', { count: 'exact', head: true });
-            
+            const { data, error } = await supabaseClient.from('districts').select('count', { count: 'exact', head: true });
             if (error) {
                 document.getElementById('dbStatus').innerHTML = 'Ошибка подключения';
                 document.getElementById('dbStatus').style.background = 'rgba(239,68,68,0.2)';
@@ -387,66 +354,58 @@
             }
         }
 
-        async function loadAllTasks() {
-            const { data, error } = await supabaseClient
-                .from('assignments')
-                .select('*, task_templates(title), chiefs(name, district_id), districts(name)')
-                .order('created_at', { ascending: false });
+        // Загрузка уникальных задач (по шаблонам)
+        async function loadTasks() {
+            const { data: templates, error } = await supabaseClient
+                .from('task_templates')
+                .select('*')
+                .order('id');
             
-            if (error) {
-                console.error('Ошибка загрузки задач:', error);
-                return;
-            }
-            allTasks = data || [];
+            if (error) return;
+            
+            const { data: assignments } = await supabaseClient
+                .from('assignments')
+                .select('template_id, status');
+            
+            allTemplates = templates || [];
+            allAssignments = assignments || [];
             renderTasksTable();
         }
 
         function renderTasksTable() {
-            const searchInput = document.getElementById('taskSearch');
-            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            const searchTerm = document.getElementById('taskSearch')?.value.toLowerCase() || '';
             
-            const filtered = allTasks.filter(function(t) {
-                return (t.task_templates?.title || '').toLowerCase().includes(searchTerm) ||
-                       (t.chiefs?.name || '').toLowerCase().includes(searchTerm) ||
-                       (t.districts?.name || '').toLowerCase().includes(searchTerm);
+            const filtered = allTemplates.filter(function(t) {
+                return t.title.toLowerCase().includes(searchTerm);
             });
             
             const tbody = document.getElementById('tasksTable');
             if (!filtered || filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:40px;">Нет задач</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:40px;">Нет задач</td></tr>';
                 return;
             }
             
             let html = '';
             for (let i = 0; i < filtered.length; i++) {
-                const task = filtered[i];
+                const template = filtered[i];
+                const assignmentsForTemplate = allAssignments.filter(function(a) { return a.template_id === template.id; });
+                const totalCount = assignmentsForTemplate.length;
+                const completedCount = assignmentsForTemplate.filter(function(a) { return a.status === 'completed'; }).length;
+                const pendingCount = totalCount - completedCount;
+                
                 html += '<tr>' +
-                    '<td style="font-family: monospace; font-size: 11px;">' + (task.id || '') + '</td>' +
-                    '<td>' + (task.task_templates?.title || '-') + '</td>' +
-                    '<td>' + (task.chiefs?.name || '-') + '</td>' +
-                    '<td>' + (task.districts?.name || '-') + '</td>' +
-                    '<td>' + (task.link ? '<a href="' + task.link + '" target="_blank" style="color:#6c8cff;">Ссылка</a>' : '-') + '</td>' +
-                    '<td><span class="status-badge status-' + (task.status || 'pending') + '">' + (task.status === 'pending' ? 'Ожидает' : 'Выполнено') + '</span></td>' +
+                    '<td>' + template.id + '</td>' +
+                    '<td><strong>' + template.title + '</strong></td>' +
+                    '<td>' + (template.description || '-') + '</td>' +
+                    '<td>Всего: ' + totalCount + ' (Выполнено: ' + completedCount + ', Ожидает: ' + pendingCount + ')</td>' +
+                    '<td><span class="status-badge status-active">' + (template.is_active ? 'Активна' : 'Неактивна') + '</span></td>' +
                     '<td>' +
-                        '<button class="delete-btn" onclick="deleteTask(' + task.id + ')">Удалить</button>' +
-                        '<button class="delete-all-btn" onclick="deleteAllTasksByTemplate(' + task.template_id + ', \'' + (task.task_templates?.title || '').replace(/'/g, "\\'") + '\')">Удалить у всех</button>' +
+                        '<button class="delete-btn" onclick="deleteAllTasksByTemplate(' + template.id + ', \'' + template.title.replace(/'/g, "\\'") + '\')">Удалить задачу у всех</button>' +
                     '</td>' +
                 '</tr>';
             }
             tbody.innerHTML = html;
         }
-
-        // Удалить одну задачу (у одного шефа)
-        window.deleteTask = async function(taskId) {
-            if (!confirm('Удалить эту задачу у этого шефа? Это действие нельзя отменить.')) return;
-            
-            await supabaseClient.from('assignments').delete().eq('id', taskId);
-            await supabaseClient.from('operations_history').delete().eq('assignment_id', taskId);
-            loadAllTasks();
-            loadAllChiefs();
-            loadRating();
-            showToast('Задача удалена у одного шефа');
-        };
 
         // Удалить ВСЕ задачи с этим шаблоном у ВСЕХ шефов
         window.deleteAllTasksByTemplate = async function(templateId, templateTitle) {
@@ -474,22 +433,20 @@
                 }
             }
             
-            loadAllTasks();
-            loadAllChiefs();
-            loadRating();
+            loadTasks();
+            loadChiefs();
+            loadRatingMain();
+            loadRatingPrimary();
             showToast('Все задачи "' + templateTitle + '" удалены у всех шефов');
         };
 
-        async function loadAllChiefs() {
+        async function loadChiefs() {
             const { data, error } = await supabaseClient
                 .from('chiefs')
                 .select('*, districts(name)')
                 .order('name');
             
-            if (error) {
-                console.error('Ошибка загрузки шефов:', error);
-                return;
-            }
+            if (error) return;
             
             const { data: scores } = await supabaseClient.from('chief_scores').select('*');
             const scoreMap = {};
@@ -499,34 +456,32 @@
                 }
             }
             
-            allChiefs = [];
+            const chiefs = [];
             if (data) {
                 for (let i = 0; i < data.length; i++) {
-                    allChiefs.push({
+                    chiefs.push({
                         id: data[i].id,
                         name: data[i].name,
-                        district_id: data[i].district_id,
-                        districts: data[i].districts,
+                        district: data[i].districts?.name || '-',
                         primary_branch_id: data[i].primary_branch_id,
                         score: scoreMap[data[i].id] || 0
                     });
                 }
             }
-            renderChiefsTable();
+            renderChiefsTable(chiefs);
         }
 
-        function renderChiefsTable() {
-            const searchInput = document.getElementById('chiefSearch');
-            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+        function renderChiefsTable(chiefs) {
+            const searchTerm = document.getElementById('chiefSearch')?.value.toLowerCase() || '';
             
-            const filtered = allChiefs.filter(function(c) {
+            const filtered = chiefs.filter(function(c) {
                 return (c.name || '').toLowerCase().includes(searchTerm) ||
-                       (c.districts?.name || '').toLowerCase().includes(searchTerm);
+                       (c.district || '').toLowerCase().includes(searchTerm);
             });
             
             const tbody = document.getElementById('chiefsTable');
             if (!filtered || filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:40px;">Нет шефов</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:40px;">Нет шефов</td></tr>';
                 return;
             }
             
@@ -534,9 +489,8 @@
             for (let i = 0; i < filtered.length; i++) {
                 const chief = filtered[i];
                 html += '<tr>' +
-                    '<td style="font-family: monospace; font-size: 11px;">' + (chief.id || '') + '</td>' +
                     '<td>' + (chief.name || '-') + '</td>' +
-                    '<td>' + (chief.districts?.name || '-') + '</td>' +
+                    '<td>' + (chief.district || '-') + '</td>' +
                     '<td>' + (chief.primary_branch_id ? 'Первичка' : 'Местное') + '</td>' +
                     '<td style="color: #6c8cff; font-weight: 600;">' + chief.score + ' баллов</td>' +
                     '<td>' +
@@ -549,30 +503,34 @@
         }
 
         window.addPoints = async function(chiefId) {
-            const chief = allChiefs.find(function(c) { return c.id === chiefId; });
-            const currentScore = chief ? chief.score : 0;
-            const newScore = currentScore + 1;
-            await supabaseClient.from('chief_scores').upsert({ chief_id: chiefId, total_score: newScore, updated_at: new Date() });
-            await supabaseClient.from('operations_history').insert([{ chief_id: chiefId, action: 'Админ начислил +1 балл' }]);
-            loadAllChiefs();
-            loadRating();
+            await supabaseClient.rpc('increment_score', { chief_id_param: chiefId });
+            loadChiefs();
+            loadRatingMain();
+            loadRatingPrimary();
             showToast('Начислен 1 балл');
         };
 
         window.removePoints = async function(chiefId) {
-            const chief = allChiefs.find(function(c) { return c.id === chiefId; });
-            const currentScore = chief ? chief.score : 0;
-            const newScore = Math.max(0, currentScore - 1);
-            await supabaseClient.from('chief_scores').upsert({ chief_id: chiefId, total_score: newScore, updated_at: new Date() });
-            await supabaseClient.from('operations_history').insert([{ chief_id: chiefId, action: 'Админ снял 1 балл' }]);
-            loadAllChiefs();
-            loadRating();
+            await supabaseClient.rpc('decrement_score', { chief_id_param: chiefId });
+            loadChiefs();
+            loadRatingMain();
+            loadRatingPrimary();
             showToast('Снят 1 балл');
         };
 
-        async function loadRating() {
-            const { data: chiefs } = await supabaseClient.from('chiefs').select('id, district_id, districts(name)');
+        async function loadRatingMain() {
+            const { data: chiefs } = await supabaseClient
+                .from('chiefs')
+                .select('id, district_id, districts(name), primary_branch_id');
+            
             const { data: scores } = await supabaseClient.from('chief_scores').select('*');
+            
+            const scoreMap = {};
+            if (scores) {
+                for (let i = 0; i < scores.length; i++) {
+                    scoreMap[scores[i].chief_id] = scores[i].total_score || 0;
+                }
+            }
             
             const districtScores = {};
             const districtCounts = {};
@@ -580,8 +538,10 @@
             if (chiefs) {
                 for (let i = 0; i < chiefs.length; i++) {
                     const chief = chiefs[i];
+                    if (chief.primary_branch_id) continue; // пропускаем первички
+                    
                     const districtName = chief.districts?.name || 'Неизвестно';
-                    const score = scores ? (scores.find(function(s) { return s.chief_id === chief.id; })?.total_score || 0) : 0;
+                    const score = scoreMap[chief.id] || 0;
                     
                     if (!districtScores[districtName]) {
                         districtScores[districtName] = 0;
@@ -603,7 +563,7 @@
                 return b.total - a.total;
             });
             
-            const tbody = document.getElementById('ratingTable');
+            const tbody = document.getElementById('ratingMainTable');
             if (!sorted || sorted.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:40px;">Нет данных</td></tr>';
                 return;
@@ -616,6 +576,70 @@
                     '<td style="font-weight: 600;">' + r.name + '</td>' +
                     '<td style="color: #6c8cff; font-weight: 600;">' + r.total + ' баллов</td>' +
                     '<td>' + r.count + ' шефов</td>' +
+                    '<td>' + r.avg + ' баллов</td>' +
+                '</tr>';
+            }
+            tbody.innerHTML = html;
+        }
+
+        async function loadRatingPrimary() {
+            const { data: chiefs } = await supabaseClient
+                .from('chiefs')
+                .select('id, district_id, districts(name), primary_branch_id');
+            
+            const { data: scores } = await supabaseClient.from('chief_scores').select('*');
+            
+            const scoreMap = {};
+            if (scores) {
+                for (let i = 0; i < scores.length; i++) {
+                    scoreMap[scores[i].chief_id] = scores[i].total_score || 0;
+                }
+            }
+            
+            const districtScores = {};
+            const districtCounts = {};
+            
+            if (chiefs) {
+                for (let i = 0; i < chiefs.length; i++) {
+                    const chief = chiefs[i];
+                    if (!chief.primary_branch_id) continue; // только первички
+                    
+                    const districtName = chief.districts?.name || 'Неизвестно';
+                    const score = scoreMap[chief.id] || 0;
+                    
+                    if (!districtScores[districtName]) {
+                        districtScores[districtName] = 0;
+                        districtCounts[districtName] = 0;
+                    }
+                    districtScores[districtName] += score;
+                    districtCounts[districtName]++;
+                }
+            }
+            
+            const sorted = Object.keys(districtScores).map(function(name) {
+                return {
+                    name: name,
+                    total: districtScores[name],
+                    count: districtCounts[name],
+                    avg: Math.round(districtScores[name] / districtCounts[name])
+                };
+            }).sort(function(a, b) {
+                return b.total - a.total;
+            });
+            
+            const tbody = document.getElementById('ratingPrimaryTable');
+            if (!sorted || sorted.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:40px;">Нет данных</td></tr>';
+                return;
+            }
+            
+            let html = '';
+            for (let i = 0; i < sorted.length; i++) {
+                const r = sorted[i];
+                html += '<tr>' +
+                    '<td style="font-weight: 600;">' + r.name + '</td>' +
+                    '<td style="color: #6c8cff; font-weight: 600;">' + r.total + ' баллов</td>' +
+                    '<td>' + r.count + ' первичек</td>' +
                     '<td>' + r.avg + ' баллов</td>' +
                 '</tr>';
             }
@@ -639,7 +663,7 @@
                     '<td>' + t.id + '</td>' +
                     '<td><strong>' + t.title + '</strong></td>' +
                     '<td>' + (t.description || '-') + '</td>' +
-                    '<td><span class="status-badge" style="background: ' + (t.is_active ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)') + '; color: ' + (t.is_active ? '#10b981' : '#f87171') + ';">' + (t.is_active ? 'Активен' : 'Неактивен') + '</span></td>' +
+                    '<td><span class="status-badge status-active">' + (t.is_active ? 'Активен' : 'Неактивен') + '</span></td>' +
                     '<td><button class="delete-btn" onclick="toggleTemplate(' + t.id + ', ' + !t.is_active + ')">' + (t.is_active ? 'Отключить' : 'Включить') + '</button></td>' +
                 '</tr>';
             }
@@ -675,9 +699,10 @@
                 }
                 document.getElementById(this.dataset.tab + '-panel').classList.add('active');
                 
-                if (this.dataset.tab === 'tasks') loadAllTasks();
-                if (this.dataset.tab === 'chiefs') loadAllChiefs();
-                if (this.dataset.tab === 'rating') loadRating();
+                if (this.dataset.tab === 'tasks') loadTasks();
+                if (this.dataset.tab === 'chiefs') loadChiefs();
+                if (this.dataset.tab === 'ratingMain') loadRatingMain();
+                if (this.dataset.tab === 'ratingPrimary') loadRatingPrimary();
                 if (this.dataset.tab === 'templates') loadTemplates();
             });
         }
@@ -689,21 +714,23 @@
         
         const chiefSearch = document.getElementById('chiefSearch');
         if (chiefSearch) {
-            chiefSearch.addEventListener('input', renderChiefsTable);
+            chiefSearch.addEventListener('input', function() { loadChiefs(); });
         }
 
         checkConnection();
-        loadAllTasks();
-        loadAllChiefs();
-        loadRating();
+        loadTasks();
+        loadChiefs();
+        loadRatingMain();
+        loadRatingPrimary();
         loadTemplates();
         
         setInterval(function() {
             const activeTab = document.querySelector('.tab-btn.active');
             if (activeTab) {
-                if (activeTab.dataset.tab === 'tasks') loadAllTasks();
-                if (activeTab.dataset.tab === 'chiefs') loadAllChiefs();
-                if (activeTab.dataset.tab === 'rating') loadRating();
+                if (activeTab.dataset.tab === 'tasks') loadTasks();
+                if (activeTab.dataset.tab === 'chiefs') loadChiefs();
+                if (activeTab.dataset.tab === 'ratingMain') loadRatingMain();
+                if (activeTab.dataset.tab === 'ratingPrimary') loadRatingPrimary();
             }
         }, 15000);
     </script>
