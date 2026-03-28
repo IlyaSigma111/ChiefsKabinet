@@ -302,7 +302,7 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 20px;
             padding: 12px;
-            margin: 10px;
+            margin: 10px 0;
             color: #f87171;
             font-size: 13px;
             text-align: center;
@@ -367,15 +367,15 @@
         <div class="content">
             <div id="tasks" class="page active">
                 <h3>Мои задачи</h3>
-                <div id="tasksList" class="loading-spinner">Загрузка задач...</div>
+                <div id="tasksList"></div>
             </div>
             <div id="rating" class="page">
                 <h3>Рейтинг округов</h3>
-                <div style="overflow-x: auto;"><table class="ranking-table"><thead><tr><th>Округ</th><th>Всего баллов</th></tr></thead><tbody id="ratingList"></tbody></table></div>
+                <div style="overflow-x: auto;"><table class="ranking-table"><thead>运转<th>Округ</th><th>Всего баллов</th> </thead><tbody id="ratingList"></tbody></table></div>
             </div>
             <div id="history" class="page">
                 <h3>История операций</h3>
-                <div id="historyList" class="loading-spinner">Загрузка истории...</div>
+                <div id="historyList"></div>
             </div>
             <div id="help" class="page">
                 <h3>Справка</h3>
@@ -386,25 +386,15 @@
 
     <script>
         (function() {
-            // Показ ошибки
-            function showError(containerId, message) {
-                const container = document.getElementById(containerId);
-                if (container) {
-                    container.innerHTML = '<div class="error-message">⚠️ ' + message + '</div>';
-                }
-            }
-
-            // Проверяем localStorage
+            // Получаем данные из localStorage
             let chiefId = localStorage.getItem('chiefId');
             let districtName = localStorage.getItem('chiefDistrictName');
             let branchType = localStorage.getItem('chiefBranchType');
             
-            console.log('chiefId:', chiefId);
-            console.log('districtName:', districtName);
-            
+            // Если нет chiefId — возвращаем на главную
             if (!chiefId) {
-                showError('tasksList', 'Ошибка: не выбран округ. Вернитесь на главную страницу.');
-                document.getElementById('districtDisplay').innerHTML = 'Ошибка: выберите округ';
+                document.getElementById('tasksList').innerHTML = '<div class="error-message">⚠️ Ошибка: не выбран округ. <a href="index.html" style="color:#6c8cff;">Вернуться на главную</a></div>';
+                document.getElementById('districtDisplay').innerHTML = 'Ошибка';
                 return;
             }
             
@@ -412,7 +402,7 @@
             
             // Проверяем Supabase
             if (typeof supabase === 'undefined') {
-                showError('tasksList', 'Ошибка: не удалось загрузить библиотеку Supabase');
+                document.getElementById('tasksList').innerHTML = '<div class="error-message">⚠️ Ошибка загрузки библиотеки Supabase</div>';
                 return;
             }
             
@@ -423,25 +413,53 @@
             });
             
             let lastTaskCount = 0;
+            let isLoading = false;
+            
+            // Функция с таймаутом для запросов
+            async function fetchWithTimeout(promise, timeoutMs = 10000) {
+                let timeoutId;
+                const timeoutPromise = new Promise(function(_, reject) {
+                    timeoutId = setTimeout(function() {
+                        reject(new Error('Превышено время ожидания (' + timeoutMs + 'мс)'));
+                    }, timeoutMs);
+                });
+                try {
+                    const result = await Promise.race([promise, timeoutPromise]);
+                    clearTimeout(timeoutId);
+                    return result;
+                } catch (err) {
+                    clearTimeout(timeoutId);
+                    throw err;
+                }
+            }
             
             async function loadTasks() {
+                if (isLoading) return;
+                isLoading = true;
+                
+                const container = document.getElementById('tasksList');
+                container.innerHTML = '<div class="loading-spinner">⏳ Загрузка задач...</div>';
+                
                 try {
                     console.log('Загрузка задач для chiefId:', chiefId);
-                    const { data, error } = await supabaseClient
-                        .from('assignments')
-                        .select('*, task_templates(*)')
-                        .eq('chief_id', chiefId)
-                        .order('created_at', { ascending: false });
+                    
+                    const { data, error } = await fetchWithTimeout(
+                        supabaseClient
+                            .from('assignments')
+                            .select('*, task_templates(*)')
+                            .eq('chief_id', chiefId)
+                            .order('created_at', { ascending: false }),
+                        15000
+                    );
                     
                     if (error) {
                         console.error('Ошибка загрузки задач:', error);
-                        showError('tasksList', 'Ошибка загрузки: ' + error.message);
+                        container.innerHTML = '<div class="error-message">⚠️ Ошибка: ' + error.message + '</div>';
                         return;
                     }
                     
                     console.log('Получено задач:', data?.length || 0);
                     
-                    const container = document.getElementById('tasksList');
                     if (!data || data.length === 0) {
                         container.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.5;">📭 Нет задач</div>';
                         return;
@@ -479,7 +497,9 @@
                     container.innerHTML = html;
                 } catch (err) {
                     console.error('Критическая ошибка загрузки задач:', err);
-                    showError('tasksList', 'Ошибка: ' + err.message);
+                    container.innerHTML = '<div class="error-message">⚠️ Ошибка подключения: ' + err.message + '<br><br>Проверьте интернет-соединение и попробуйте обновить страницу.</div>';
+                } finally {
+                    isLoading = false;
                 }
             }
             
@@ -560,7 +580,7 @@
                     
                     const container = document.getElementById('ratingList');
                     if (!sorted.length) {
-                        container.innerHTML = '<tr><td colspan="2" style="text-align:center;">Нет данных</td></tr>';
+                        container.innerHTML = '运转<td colspan="2" style="text-align:center;">Нет数据</td></tr>';
                         return;
                     }
                     
@@ -616,6 +636,7 @@
             loadHistory();
             loadRating();
             
+            // Обновляем задачи каждые 30 секунд
             setInterval(function() {
                 loadTasks();
             }, 30000);
