@@ -123,9 +123,9 @@
 
     <div class="container">
         <div class="header glass-card">
-            <div class="logo"><h2>📰 Кабинет шеф-редактора</h2></div>
+            <div class="logo"><h2>Кабинет шеф-редактора</h2></div>
             <div style="display: flex; gap: 16px;">
-                <span class="district-badge" id="districtDisplay">📍 Загрузка...</span>
+                <span class="district-badge" id="districtDisplay">Загрузка...</span>
                 <button class="reset-btn" onclick="resetAndExit()">Сменить</button>
             </div>
         </div>
@@ -138,18 +138,39 @@
 
         <div class="menu-scroll">
             <div class="menu-items">
-                <button class="menu-btn active" data-page="tasks">📋 Мои задачи</button>
-                <button class="menu-btn" data-page="rating">🏆 Рейтинг</button>
-                <button class="menu-btn" data-page="history">📜 История</button>
-                <button class="menu-btn" data-page="help">❓ Справка</button>
+                <button class="menu-btn active" data-page="tasks">Мои задачи</button>
+                <button class="menu-btn" data-page="rating">Рейтинг округов</button>
+                <button class="menu-btn" data-page="history">История</button>
+                <button class="menu-btn" data-page="help">Справка</button>
             </div>
         </div>
 
         <div class="content">
-            <div id="tasks" class="page active"><h3>📋 Мои задачи</h3><div id="tasksList"></div></div>
-            <div id="rating" class="page"><h3>🏆 Рейтинг</h3><div style="overflow-x:auto;"><table class="ranking-table"><thead>运转<th>Шеф</th><th>Отделение</th><th>Баллы</th> </thead><tbody id="ratingList"></tbody></table></div></div>
-            <div id="history" class="page"><h3>📜 История</h3><div id="historyList"></div></div>
-            <div id="help" class="page"><h3>❓ Справка</h3><p style="opacity:0.7; line-height:1.6;">• Выполняйте задачи и прикрепляйте ссылки (t.me или vk.com)<br>• 1 ссылка = 1 балл<br>• У задач есть срок выполнения — старайтесь успеть!</p></div>
+            <div id="tasks" class="page active">
+                <h3>Мои задачи</h3>
+                <div id="tasksList"></div>
+            </div>
+
+            <div id="rating" class="page">
+                <h3>Рейтинг округов</h3>
+                <div style="overflow-x:auto;">
+                    <table class="ranking-table">
+                        <thead>
+                            <tr><th>Округ</th><th>Всего баллов</th> </thead>
+                        <tbody id="ratingList"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="history" class="page">
+                <h3>История операций</h3>
+                <div id="historyList"></div>
+            </div>
+
+            <div id="help" class="page">
+                <h3>Справка</h3>
+                <p style="opacity:0.7; line-height:1.6;">• Выполняйте задачи и прикрепляйте ссылки (t.me или vk.com)<br>• 1 ссылка = 1 балл<br>• Баллы идут в копилку вашего округа<br>• У задач есть срок выполнения — старайтесь успеть!</p>
+            </div>
         </div>
     </div>
 
@@ -174,7 +195,7 @@
                 return;
             }
             
-            document.getElementById('districtDisplay').innerHTML = `📍 ${districtName}${branchType === 'primary' ? ' • Первичка' : ''}`;
+            document.getElementById('districtDisplay').innerHTML = districtName + (branchType === 'primary' ? ' • Первичка' : '');
             
             let lastTaskCount = 0;
             
@@ -193,13 +214,13 @@
                 
                 const container = document.getElementById('tasksList');
                 if (!data?.length) {
-                    container.innerHTML = '<p style="opacity:0.5; text-align:center; padding:60px;">📭 Нет задач</p>';
+                    container.innerHTML = '<p style="opacity:0.5; text-align:center; padding:60px;">Нет задач</p>';
                     return;
                 }
                 
                 const pendingTasks = data.filter(t => t.status === 'pending');
                 if (pendingTasks.length > lastTaskCount && lastTaskCount > 0 && Notification.permission === 'granted') {
-                    new Notification('📢 Новая задача!', { body: `У вас ${pendingTasks.length} новых задач` });
+                    new Notification('Новая задача!', { body: 'У вас ' + pendingTasks.length + ' новых задач' });
                 }
                 lastTaskCount = pendingTasks.length;
                 
@@ -208,19 +229,19 @@
                     if (task.deadline) {
                         const deadlineDate = new Date(task.deadline);
                         const isExpired = deadlineDate < new Date();
-                        deadlineHtml = `<div class="deadline ${isExpired ? 'deadline-urgent' : 'deadline-normal'}">⏰ Срок: ${deadlineDate.toLocaleString()} ${isExpired ? '(просрочено!)' : ''}</div>`;
+                        deadlineHtml = '<div class="deadline ' + (isExpired ? 'deadline-urgent' : 'deadline-normal') + '">Срок: ' + deadlineDate.toLocaleString() + (isExpired ? ' (просрочено!)' : '') + '</div>';
                     }
                     return `
                         <div class="task-item">
                             <div class="task-title">${task.task_templates?.title || 'Задача'}</div>
                             <div class="task-desc">${task.task_templates?.description || ''}</div>
                             ${deadlineHtml}
-                            ${task.link ? `<a href="${task.link}" target="_blank" class="task-link">🔗 ${task.link}</a>` : ''}
-                            ${task.coordinator_comment ? `<div style="font-size:13px; margin-top:8px; color:#6c8cff;">💬 ${task.coordinator_comment}</div>` : ''}
-                            <div><span class="task-status status-${task.status}">${task.status === 'pending' ? '⏳ Ожидает' : '✅ Выполнено'}</span></div>
+                            ${task.link ? '<a href="' + task.link + '" target="_blank" class="task-link">Ссылка</a>' : ''}
+                            ${task.coordinator_comment ? '<div style="font-size:13px; margin-top:8px; color:#6c8cff;">Комментарий: ' + task.coordinator_comment + '</div>' : ''}
+                            <div><span class="task-status status-' + task.status + '">' + (task.status === 'pending' ? 'Ожидает' : 'Выполнено') + '</span></div>
                             ${task.status === 'pending' ? `
                                 <input type="text" id="link_${task.id}" class="link-input" placeholder="Вставьте ссылку (t.me или vk.com)">
-                                <button class="btn-complete" onclick="completeTask(${task.id})">✅ Выполнить +1 балл</button>
+                                <button class="btn-complete" onclick="completeTask(${task.id})">Выполнить +1 балл</button>
                             ` : ''}
                         </div>
                     `;
@@ -228,7 +249,7 @@
             }
             
             window.completeTask = async function(taskId) {
-                const linkInput = document.getElementById(`link_${taskId}`);
+                const linkInput = document.getElementById('link_' + taskId);
                 const link = linkInput?.value?.trim();
                 if (!link) { alert('Вставьте ссылку'); return; }
                 if (!link.includes('t.me') && !link.includes('vk.com')) { alert('Ссылка должна быть на t.me или vk.com'); return; }
@@ -240,7 +261,7 @@
                 await supabaseClient.from('chief_scores').upsert({ chief_id: chiefId, total_score: completed?.length || 0 });
                 
                 loadTasks(); loadStats(); loadHistory();
-                showToast('✅ Задача выполнена! +1 балл');
+                showToast('Задача выполнена! +1 балл');
             };
             
             async function loadStats() {
@@ -254,15 +275,33 @@
             async function loadHistory() {
                 const { data } = await supabaseClient.from('operations_history').select('*').eq('chief_id', chiefId).order('created_at', { ascending: false }).limit(30);
                 const container = document.getElementById('historyList');
-                if (!data?.length) { container.innerHTML = '<p style="opacity:0.5; text-align:center; padding:60px;">📭 История пуста</p>'; return; }
-                container.innerHTML = data.map(h => `<div class="history-item"><span>${h.action}</span><span style="opacity:0.5;">${new Date(h.created_at).toLocaleString()}</span></div>`).join('');
+                if (!data?.length) { container.innerHTML = '<p style="opacity:0.5; text-align:center; padding:60px;">История пуста</p>'; return; }
+                container.innerHTML = data.map(h => '<div class="history-item"><span>' + h.action + '</span><span style="opacity:0.5;">' + new Date(h.created_at).toLocaleString() + '</span></div>').join('');
             }
             
             async function loadRating() {
-                const { data } = await supabaseClient.from('chief_scores').select('*, chiefs(name, primary_branch_id)').order('total_score', { ascending: false });
+                const { data: chiefs } = await supabaseClient.from('chiefs').select('id, district_id, districts(name)');
+                const { data: scores } = await supabaseClient.from('chief_scores').select('*');
+                
+                const districtScores = {};
+                chiefs?.forEach(chief => {
+                    const districtName = chief.districts?.name || 'Неизвестно';
+                    const score = scores?.find(s => s.chief_id === chief.id)?.total_score || 0;
+                    if (!districtScores[districtName]) {
+                        districtScores[districtName] = 0;
+                    }
+                    districtScores[districtName] += score;
+                });
+                
+                const sorted = Object.entries(districtScores).map(([name, total]) => ({ name, total })).sort((a, b) => b.total - a.total);
+                
                 const container = document.getElementById('ratingList');
-                if (!data?.length) { container.innerHTML = '<tr><td colspan="3">Нет данных</td></tr>'; return; }
-                container.innerHTML = data.map(s => `<tr><td style="font-weight:500;">${s.chiefs?.name?.split('Шеф')[0] || 'Шеф'}</td><td>${s.chiefs?.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</td><td style="color:#6c8cff;">${s.total_score} баллов</td></tr>`).join('');
+                if (!sorted.length) {
+                    container.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:40px;">Нет данных</td></tr>';
+                    return;
+                }
+                
+                container.innerHTML = sorted.map(r => '<tr><td style="font-weight: 500;">' + r.name + '</td><td style="color: #6c8cff; font-weight: 600;">' + r.total + ' баллов</td></tr>').join('');
             }
             
             function showToast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.innerText = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
