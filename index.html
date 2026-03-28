@@ -203,6 +203,12 @@
             font-size: 11px;
             opacity: 0.7;
         }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
@@ -236,17 +242,23 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SUPABASE_URL = 'https://csvynjkhhlexbnwpziup.supabase.co';
         const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
         
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
         let districtsList = [];
         let branchesList = [];
 
         async function loadDistricts() {
-            const { data } = await supabaseClient.from('districts').select('*').order('name');
+            const { data, error } = await sb.from('districts').select('*').order('name');
+            if (error) {
+                console.error('Ошибка загрузки округов:', error);
+                document.getElementById('districtSelect').innerHTML = '<option value="">Ошибка загрузки</option>';
+                return;
+            }
             if (data) {
                 districtsList = data;
                 const select = document.getElementById('districtSelect');
@@ -256,7 +268,11 @@
         }
 
         async function loadBranches(districtId) {
-            const { data } = await supabaseClient.from('primary_branches').select('*').eq('district_id', districtId);
+            const { data, error } = await sb.from('primary_branches').select('*').eq('district_id', districtId);
+            if (error) {
+                console.error('Ошибка загрузки первичек:', error);
+                return;
+            }
             branchesList = data || [];
             const container = document.getElementById('branchOptions');
             
@@ -315,18 +331,21 @@
             localStorage.setItem('chiefDistrictName', district.name);
             localStorage.setItem('chiefBranchId', branchId || '');
             
-            await supabaseClient.from('chiefs').insert([{
+            const { error } = await sb.from('chiefs').insert([{
                 id: chiefId,
                 name: `Шеф ${district.name}`,
                 district_id: parseInt(districtId),
                 primary_branch_id: branchId
-            }]).catch(e => console.log('exists'));
+            }]);
+            
+            if (error && error.code !== '23505') {
+                console.error('Ошибка создания шефа:', error);
+            }
             
             window.location.href = 'chief.html';
         });
 
         loadDistricts();
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
