@@ -147,7 +147,7 @@
 
         <div class="content">
             <div id="tasks" class="page active"><h3>📋 Мои задачи</h3><div id="tasksList"></div></div>
-            <div id="rating" class="page"><h3>🏆 Рейтинг</h3><div style="overflow-x:auto;"><table class="ranking-table"><thead><tr><th>Шеф</th><th>Отделение</th><th>Баллы</th></tr></thead><tbody id="ratingList"></tbody></table></div></div>
+            <div id="rating" class="page"><h3>🏆 Рейтинг</h3><div style="overflow-x:auto;"><table class="ranking-table"><thead>运转<th>Шеф</th><th>Отделение</th><th>Баллы</th> </thead><tbody id="ratingList"></tbody></table></div></div>
             <div id="history" class="page"><h3>📜 История</h3><div id="historyList"></div></div>
             <div id="help" class="page"><h3>❓ Справка</h3><p style="opacity:0.7; line-height:1.6;">• Выполняйте задачи и прикрепляйте ссылки (t.me или vk.com)<br>• 1 ссылка = 1 балл<br>• У задач есть срок выполнения — старайтесь успеть!</p></div>
         </div>
@@ -262,7 +262,7 @@
                 const { data } = await supabaseClient.from('chief_scores').select('*, chiefs(name, primary_branch_id)').order('total_score', { ascending: false });
                 const container = document.getElementById('ratingList');
                 if (!data?.length) { container.innerHTML = '<tr><td colspan="3">Нет данных</td></tr>'; return; }
-                container.innerHTML = data.map(s => `<tr><td>${s.chiefs?.name?.split('Шеф')[0] || 'Шеф'}</td><td>${s.chiefs?.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</td><td style="color:#6c8cff;">${s.total_score} баллов</td></tr>`).join('');
+                container.innerHTML = data.map(s => `<tr><td style="font-weight:500;">${s.chiefs?.name?.split('Шеф')[0] || 'Шеф'}</td><td>${s.chiefs?.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</td><td style="color:#6c8cff;">${s.total_score} баллов</td></tr>`).join('');
             }
             
             function showToast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.innerText = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
