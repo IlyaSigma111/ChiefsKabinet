@@ -120,6 +120,16 @@
             transform: translateY(-2px);
         }
 
+        .mass-btn {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(236, 72, 153, 0.3));
+            border-color: rgba(168, 85, 247, 0.5);
+            margin-top: 8px;
+        }
+
+        .mass-btn:hover {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.45), rgba(236, 72, 153, 0.45));
+        }
+
         .template-item {
             background: rgba(0, 0, 0, 0.35);
             padding: 18px 20px;
@@ -155,6 +165,16 @@
 
         .status-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
         .status-completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+
+        .info-note {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid #3b82f6;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
 
         @media (max-width: 768px) {
             .container {
@@ -204,17 +224,30 @@
 
             <div class="panel glass-card">
                 <h2>✏️ Создать задачу</h2>
+                
+                <div class="info-note">
+                    📌 <strong>Кому отправить:</strong><br>
+                    • <strong>Местному отделению</strong> — только главный шеф округа<br>
+                    • <strong>Первичкам</strong> — все первичные отделения округа<br>
+                    • <strong>ВСЕМ (распуш)</strong> — всем шефам всех округов (и местным, и первичкам)
+                </div>
+
                 <select id="templateSelect">
                     <option value="">Выберите шаблон</option>
                 </select>
+                
                 <select id="targetSelect">
                     <option value="">Выберите кому отправить</option>
-                    <option value="district">🏛️ Всему местному отделению</option>
-                    <option value="primary">📌 Всем первичкам</option>
+                    <option value="district">🏛️ Только местному отделению</option>
+                    <option value="primary">📌 Всем первичкам этого округа</option>
                 </select>
+                
                 <select id="districtSelect">
                     <option value="">Выберите местное отделение</option>
                 </select>
+                
+                <button class="mass-btn" onclick="sendToAllDistricts()">🌍 РАСПУШ ДЛЯ ВСЕХ ОКРУГОВ</button>
+                
                 <input type="text" id="taskLink" placeholder="Ссылка (опционально)">
                 <textarea id="taskComment" placeholder="Комментарий"></textarea>
                 <button onclick="createAssignment()">📤 Отправить задачу</button>
@@ -318,6 +351,7 @@
             let chiefs = [];
             
             if (targetType === 'district') {
+                // Только главный шеф местного отделения (без первички)
                 const { data } = await sb
                     .from('chiefs')
                     .select('id, district_id')
@@ -325,6 +359,7 @@
                     .is('primary_branch_id', null);
                 chiefs = data || [];
             } else if (targetType === 'primary') {
+                // Только первички этого округа
                 const { data } = await sb
                     .from('chiefs')
                     .select('id, district_id')
@@ -350,6 +385,47 @@
             }
             
             alert(`✅ Задача отправлена ${chiefs.length} шефам!`);
+            document.getElementById('taskLink').value = '';
+            document.getElementById('taskComment').value = '';
+            loadActiveTasks();
+        }
+
+        async function sendToAllDistricts() {
+            const templateId = document.getElementById('templateSelect').value;
+            const link = document.getElementById('taskLink').value;
+            const comment = document.getElementById('taskComment').value;
+            
+            if (!templateId) { alert('Выберите шаблон'); return; }
+            
+            // Получаем ВСЕХ шефов (и местные, и первички) из всех округов
+            const { data: allChiefs, error } = await sb
+                .from('chiefs')
+                .select('id, district_id');
+            
+            if (error) {
+                alert('Ошибка: ' + error.message);
+                return;
+            }
+            
+            if (!allChiefs?.length) {
+                alert('Нет шефов для отправки');
+                return;
+            }
+            
+            let successCount = 0;
+            for (const chief of allChiefs) {
+                const { error: insertError } = await sb.from('assignments').insert([{
+                    template_id: parseInt(templateId),
+                    chief_id: chief.id,
+                    district_id: chief.district_id,
+                    link: link,
+                    coordinator_comment: comment,
+                    status: 'pending'
+                }]);
+                if (!insertError) successCount++;
+            }
+            
+            alert(`🌍 РАСПУШ выполнен! Задача отправлена ${successCount} шефам во всех округах!`);
             document.getElementById('taskLink').value = '';
             document.getElementById('taskComment').value = '';
             loadActiveTasks();
