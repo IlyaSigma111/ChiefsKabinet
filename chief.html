@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Кабинет шеф-редактора</title>
     <style>
         * {
@@ -10,27 +10,22 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
             background: #0a0c10;
             color: #fff;
-            min-height: 100vh;
         }
-
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 16px;
         }
-
         .card {
-            background: rgba(30, 35, 45, 0.9);
+            background: #1a1e2a;
             border-radius: 24px;
             padding: 16px 20px;
             margin-bottom: 16px;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
@@ -38,19 +33,16 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-
         .logo h2 {
             font-size: 20px;
             font-weight: 600;
         }
-
         .district-badge {
             background: #2d3748;
             padding: 8px 16px;
             border-radius: 40px;
             font-size: 14px;
         }
-
         .reset-btn {
             background: rgba(239, 68, 68, 0.2);
             border: none;
@@ -60,33 +52,28 @@
             font-size: 14px;
             cursor: pointer;
         }
-
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin-bottom: 16px;
         }
-
         .stat-card {
-            background: rgba(0, 0, 0, 0.5);
+            background: #1a1e2a;
             padding: 16px 8px;
             border-radius: 20px;
             text-align: center;
         }
-
         .stat-number {
             font-size: 28px;
             font-weight: 700;
             color: #6c8cff;
         }
-
         .stat-label {
             font-size: 11px;
             opacity: 0.7;
             margin-top: 4px;
         }
-
         .menu-items {
             display: flex;
             gap: 8px;
@@ -94,7 +81,6 @@
             padding-bottom: 8px;
             margin-bottom: 16px;
         }
-
         .menu-btn {
             padding: 10px 20px;
             background: #2d3748;
@@ -106,53 +92,42 @@
             cursor: pointer;
             white-space: nowrap;
         }
-
         .menu-btn.active {
             background: #6c8cff;
-            color: #fff;
         }
-
         .content {
-            background: rgba(30, 35, 45, 0.7);
+            background: #1a1e2a;
             border-radius: 24px;
             padding: 20px;
             min-height: 400px;
         }
-
         .page {
             display: none;
         }
-
         .page.active {
             display: block;
         }
-
         .page h3 {
             font-size: 18px;
             margin-bottom: 16px;
-            font-weight: 600;
         }
-
         .task-item {
-            background: #1e232d;
+            background: #0f1117;
             padding: 16px;
             border-radius: 20px;
             margin-bottom: 12px;
             border: 1px solid #2d3748;
         }
-
         .task-title {
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 6px;
         }
-
         .task-desc {
             font-size: 12px;
             opacity: 0.7;
             margin-bottom: 8px;
         }
-
         .deadline {
             font-size: 11px;
             margin: 6px 0;
@@ -160,26 +135,20 @@
             border-radius: 20px;
             display: inline-block;
         }
-
         .deadline-normal {
             background: #f59e0b20;
             color: #f59e0b;
         }
-
         .deadline-urgent {
             background: #f8717120;
             color: #f87171;
         }
-
         .task-link {
             color: #6c8cff;
             text-decoration: none;
             font-size: 12px;
             word-break: break-all;
-            display: inline-block;
-            margin: 6px 0;
         }
-
         .task-status {
             display: inline-block;
             padding: 4px 12px;
@@ -187,17 +156,14 @@
             font-size: 11px;
             margin-top: 8px;
         }
-
         .status-pending {
             background: #f59e0b20;
             color: #f59e0b;
         }
-
         .status-completed {
             background: #10b98120;
             color: #10b981;
         }
-
         .btn-complete {
             background: #10b98120;
             border: none;
@@ -210,7 +176,6 @@
             margin-top: 12px;
             width: 100%;
         }
-
         .link-input {
             width: 100%;
             padding: 12px;
@@ -221,32 +186,25 @@
             font-size: 14px;
             margin-top: 12px;
         }
-
         .history-item {
-            background: #1e232d;
+            background: #0f1117;
             padding: 12px;
             border-radius: 16px;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             font-size: 12px;
-            flex-wrap: wrap;
-            gap: 8px;
         }
-
         .ranking-table {
             width: 100%;
             border-collapse: collapse;
         }
-
-        .ranking-table th,
-        .ranking-table td {
+        .ranking-table th, .ranking-table td {
             padding: 10px 6px;
             text-align: left;
             border-bottom: 1px solid #2d3748;
             font-size: 13px;
         }
-
         .toast {
             position: fixed;
             bottom: 20px;
@@ -258,35 +216,19 @@
             z-index: 1000;
             border-left: 4px solid #6c8cff;
             font-size: 13px;
-            max-width: 90%;
-            text-align: center;
         }
-
         .empty-state {
             text-align: center;
             padding: 40px;
             opacity: 0.6;
         }
-
-        @media (min-width: 768px) {
-            .container {
-                padding: 24px;
-                max-width: 1000px;
-            }
-            .stat-number {
-                font-size: 32px;
-            }
-        }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
         <div class="card">
             <div class="header">
-                <div class="logo">
-                    <h2>📰 Кабинет шеф-редактора</h2>
-                </div>
+                <div class="logo"><h2>📰 Кабинет шеф-редактора</h2></div>
                 <div style="display: flex; gap: 10px;">
                     <span class="district-badge" id="districtDisplay">Загрузка...</span>
                     <button class="reset-btn" onclick="resetAndExit()">Сменить</button>
@@ -295,80 +237,65 @@
         </div>
 
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number" id="totalTasks">0</div>
-                <div class="stat-label">Всего задач</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="completedTasks">0</div>
-                <div class="stat-label">Выполнено</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="totalScore">0</div>
-                <div class="stat-label">Мои баллы</div>
-            </div>
+            <div class="stat-card"><div class="stat-number" id="totalTasks">0</div><div class="stat-label">Всего задач</div></div>
+            <div class="stat-card"><div class="stat-number" id="completedTasks">0</div><div class="stat-label">Выполнено</div></div>
+            <div class="stat-card"><div class="stat-number" id="totalScore">0</div><div class="stat-label">Баллов</div></div>
         </div>
 
         <div class="menu-items">
             <button class="menu-btn active" data-page="tasks">Мои задачи</button>
-            <button class="menu-btn" data-page="rating">Рейтинг округов</button>
+            <button class="menu-btn" data-page="rating">Рейтинг</button>
             <button class="menu-btn" data-page="history">История</button>
             <button class="menu-btn" data-page="help">Справка</button>
         </div>
 
         <div class="content">
-            <div id="tasks" class="page active">
-                <h3>Мои задачи</h3>
-                <div id="tasksList"></div>
-            </div>
-
-            <div id="rating" class="page">
-                <h3>Рейтинг округов</h3>
-                <div style="overflow-x: auto;">
-                    <table class="ranking-table">
-                        <thead><tr><th>Округ</th><th>Всего баллов</th></tr></thead>
-                        <tbody id="ratingList"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="history" class="page">
-                <h3>История</h3>
-                <div id="historyList"></div>
-            </div>
-
-            <div id="help" class="page">
-                <h3>Справка</h3>
-                <p style="opacity: 0.7; line-height: 1.5;">
-                    • Выполняйте задачи и прикрепляйте ссылки (t.me или vk.com)<br>
-                    • 1 ссылка = 1 балл<br>
-                    • Баллы идут в копилку вашего округа
-                </p>
-            </div>
+            <div id="tasks" class="page active"><h3>Мои задачи</h3><div id="tasksList"></div></div>
+            <div id="rating" class="page"><h3>Рейтинг округов</h3><div style="overflow-x:auto;"><table class="ranking-table"><thead> <tr><th>Округ</th><th>Баллы</th></tr> </thead><tbody id="ratingList"></tbody></table></div></div>
+            <div id="history" class="page"><h3>История</h3><div id="historyList"></div></div>
+            <div id="help" class="page"><h3>Справка</h3><p style="opacity:0.7;">• Выполняйте задачи и прикрепляйте ссылки (t.me или vk.com)<br>• 1 ссылка = 1 балл</p></div>
         </div>
     </div>
 
     <script>
-        // Глобальная функция для вызова после загрузки
-        function initApp() {
-            // Supabase настройки
-            const SUPABASE_URL = 'https://csvynjkhhlexbnwpziup.supabase.co';
-            const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
+        // Ждём загрузки Supabase с повторными попытками
+        let supabaseClient = null;
+        let retryCount = 0;
+        
+        function waitForSupabase() {
+            return new Promise((resolve) => {
+                function check() {
+                    if (typeof supabase !== 'undefined') {
+                        resolve(supabase);
+                    } else if (retryCount < 20) {
+                        retryCount++;
+                        setTimeout(check, 200);
+                    } else {
+                        resolve(null);
+                    }
+                }
+                check();
+            });
+        }
+        
+        async function startApp() {
+            const sbLib = await waitForSupabase();
             
-            if (typeof supabase === 'undefined') {
-                document.getElementById('tasksList').innerHTML = '<div class="empty-state">Ошибка загрузки Supabase</div>';
+            if (!sbLib) {
+                document.getElementById('tasksList').innerHTML = '<div class="empty-state">⚠️ Ошибка загрузки. Проверьте интернет.</div>';
                 return;
             }
             
-            const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            const SUPABASE_URL = 'https://csvynjkhhlexbnwpziup.supabase.co';
+            const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
+            const sb = sbLib.createClient(SUPABASE_URL, SUPABASE_KEY);
             
-            // Получаем данные из localStorage
             let chiefId = localStorage.getItem('chiefId');
             let districtName = localStorage.getItem('chiefDistrictName');
             let branchType = localStorage.getItem('chiefBranchType');
             
             if (!chiefId) {
-                document.getElementById('tasksList').innerHTML = '<div class="empty-state">⚠️ Ошибка: не выбран округ. <a href="index.html" style="color:#6c8cff;">Вернуться на главную</a></div>';
+                document.getElementById('tasksList').innerHTML = '<div class="empty-state">⚠️ Не выбран округ. <a href="index.html" style="color:#6c8cff;">На главную</a></div>';
                 document.getElementById('districtDisplay').innerHTML = 'Ошибка';
                 return;
             }
@@ -388,7 +315,6 @@
                         .order('created_at', { ascending: false });
                     
                     if (error) throw error;
-                    
                     if (!data || data.length === 0) {
                         container.innerHTML = '<div class="empty-state">📭 Нет задач</div>';
                         return;
@@ -420,205 +346,102 @@
                     }
                     container.innerHTML = html;
                 } catch (err) {
-                    console.error(err);
                     container.innerHTML = '<div class="empty-state">⚠️ Ошибка: ' + err.message + '</div>';
                 }
             }
             
-            // Выполнение задачи
             window.completeTask = async function(taskId) {
                 const linkInput = document.getElementById('link_' + taskId);
                 const link = linkInput ? linkInput.value.trim() : '';
-                
-                if (!link) {
-                    alert('Вставьте ссылку');
-                    return;
-                }
-                if (!link.includes('t.me') && !link.includes('vk.com')) {
-                    alert('Ссылка должна быть на t.me или vk.com');
-                    return;
-                }
+                if (!link) { alert('Вставьте ссылку'); return; }
+                if (!link.includes('t.me') && !link.includes('vk.com')) { alert('Ссылка должна быть на t.me или vk.com'); return; }
                 
                 try {
-                    await sb.from('assignments').update({ 
-                        status: 'completed', 
-                        link: link, 
-                        completed_at: new Date() 
-                    }).eq('id', taskId);
+                    await sb.from('assignments').update({ status: 'completed', link: link, completed_at: new Date() }).eq('id', taskId);
+                    await sb.from('operations_history').insert([{ chief_id: chiefId, assignment_id: taskId, action: 'Выполнена задача +1 балл' }]);
                     
-                    await sb.from('operations_history').insert([{ 
-                        chief_id: chiefId, 
-                        assignment_id: taskId, 
-                        action: 'Выполнена задача +1 балл' 
-                    }]);
+                    const { data: current } = await sb.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
+                    const newScore = (current?.total_score || 0) + 1;
+                    await sb.from('chief_scores').upsert({ chief_id: chiefId, total_score: newScore, updated_at: new Date() });
                     
-                    const { data: currentScore } = await sb
-                        .from('chief_scores')
-                        .select('total_score')
-                        .eq('chief_id', chiefId)
-                        .single();
-                    
-                    const newScore = (currentScore?.total_score || 0) + 1;
-                    await sb.from('chief_scores').upsert({ 
-                        chief_id: chiefId, 
-                        total_score: newScore, 
-                        updated_at: new Date() 
-                    });
-                    
-                    loadTasks();
-                    loadStats();
-                    loadHistory();
-                    loadRating();
+                    loadTasks(); loadStats(); loadHistory(); loadRating();
                     showToast('✅ +1 балл');
                 } catch (err) {
                     alert('Ошибка: ' + err.message);
                 }
             };
             
-            // Статистика
             async function loadStats() {
                 try {
-                    const { data: tasks } = await sb
-                        .from('assignments')
-                        .select('status')
-                        .eq('chief_id', chiefId);
-                    
-                    const { data: score } = await sb
-                        .from('chief_scores')
-                        .select('total_score')
-                        .eq('chief_id', chiefId)
-                        .single();
-                    
+                    const { data: tasks } = await sb.from('assignments').select('status').eq('chief_id', chiefId);
+                    const { data: score } = await sb.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
                     document.getElementById('totalTasks').innerText = tasks?.length || 0;
                     document.getElementById('completedTasks').innerText = tasks ? tasks.filter(t => t.status === 'completed').length : 0;
                     document.getElementById('totalScore').innerText = score?.total_score || 0;
-                } catch (err) {
-                    console.error(err);
-                }
+                } catch (err) {}
             }
             
-            // История
             async function loadHistory() {
                 const container = document.getElementById('historyList');
                 container.innerHTML = '<div class="empty-state">⏳ Загрузка...</div>';
-                
                 try {
-                    const { data } = await sb
-                        .from('operations_history')
-                        .select('*')
-                        .eq('chief_id', chiefId)
-                        .order('created_at', { ascending: false })
-                        .limit(30);
-                    
-                    if (!data || data.length === 0) {
-                        container.innerHTML = '<div class="empty-state">📭 История пуста</div>';
-                        return;
-                    }
-                    
+                    const { data } = await sb.from('operations_history').select('*').eq('chief_id', chiefId).order('created_at', { ascending: false }).limit(30);
+                    if (!data || data.length === 0) { container.innerHTML = '<div class="empty-state">📭 История пуста</div>'; return; }
                     let html = '';
                     for (let i = 0; i < data.length; i++) {
-                        html += '<div class="history-item">' +
-                                    '<span>' + data[i].action + '</span>' +
-                                    '<span style="opacity:0.5;">' + new Date(data[i].created_at).toLocaleString() + '</span>' +
-                                '</div>';
+                        html += '<div class="history-item"><span>' + data[i].action + '</span><span style="opacity:0.5;">' + new Date(data[i].created_at).toLocaleString() + '</span></div>';
                     }
                     container.innerHTML = html;
-                } catch (err) {
-                    container.innerHTML = '<div class="empty-state">⚠️ Ошибка</div>';
-                }
+                } catch (err) { container.innerHTML = '<div class="empty-state">⚠️ Ошибка</div>'; }
             }
             
-            // Рейтинг
             async function loadRating() {
                 const container = document.getElementById('ratingList');
-                container.innerHTML = '<tr><td colspan="2" class="empty-state">⏳ Загрузка...</td></tr>';
-                
+                container.innerHTML = '发展<td colspan="2" class="empty-state">⏳ Загрузка...<\/td><\/tr>';
                 try {
-                    const { data: chiefs } = await sb
-                        .from('chiefs')
-                        .select('id, district_id, districts(name)');
-                    
-                    const { data: scores } = await sb
-                        .from('chief_scores')
-                        .select('*');
-                    
+                    const { data: chiefs } = await sb.from('chiefs').select('id, district_id, districts(name)');
+                    const { data: scores } = await sb.from('chief_scores').select('*');
                     const scoreMap = {};
-                    if (scores) {
-                        for (let i = 0; i < scores.length; i++) {
-                            scoreMap[scores[i].chief_id] = scores[i].total_score || 0;
-                        }
-                    }
-                    
-                    const districtScores = {};
-                    if (chiefs) {
-                        for (let i = 0; i < chiefs.length; i++) {
-                            const chief = chiefs[i];
-                            const name = chief.districts?.name || 'Неизвестно';
-                            districtScores[name] = (districtScores[name] || 0) + (scoreMap[chief.id] || 0);
-                        }
-                    }
-                    
-                    const sorted = Object.entries(districtScores).sort((a, b) => b[1] - a[1]);
-                    
-                    if (sorted.length === 0) {
-                        container.innerHTML = '<tr><td colspan="2" class="empty-state">Нет данных</td></tr>';
-                        return;
-                    }
-                    
+                    if (scores) for (let s of scores) scoreMap[s.chief_id] = s.total_score || 0;
+                    const districts = {};
+                    if (chiefs) for (let c of chiefs) { const name = c.districts?.name || 'Неизвестно'; districts[name] = (districts[name] || 0) + (scoreMap[c.id] || 0); }
+                    const sorted = Object.entries(districts).sort((a,b) => b[1] - a[1]);
+                    if (sorted.length === 0) { container.innerHTML = '发展<td colspan="2" class="empty-state">Нет данных<\/td><\/tr>'; return; }
                     let html = '';
-                    for (let i = 0; i < sorted.length; i++) {
-                        html += '<tr><td style="font-weight:500;">' + sorted[i][0] + '</td><td style="color:#6c8cff;">' + sorted[i][1] + ' баллов</td></tr>';
-                    }
+                    for (let i = 0; i < sorted.length; i++) { html += '发展<td style="font-weight:500;">' + sorted[i][0] + '<\/td><td style="color:#6c8cff;">' + sorted[i][1] + ' баллов<\/td><\/tr>'; }
                     container.innerHTML = html;
-                } catch (err) {
-                    container.innerHTML = '<tr><td colspan="2" class="empty-state">⚠️ Ошибка</td></tr>';
-                }
+                } catch (err) { container.innerHTML = '发展<td colspan="2" class="empty-state">⚠️ Ошибка<\/td><\/tr>'; }
             }
             
             function showToast(msg) {
-                const toast = document.createElement('div');
-                toast.className = 'toast';
-                toast.innerText = msg;
+                const toast = document.createElement('div'); toast.className = 'toast'; toast.innerText = msg;
                 document.body.appendChild(toast);
                 setTimeout(() => toast.remove(), 2500);
             }
             
-            window.resetAndExit = function() {
-                localStorage.clear();
-                window.location.href = 'index.html';
-            };
+            window.resetAndExit = function() { localStorage.clear(); window.location.href = 'index.html'; };
             
-            // Меню
             const btns = document.querySelectorAll('.menu-btn');
             for (let i = 0; i < btns.length; i++) {
                 btns[i].onclick = function() {
                     for (let j = 0; j < btns.length; j++) btns[j].classList.remove('active');
                     this.classList.add('active');
-                    for (let j = 0; j < document.querySelectorAll('.page').length; j++) {
-                        document.querySelectorAll('.page')[j].classList.remove('active');
-                    }
+                    for (let j = 0; j < document.querySelectorAll('.page').length; j++) document.querySelectorAll('.page')[j].classList.remove('active');
                     document.getElementById(this.dataset.page).classList.add('active');
                     if (this.dataset.page === 'rating') loadRating();
                     if (this.dataset.page === 'history') loadHistory();
                 };
             }
             
-            // Запуск загрузки
             loadStats();
             loadTasks();
             loadHistory();
             loadRating();
-            
-            // Автообновление
             setInterval(loadTasks, 30000);
         }
         
-        // Запускаем после полной загрузки DOM
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initApp);
-        } else {
-            initApp();
-        }
+        // Запускаем
+        startApp();
     </script>
 </body>
 </html>
