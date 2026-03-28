@@ -139,28 +139,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 28px;
-        }
-
-        .stat-card {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            border-radius: 24px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 36px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff, #b0c4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -178,7 +156,7 @@
             opacity: 0.7;
         }
 
-        .delete-btn, .add-points-btn, .remove-points-btn {
+        .delete-btn, .delete-all-btn, .add-points-btn, .remove-points-btn {
             padding: 6px 14px;
             border: none;
             border-radius: 20px;
@@ -196,6 +174,15 @@
 
         .delete-btn:hover {
             background: rgba(239, 68, 68, 0.4);
+        }
+
+        .delete-all-btn {
+            background: rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+
+        .delete-all-btn:hover {
+            background: rgba(239, 68, 68, 0.5);
         }
 
         .add-points-btn {
@@ -440,21 +427,57 @@
                     '<td>' + (task.districts?.name || '-') + '</td>' +
                     '<td>' + (task.link ? '<a href="' + task.link + '" target="_blank" style="color:#6c8cff;">Ссылка</a>' : '-') + '</td>' +
                     '<td><span class="status-badge status-' + (task.status || 'pending') + '">' + (task.status === 'pending' ? 'Ожидает' : 'Выполнено') + '</span></td>' +
-                    '<td><button class="delete-btn" onclick="deleteTask(' + task.id + ')">Удалить</button></td>' +
+                    '<td>' +
+                        '<button class="delete-btn" onclick="deleteTask(' + task.id + ')">Удалить</button>' +
+                        '<button class="delete-all-btn" onclick="deleteAllTasksByTemplate(' + task.template_id + ', \'' + (task.task_templates?.title || '').replace(/'/g, "\\'") + '\')">Удалить у всех</button>' +
+                    '</td>' +
                 '</tr>';
             }
             tbody.innerHTML = html;
         }
 
+        // Удалить одну задачу (у одного шефа)
         window.deleteTask = async function(taskId) {
-            if (!confirm('Удалить задачу? Это действие нельзя отменить.')) return;
+            if (!confirm('Удалить эту задачу у этого шефа? Это действие нельзя отменить.')) return;
             
             await supabaseClient.from('assignments').delete().eq('id', taskId);
             await supabaseClient.from('operations_history').delete().eq('assignment_id', taskId);
             loadAllTasks();
             loadAllChiefs();
             loadRating();
-            showToast('Задача удалена');
+            showToast('Задача удалена у одного шефа');
+        };
+
+        // Удалить ВСЕ задачи с этим шаблоном у ВСЕХ шефов
+        window.deleteAllTasksByTemplate = async function(templateId, templateTitle) {
+            if (!confirm('Удалить ВСЕ задачи "' + templateTitle + '" у ВСЕХ шефов? Это действие нельзя отменить.')) return;
+            
+            // Получаем все ID задач с этим шаблоном
+            const { data: tasksToDelete } = await supabaseClient
+                .from('assignments')
+                .select('id')
+                .eq('template_id', templateId);
+            
+            if (tasksToDelete && tasksToDelete.length > 0) {
+                // Удаляем все эти задачи
+                await supabaseClient
+                    .from('assignments')
+                    .delete()
+                    .eq('template_id', templateId);
+                
+                // Удаляем историю
+                for (let i = 0; i < tasksToDelete.length; i++) {
+                    await supabaseClient
+                        .from('operations_history')
+                        .delete()
+                        .eq('assignment_id', tasksToDelete[i].id);
+                }
+            }
+            
+            loadAllTasks();
+            loadAllChiefs();
+            loadRating();
+            showToast('Все задачи "' + templateTitle + '" удалены у всех шефов');
         };
 
         async function loadAllChiefs() {
@@ -582,7 +605,7 @@
             
             const tbody = document.getElementById('ratingTable');
             if (!sorted || sorted.length === 0) {
-                tbody.innerHTML = '<table><td colspan="4" style="text-align:center; padding:40px;">Нет данных</td> </tr>';
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:40px;">Нет данных</td></tr>';
                 return;
             }
             
@@ -605,7 +628,7 @@
             
             const tbody = document.getElementById('templatesTable');
             if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:40px;">Нет шаблонов</td> </tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:40px;">Нет шаблонов</td></tr>';
                 return;
             }
             
