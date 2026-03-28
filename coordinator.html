@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Медиакоординатор | Редакционная платформа</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Медиакоординатор</title>
     <style>
         * {
             margin: 0;
@@ -12,11 +12,10 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
             background: #0a0c10;
             color: rgba(255, 255, 255, 0.95);
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
         .dark-glow {
@@ -36,211 +35,124 @@
             opacity: 0.4;
         }
 
-        .sphere-1 {
-            width: 600px;
-            height: 600px;
-            top: -200px;
-            right: -200px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
+        .sphere-1 { width: 600px; height: 600px; top: -200px; right: -200px; background: linear-gradient(135deg, #667eea, #764ba2); }
+        .sphere-2 { width: 500px; height: 500px; bottom: -200px; left: -100px; background: linear-gradient(135deg, #ff6b6b, #ff8e53); }
+        .sphere-3 { width: 400px; height: 400px; top: 50%; left: 30%; background: linear-gradient(135deg, #4facfe, #00f2fe); }
 
-        .sphere-2 {
-            width: 500px;
-            height: 500px;
-            bottom: -200px;
-            left: -100px;
-            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-        }
-
-        .sphere-3 {
-            width: 400px;
-            height: 400px;
-            top: 50%;
-            left: 30%;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-        }
-
-        .ultra-glass {
-            background: rgba(20, 25, 35, 0.25);
-            backdrop-filter: blur(20px) saturate(180%);
+        .glass-card {
+            background: rgba(20, 25, 35, 0.3);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 32px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+            border-radius: 28px;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            z-index: 1;
+            padding: 16px;
         }
 
-        header.ultra-glass {
-            padding: 20px 30px;
-            margin-bottom: 25px;
-        }
-
-        .header-content {
+        .header {
+            padding: 16px 20px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 12px;
         }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+        .header h1 {
+            font-size: 20px;
         }
 
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            background: linear-gradient(to right, #fff, #b0c4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .dashboard-grid {
+        .grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
         }
 
         .panel {
-            padding: 28px;
+            padding: 20px;
         }
 
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
+        .panel h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .panel-header h2 {
-            font-size: 20px;
-            font-weight: 500;
-        }
-
-        .glass-input {
+        select, input, textarea {
             width: 100%;
-            padding: 14px 18px;
+            padding: 14px 16px;
             background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 20px;
             color: white;
-            font-size: 15px;
-            margin-bottom: 15px;
+            font-size: 14px;
+            margin-bottom: 12px;
             font-family: inherit;
         }
 
-        .glass-textarea {
-            width: 100%;
-            padding: 14px 18px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            color: white;
-            font-size: 15px;
-            min-height: 100px;
-            margin-bottom: 15px;
-            font-family: inherit;
+        textarea {
+            min-height: 80px;
             resize: vertical;
         }
 
-        .glass-input:focus,
-        .glass-textarea:focus {
-            outline: none;
-            border-color: rgba(108, 140, 255, 0.3);
-        }
-
-        .glass-button {
+        button {
+            width: 100%;
+            padding: 14px;
             background: rgba(108, 140, 255, 0.2);
             border: 1px solid rgba(108, 140, 255, 0.3);
             border-radius: 30px;
-            padding: 12px 28px;
             color: white;
-            font-size: 15px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .glass-button:hover {
-            background: rgba(108, 140, 255, 0.3);
-            transform: translateY(-2px);
+        button:active {
+            transform: scale(0.98);
         }
 
-        .template-card {
+        .template-item {
             background: rgba(0, 0, 0, 0.3);
+            padding: 14px;
             border-radius: 20px;
-            padding: 16px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             cursor: pointer;
             transition: all 0.2s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .template-card:hover {
+        .template-item:hover {
             background: rgba(108, 140, 255, 0.1);
             transform: translateX(5px);
         }
 
-        .task-list {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
         .task-item {
             background: rgba(0, 0, 0, 0.3);
-            padding: 16px;
+            padding: 14px;
             border-radius: 20px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .task-status {
+            display: inline-block;
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 12px;
-            display: inline-block;
+            font-size: 11px;
         }
 
-        .status-pending {
-            background: rgba(245, 158, 11, 0.2);
-            color: #f59e0b;
-        }
+        .status-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .status-completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
 
-        .status-in_progress {
-            background: rgba(59, 130, 246, 0.2);
-            color: #3b82f6;
-        }
-
-        .status-completed {
-            background: rgba(16, 185, 129, 0.2);
-            color: #10b981;
-        }
-
-        @media (max-width: 1000px) {
-            .dashboard-grid {
+        @media (max-width: 768px) {
+            .grid {
                 grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 12px;
             }
         }
     </style>
@@ -253,230 +165,160 @@
     </div>
 
     <div class="container">
-        <header class="ultra-glass">
-            <div class="header-content">
-                <div class="logo-area">
-                    <div class="logo-icon">🎛️</div>
-                    <div class="logo-text">Медиакоординатор</div>
-                </div>
-                <div style="font-size: 13px; opacity: 0.6;">Управление задачами</div>
-            </div>
-        </header>
+        <div class="header glass-card">
+            <h1>🎛️ Медиакоординатор</h1>
+            <div style="font-size: 13px; opacity: 0.6;">Управление задачами</div>
+        </div>
 
-        <div class="dashboard-grid">
-            <!-- Левая панель: шаблоны -->
-            <div class="panel ultra-glass">
-                <div class="panel-header">
-                    <h2>📋 Шаблоны задач</h2>
-                </div>
-                <div id="templatesList" class="task-list"></div>
-                
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05);">
-                    <input type="text" id="newTemplateTitle" class="glass-input" placeholder="Название шаблона">
-                    <textarea id="newTemplateDesc" class="glass-textarea" placeholder="Описание шаблона"></textarea>
-                    <button class="glass-button" onclick="createTemplate()">+ Создать шаблон</button>
-                </div>
+        <div class="grid">
+            <div class="panel glass-card">
+                <h2>📋 Шаблоны задач</h2>
+                <div id="templatesList"></div>
+                <input type="text" id="newTemplateTitle" placeholder="Название шаблона">
+                <textarea id="newTemplateDesc" placeholder="Описание шаблона"></textarea>
+                <button onclick="createTemplate()">+ Создать шаблон</button>
             </div>
 
-            <!-- Правая панель: создание задачи -->
-            <div class="panel ultra-glass">
-                <div class="panel-header">
-                    <h2>✏️ Создать задачу</h2>
-                </div>
-                
-                <select id="templateSelect" class="glass-input">
+            <div class="panel glass-card">
+                <h2>✏️ Создать задачу</h2>
+                <select id="templateSelect">
                     <option value="">Выберите шаблон</option>
                 </select>
-                
-                <select id="chiefSelect" class="glass-input">
-                    <option value="">Выберите шефа</option>
+                <select id="districtSelect">
+                    <option value="">Выберите округ (всем шефам)</option>
                 </select>
-                
-                <select id="districtSelect" class="glass-input">
-                    <option value="">Или выберите округ (всем шефам округа)</option>
+                <select id="branchSelect">
+                    <option value="">Или конкретную первичку</option>
                 </select>
-                
-                <input type="text" id="taskLink" class="glass-input" placeholder="Ссылка на материал">
-                <textarea id="taskComment" class="glass-textarea" placeholder="Комментарий для шефа (опционально)"></textarea>
-                
-                <button class="glass-button" onclick="createAssignment()">📤 Отправить задачу</button>
-                
-                <div class="panel-header" style="margin-top: 30px;">
-                    <h2>📊 Активные задачи</h2>
-                </div>
-                <div id="activeTasksList" class="task-list"></div>
+                <input type="text" id="taskLink" placeholder="Ссылка (опционально)">
+                <textarea id="taskComment" placeholder="Комментарий"></textarea>
+                <button onclick="createAssignment()">📤 Отправить задачу</button>
+            </div>
+
+            <div class="panel glass-card">
+                <h2>📊 Активные задачи</h2>
+                <div id="activeTasksList" style="max-height: 500px; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SUPABASE_URL = 'https://csvynjkhhlexbnwpziup.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
-        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        const districts = [
-            'Ишимский округ', 'Тобольск', 'Ярковский округ', 'Казанский округ',
-            'Сладковский округ', 'Тюменский округ', 'Бердюжский округ', 'Тобольский округ',
-            'Вагайский округ', 'Юргинский округ', 'Ялуторовский округ', 'Викуловский округ',
-            'Абатский округ', 'Заводоуковский округ', 'Сорокинский округ', 'Ишим',
-            'Упоровский округ', 'Нижнетавдинский округ', 'Уватский округ', 'Исетский округ',
-            'Омутинский округ', 'Армизонский округ', 'Армашевский округ', 'Тюмень',
-            'Голышмановский округ', 'Ялуторовск'
-        ];
-
-        let coordinatorId = 'coordinator_' + Date.now();
+        const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
+        
+        const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function loadTemplates() {
-            const { data: templates } = await supabase
-                .from('task_templates')
-                .select('*')
-                .eq('is_active', true)
-                .order('created_at', { ascending: false });
-            
+            const { data } = await sbClient.from('task_templates').select('*').eq('is_active', true);
             const container = document.getElementById('templatesList');
             const select = document.getElementById('templateSelect');
             
-            if (templates?.length) {
-                container.innerHTML = templates.map(t => `
-                    <div class="template-card" onclick="selectTemplate(${t.id})">
-                        <div>
-                            <strong>${t.title}</strong>
-                            <div style="font-size: 12px; opacity: 0.6;">${t.description || ''}</div>
-                        </div>
-                        <div>→</div>
+            if (data?.length) {
+                container.innerHTML = data.map(t => `
+                    <div class="template-item" onclick="selectTemplate(${t.id})">
+                        <strong>${t.title}</strong>
+                        <div style="font-size: 12px; opacity: 0.6;">${t.description || ''}</div>
                     </div>
                 `).join('');
-                
                 select.innerHTML = '<option value="">Выберите шаблон</option>' + 
-                    templates.map(t => `<option value="${t.id}">${t.title}</option>`).join('');
-            } else {
-                container.innerHTML = '<p style="opacity: 0.5; text-align: center;">Нет шаблонов</p>';
+                    data.map(t => `<option value="${t.id}">${t.title}</option>`).join('');
             }
         }
 
-        async function loadChiefs() {
-            const { data: chiefs } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('role', 'chief');
-            
-            const select = document.getElementById('chiefSelect');
-            select.innerHTML = '<option value="">Выберите шефа</option>' + 
-                (chiefs || []).map(c => `<option value="${c.id}" data-district="${c.district || ''}">${c.full_name || c.email?.split('@')[0] || 'Шеф'} — ${c.district || 'округ не выбран'}</option>`).join('');
-        }
-
         async function loadDistricts() {
+            const { data } = await sbClient.from('districts').select('*').order('name');
             const select = document.getElementById('districtSelect');
             select.innerHTML = '<option value="">Выберите округ (всем шефам)</option>' + 
-                districts.map(d => `<option value="${d}">${d}</option>`).join('');
+                (data || []).map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+        }
+
+        async function loadBranches() {
+            const { data } = await sbClient.from('primary_branches').select('*, districts(name)');
+            const select = document.getElementById('branchSelect');
+            select.innerHTML = '<option value="">Выберите первичку</option>' + 
+                (data || []).map(b => `<option value="${b.id}">${b.districts?.name} — ${b.name}</option>`).join('');
         }
 
         async function loadActiveTasks() {
-            const { data: tasks } = await supabase
+            const { data } = await sbClient
                 .from('assignments')
-                .select('*, profiles(full_name, email), task_templates(*)')
+                .select('*, task_templates(*), chiefs(name)')
                 .neq('status', 'completed')
                 .order('created_at', { ascending: false });
             
             const container = document.getElementById('activeTasksList');
-            if (!tasks?.length) {
+            if (!data?.length) {
                 container.innerHTML = '<p style="opacity: 0.5; text-align: center; padding: 40px;">✅ Нет активных задач</p>';
                 return;
             }
             
-            container.innerHTML = tasks.map(task => `
+            container.innerHTML = data.map(task => `
                 <div class="task-item">
-                    <div style="margin-bottom: 8px;">
-                        <strong>${task.task_templates?.title || 'Задача'}</strong>
-                        <span class="task-status status-${task.status}" style="margin-left: 10px;">${task.status === 'pending' ? '⏳ Ожидает' : '🔄 В работе'}</span>
-                    </div>
-                    <div style="font-size: 13px; opacity: 0.7;">Шеф: ${task.profiles?.full_name || task.profiles?.email?.split('@')[0] || 'Шеф'} | Округ: ${task.district || '-'}</div>
-                    ${task.link ? `<a href="${task.link}" target="_blank" style="color: #6c8cff; font-size: 13px;">🔗 Ссылка</a>` : ''}
-                    ${task.coordinator_comment ? `<div style="font-size: 12px; margin-top: 8px; color: #6c8cff;">💬 ${task.coordinator_comment}</div>` : ''}
+                    <strong>${task.task_templates?.title || 'Задача'}</strong>
+                    <span class="task-status status-${task.status}">${task.status === 'pending' ? '⏳ Ожидает' : '🔄 В работе'}</span>
+                    <div style="font-size: 12px; opacity: 0.7; margin-top: 6px;">Шеф: ${task.chiefs?.name || 'Шеф'}</div>
+                    ${task.link ? `<a href="${task.link}" target="_blank" style="color: #6c8cff; font-size: 12px;">🔗 Ссылка</a>` : ''}
                 </div>
             `).join('');
         }
 
         async function createTemplate() {
             const title = document.getElementById('newTemplateTitle').value;
-            const description = document.getElementById('newTemplateDesc').value;
+            const desc = document.getElementById('newTemplateDesc').value;
+            if (!title) { alert('Введите название'); return; }
             
-            if (!title) {
-                alert('Введите название шаблона');
-                return;
-            }
-            
-            const { error } = await supabase
-                .from('task_templates')
-                .insert([{
-                    title: title,
-                    description: description,
-                    is_active: true
-                }]);
-            
-            if (error) {
-                alert('Ошибка: ' + error.message);
-            } else {
-                document.getElementById('newTemplateTitle').value = '';
-                document.getElementById('newTemplateDesc').value = '';
-                loadTemplates();
-                alert('Шаблон создан!');
-            }
+            await sbClient.from('task_templates').insert([{ title, description: desc }]);
+            document.getElementById('newTemplateTitle').value = '';
+            document.getElementById('newTemplateDesc').value = '';
+            loadTemplates();
+            alert('Шаблон создан');
         }
 
         async function createAssignment() {
             const templateId = document.getElementById('templateSelect').value;
-            const chiefId = document.getElementById('chiefSelect').value;
-            const district = document.getElementById('districtSelect').value;
+            const districtId = document.getElementById('districtSelect').value;
+            const branchId = document.getElementById('branchSelect').value;
             const link = document.getElementById('taskLink').value;
             const comment = document.getElementById('taskComment').value;
             
-            if (!templateId) {
-                alert('Выберите шаблон задачи');
-                return;
-            }
+            if (!templateId) { alert('Выберите шаблон'); return; }
             
-            let chiefsToAssign = [];
+            let chiefs = [];
             
-            if (chiefId) {
-                // Отправляем конкретному шефу
-                chiefsToAssign = [{ id: chiefId, district: null }];
-            } else if (district) {
-                // Отправляем всем шефам округа
-                const { data: chiefs } = await supabase
-                    .from('profiles')
-                    .select('id, district')
-                    .eq('role', 'chief')
-                    .eq('district', district);
-                chiefsToAssign = chiefs || [];
+            if (branchId) {
+                const { data } = await sbClient
+                    .from('chiefs')
+                    .select('id, district_id')
+                    .eq('primary_branch_id', parseInt(branchId));
+                chiefs = data || [];
+            } else if (districtId) {
+                const { data } = await sbClient
+                    .from('chiefs')
+                    .select('id, district_id')
+                    .eq('district_id', parseInt(districtId));
+                chiefs = data || [];
             } else {
-                alert('Выберите шефа или округ');
+                alert('Выберите округ или первичку');
                 return;
             }
             
-            if (chiefsToAssign.length === 0) {
+            if (chiefs.length === 0) {
                 alert('Нет шефов для назначения');
                 return;
             }
             
-            let successCount = 0;
-            for (const chief of chiefsToAssign) {
-                const { error } = await supabase
-                    .from('assignments')
-                    .insert([{
-                        template_id: parseInt(templateId),
-                        chief_id: chief.id,
-                        district: chief.district || district,
-                        link: link,
-                        coordinator_comment: comment,
-                        status: 'pending'
-                    }]);
-                
-                if (!error) successCount++;
+            for (const chief of chiefs) {
+                await sbClient.from('assignments').insert([{
+                    template_id: parseInt(templateId),
+                    chief_id: chief.id,
+                    district_id: chief.district_id,
+                    link: link,
+                    coordinator_comment: comment,
+                    status: 'pending'
+                }]);
             }
             
-            alert(`Задача отправлена ${successCount} шефам!`);
+            alert(`Задача отправлена ${chiefs.length} шефам!`);
             document.getElementById('taskLink').value = '';
             document.getElementById('taskComment').value = '';
             loadActiveTasks();
@@ -487,9 +329,10 @@
         }
 
         loadTemplates();
-        loadChiefs();
         loadDistricts();
+        loadBranches();
         loadActiveTasks();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
