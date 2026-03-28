@@ -164,6 +164,10 @@
             background: #10b98120;
             color: #10b981;
         }
+        .status-expired {
+            background: #f8717120;
+            color: #f87171;
+        }
         .btn-complete {
             background: #10b98120;
             border: none;
@@ -175,6 +179,12 @@
             cursor: pointer;
             margin-top: 12px;
             width: 100%;
+        }
+        .btn-disabled {
+            background: #4a4a4a20;
+            color: #888;
+            cursor: not-allowed;
+            opacity: 0.5;
         }
         .link-input {
             width: 100%;
@@ -222,6 +232,14 @@
             padding: 40px;
             opacity: 0.6;
         }
+        .expired-warning {
+            background: #f8717120;
+            padding: 8px 12px;
+            border-radius: 12px;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #f87171;
+        }
     </style>
 </head>
 <body>
@@ -253,13 +271,12 @@
             <div id="tasks" class="page active"><h3>Мои задачи</h3><div id="tasksList"></div></div>
             <div id="rating" class="page"><h3>Рейтинг округов</h3><div style="overflow-x:auto;"><table class="ranking-table"><thead> <tr><th>Округ</th><th>Баллы</th></tr> </thead><tbody id="ratingList"></tbody></table></div></div>
             <div id="history" class="page"><h3>История</h3><div id="historyList"></div></div>
-            <div id="help" class="page"><h3>Справка</h3><p style="opacity:0.7;">• Выполняйте задачи и прикрепляйте ссылки (t.me или vk.com)<br>• 1 ссылка = 1 балл</p></div>
+            <div id="help" class="page"><h3>Справка</h3><p style="opacity:0.7;">• Выполняйте задачи и прикрепляйте ссылки (t.me или vk.com)<br>• 1 ссылка = 1 балл<br>• Просроченные задачи нельзя выполнить</p></div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Прямая инициализация без ожидания
         const SUPABASE_URL = 'https://csvynjkhhlexbnwpziup.supabase.co';
         const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -268,6 +285,14 @@
         let districtName = localStorage.getItem('chiefDistrictName');
         let branchType = localStorage.getItem('chiefBranchType');
         
+        // Проверка просрочки
+        function isTaskExpired(deadline) {
+            if (!deadline) return false;
+            const deadlineDate = new Date(deadline);
+            const now = new Date();
+            return deadlineDate < now;
+        }
+        
         if (!chiefId) {
             document.getElementById('tasksList').innerHTML = '<div class="empty-state">⚠️ Не выбран округ. <a href="index.html" style="color:#6c8cff;">На главную</a></div>';
             document.getElementById('districtDisplay').innerHTML = 'Ошибка';
@@ -275,7 +300,6 @@
             document.getElementById('districtDisplay').innerHTML = '📍 ' + (districtName || 'Неизвестно') + (branchType === 'primary' ? ' • Первичка' : '');
         }
         
-        // Загрузка задач
         async function loadTasks() {
             if (!chiefId) return;
             const container = document.getElementById('tasksList');
@@ -297,11 +321,17 @@
                 let html = '';
                 for (let i = 0; i < data.length; i++) {
                     const task = data[i];
+                    const expired = isTaskExpired(task.deadline);
                     let deadlineHtml = '';
+                    let expiredWarning = '';
+                    
                     if (task.deadline) {
                         const deadlineDate = new Date(task.deadline);
-                        const isExpired = deadlineDate < new Date();
+                        const isExpired = expired;
                         deadlineHtml = '<div class="deadline ' + (isExpired ? 'deadline-urgent' : 'deadline-normal') + '">⏰ Срок: ' + deadlineDate.toLocaleString() + (isExpired ? ' (просрочено!)' : '') + '</div>';
+                        if (isExpired && task.status === 'pending') {
+                            expiredWarning = '<div class="expired-warning">⚠️ Срок выполнения истёк! Задача просрочена.</div>';
+                        }
                     }
                     
                     html += '<div class="task-item">' +
@@ -310,11 +340,16 @@
                         deadlineHtml +
                         (task.link ? '<a href="' + task.link + '" target="_blank" class="task-link">🔗 Ссылка</a>' : '') +
                         (task.coordinator_comment ? '<div style="font-size:12px; margin-top:8px; color:#6c8cff;">💬 ' + task.coordinator_comment + '</div>' : '') +
-                        '<div><span class="task-status status-' + task.status + '">' + (task.status === 'pending' ? '⏳ Ожидает' : '✅ Выполнено') + '</span></div>';
+                        '<div><span class="task-status ' + (expired && task.status === 'pending' ? 'status-expired' : (task.status === 'pending' ? 'status-pending' : 'status-completed')) + '">' + 
+                            (task.status === 'pending' ? (expired ? '⏰ Просрочено' : '⏳ Ожидает') : '✅ Выполнено') + 
+                        '</span></div>' +
+                        expiredWarning;
                     
-                    if (task.status === 'pending') {
+                    if (task.status === 'pending' && !expired) {
                         html += '<input type="text" id="link_' + task.id + '" class="link-input" placeholder="Вставьте ссылку (t.me или vk.com)">' +
                                 '<button class="btn-complete" onclick="completeTask(' + task.id + ')">✅ Выполнить +1 балл</button>';
+                    } else if (task.status === 'pending' && expired) {
+                        html += '<button class="btn-complete btn-disabled" disabled style="opacity:0.5; cursor:not-allowed;">❌ Просрочено, выполнить нельзя</button>';
                     }
                     html += '</div>';
                 }
@@ -326,6 +361,25 @@
         }
         
         window.completeTask = async function(taskId) {
+            // Получаем задачу, чтобы проверить дедлайн
+            const { data: task, error: fetchError } = await supabaseClient
+                .from('assignments')
+                .select('deadline')
+                .eq('id', taskId)
+                .single();
+            
+            if (fetchError) {
+                alert('Ошибка проверки задачи');
+                return;
+            }
+            
+            // Проверяем просрочку
+            if (isTaskExpired(task.deadline)) {
+                alert('❌ Срок выполнения задачи истёк! Выполнить невозможно.');
+                loadTasks(); // Обновляем список
+                return;
+            }
+            
             const linkInput = document.getElementById('link_' + taskId);
             const link = linkInput ? linkInput.value.trim() : '';
             if (!link) { alert('Вставьте ссылку'); return; }
@@ -340,7 +394,7 @@
                 await supabaseClient.from('chief_scores').upsert({ chief_id: chiefId, total_score: newScore, updated_at: new Date() });
                 
                 loadTasks(); loadStats(); loadHistory(); loadRating();
-                showToast('✅ +1 балл');
+                showToast('✅ Задача выполнена! +1 балл');
             } catch (err) {
                 alert('Ошибка: ' + err.message);
             }
@@ -375,7 +429,7 @@
         async function loadRating() {
             if (!chiefId) return;
             const container = document.getElementById('ratingList');
-            container.innerHTML = '<tr><td colspan="2" class="empty-state">⏳ Загрузка...</td></tr>';
+            container.innerHTML = '发展<td colspan="2" class="empty-state">⏳ Загрузка...<\/td><\/tr>';
             try {
                 const { data: chiefs } = await supabaseClient.from('chiefs').select('id, district_id, districts(name)');
                 const { data: scores } = await supabaseClient.from('chief_scores').select('*');
@@ -384,11 +438,11 @@
                 const districts = {};
                 if (chiefs) for (let c of chiefs) { const name = c.districts?.name || 'Неизвестно'; districts[name] = (districts[name] || 0) + (scoreMap[c.id] || 0); }
                 const sorted = Object.entries(districts).sort((a,b) => b[1] - a[1]);
-                if (sorted.length === 0) { container.innerHTML = '<tr><td colspan="2" class="empty-state">Нет данных</td></tr>'; return; }
+                if (sorted.length === 0) { container.innerHTML = '发展<td colspan="2" class="empty-state">Нет данных<\/td><\/tr>'; return; }
                 let html = '';
-                for (let i = 0; i < sorted.length; i++) { html += '<tr><td style="font-weight:500;">' + sorted[i][0] + '</td><td style="color:#6c8cff;">' + sorted[i][1] + ' баллов</td></tr>'; }
+                for (let i = 0; i < sorted.length; i++) { html += '发展<td style="font-weight:500;">' + sorted[i][0] + '<\/td><td style="color:#6c8cff;">' + sorted[i][1] + ' баллов<\/td><\/tr>'; }
                 container.innerHTML = html;
-            } catch (err) { container.innerHTML = '<tr><td colspan="2" class="empty-state">⚠️ Ошибка</td></tr>'; }
+            } catch (err) { container.innerHTML = '发展<td colspan="2" class="empty-state">⚠️ Ошибка<\/td><\/tr>'; }
         }
         
         function showToast(msg) {
@@ -399,7 +453,6 @@
         
         window.resetAndExit = function() { localStorage.clear(); window.location.href = 'index.html'; };
         
-        // Меню
         const btns = document.querySelectorAll('.menu-btn');
         for (let i = 0; i < btns.length; i++) {
             btns[i].onclick = function() {
@@ -412,7 +465,6 @@
             };
         }
         
-        // Запуск если есть chiefId
         if (chiefId) {
             loadStats();
             loadTasks();
