@@ -76,7 +76,6 @@
             z-index: 1;
         }
 
-        /* Header */
         .header {
             padding: 16px 20px;
             margin-bottom: 16px;
@@ -110,7 +109,6 @@
             cursor: pointer;
         }
 
-        /* Stats */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -139,7 +137,6 @@
             margin-top: 6px;
         }
 
-        /* Menu */
         .menu-scroll {
             overflow-x: auto;
             white-space: nowrap;
@@ -170,7 +167,6 @@
             color: white;
         }
 
-        /* Content */
         .content {
             background: rgba(20, 25, 35, 0.25);
             backdrop-filter: blur(20px);
@@ -193,7 +189,6 @@
             margin-bottom: 16px;
         }
 
-        /* Tasks */
         .task-item {
             background: rgba(0, 0, 0, 0.3);
             padding: 16px;
@@ -315,6 +310,7 @@
             }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="dark-glow">
@@ -402,7 +398,7 @@
         const SUPABASE_URL = 'https://csvynjkhhlexbnwpziup.supabase.co';
         const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
         
-        const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
         let chiefId = localStorage.getItem('chiefId');
         let districtId = localStorage.getItem('chiefDistrictId');
@@ -418,20 +414,26 @@
         let lastTaskCount = 0;
         
         async function loadTasks() {
-            const { data: tasks } = await sbClient
+            const { data, error } = await sb
                 .from('assignments')
                 .select('*, task_templates(*)')
                 .eq('chief_id', chiefId)
                 .order('created_at', { ascending: false });
             
+            if (error) {
+                console.error('Ошибка загрузки задач:', error);
+                document.getElementById('tasksList').innerHTML = '<p style="opacity: 0.5; text-align: center;">Ошибка загрузки</p>';
+                return;
+            }
+            
             const container = document.getElementById('tasksList');
             
-            if (!tasks?.length) {
+            if (!data?.length) {
                 container.innerHTML = '<p style="opacity: 0.5; text-align: center; padding: 40px;">📭 Нет задач</p>';
                 return;
             }
             
-            const pendingTasks = tasks.filter(t => t.status === 'pending');
+            const pendingTasks = data.filter(t => t.status === 'pending');
             if (pendingTasks.length > lastTaskCount && lastTaskCount > 0) {
                 if (Notification.permission === 'granted') {
                     new Notification('📢 Новая задача!', {
@@ -442,7 +444,7 @@
             }
             lastTaskCount = pendingTasks.length;
             
-            container.innerHTML = tasks.map(task => `
+            container.innerHTML = data.map(task => `
                 <div class="task-item">
                     <div class="task-title">${task.task_templates?.title || 'Задача'}</div>
                     <div style="font-size: 12px; opacity: 0.7;">${task.task_templates?.description || ''}</div>
@@ -457,19 +459,25 @@
         }
         
         async function loadAllTasks() {
-            const { data: tasks } = await sbClient
+            const { data, error } = await sb
                 .from('assignments')
                 .select('*, task_templates(*), chiefs(name)')
                 .eq('district_id', parseInt(districtId))
                 .order('created_at', { ascending: false });
             
+            if (error) {
+                console.error('Ошибка загрузки всех задач:', error);
+                document.getElementById('allTasksList').innerHTML = '<p style="opacity: 0.5;">Ошибка загрузки</p>';
+                return;
+            }
+            
             const container = document.getElementById('allTasksList');
-            if (!tasks?.length) {
+            if (!data?.length) {
                 container.innerHTML = '<p style="opacity: 0.5; text-align: center; padding: 40px;">🌍 Нет задач в округе</p>';
                 return;
             }
             
-            container.innerHTML = tasks.map(task => `
+            container.innerHTML = data.map(task => `
                 <div class="task-item">
                     <div class="task-title">${task.task_templates?.title || 'Задача'}</div>
                     <div style="font-size: 12px;">Шеф: ${task.chiefs?.name || 'Шеф'}</div>
@@ -493,7 +501,7 @@
                 return;
             }
             
-            const { error } = await sbClient
+            const { error } = await sb
                 .from('assignments')
                 .update({ status: 'completed', link: link, completed_at: new Date() })
                 .eq('id', taskId);
@@ -503,7 +511,7 @@
                 return;
             }
             
-            await sbClient
+            await sb
                 .from('operations_history')
                 .insert([{
                     chief_id: chiefId,
@@ -521,29 +529,32 @@
         }
         
         async function updateScore() {
-            const { data: tasks } = await sbClient
+            const { data, error } = await sb
                 .from('assignments')
                 .select('id')
                 .eq('chief_id', chiefId)
                 .eq('status', 'completed');
             
-            const score = tasks?.length || 0;
+            if (error) return;
+            const score = data?.length || 0;
             
-            await sbClient
+            await sb
                 .from('chief_scores')
                 .upsert({ chief_id: chiefId, total_score: score, updated_at: new Date() });
         }
         
         async function loadStats() {
-            const { data: tasks } = await sbClient
+            const { data, error } = await sb
                 .from('assignments')
                 .select('status')
                 .eq('chief_id', chiefId);
             
-            const total = tasks?.length || 0;
-            const completed = tasks?.filter(t => t.status === 'completed').length || 0;
+            if (error) return;
             
-            const { data: score } = await sbClient
+            const total = data?.length || 0;
+            const completed = data?.filter(t => t.status === 'completed').length || 0;
+            
+            const { data: scoreData } = await sb
                 .from('chief_scores')
                 .select('total_score')
                 .eq('chief_id', chiefId)
@@ -551,24 +562,26 @@
             
             document.getElementById('totalTasks').innerText = total;
             document.getElementById('completedTasks').innerText = completed;
-            document.getElementById('totalScore').innerText = score?.total_score || 0;
+            document.getElementById('totalScore').innerText = scoreData?.total_score || 0;
         }
         
         async function loadHistory() {
-            const { data: history } = await sbClient
+            const { data, error } = await sb
                 .from('operations_history')
                 .select('*')
                 .eq('chief_id', chiefId)
                 .order('created_at', { ascending: false })
                 .limit(30);
             
+            if (error) return;
+            
             const container = document.getElementById('historyList');
-            if (!history?.length) {
+            if (!data?.length) {
                 container.innerHTML = '<p style="opacity: 0.5; text-align: center; padding: 40px;">📭 История пуста</p>';
                 return;
             }
             
-            container.innerHTML = history.map(h => `
+            container.innerHTML = data.map(h => `
                 <div class="history-item">
                     <span>${h.action || 'Действие'}</span>
                     <span style="opacity: 0.5;">${new Date(h.created_at).toLocaleString()}</span>
@@ -577,18 +590,20 @@
         }
         
         async function loadRating() {
-            const { data: scores } = await sbClient
+            const { data, error } = await sb
                 .from('chief_scores')
-                .select('*, chiefs(name, district_id, primary_branch_id)')
+                .select('*, chiefs(name, primary_branch_id)')
                 .order('total_score', { ascending: false });
             
+            if (error) return;
+            
             const container = document.getElementById('ratingList');
-            if (!scores?.length) {
+            if (!data?.length) {
                 container.innerHTML = '<tr><td colspan="3" style="text-align: center;">Нет данных</td></tr>';
                 return;
             }
             
-            container.innerHTML = scores.map(s => `
+            container.innerHTML = data.map(s => `
                 <tr>
                     <td>${s.chiefs?.name?.split('Шеф')[0] || 'Шеф'}</td>
                     <td>${s.chiefs?.primary_branch_id ? 'Первичка' : 'Местное'}</td>
@@ -637,6 +652,5 @@
             loadAllTasks();
         }, 30000);
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
