@@ -40,18 +40,17 @@
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 16px;
             position: relative;
             z-index: 1;
         }
 
         .card {
             background: #1a1e2a;
-            border-radius: 28px;
-            padding: 20px 24px;
-            margin-bottom: 20px;
+            border-radius: 24px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
             border: 1px solid #2d3748;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         .header {
@@ -59,85 +58,77 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
 
         .logo h2 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             color: #fff;
         }
 
         .district-badge {
             background: #2d3748;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #fff;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 13px;
         }
 
         .reset-btn {
             background: #f8717120;
             border: 1px solid #f8717140;
-            padding: 8px 20px;
-            border-radius: 40px;
+            padding: 6px 16px;
+            border-radius: 30px;
             color: #f87171;
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 13px;
             cursor: pointer;
         }
 
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 16px;
         }
         .stat-card {
             background: #0f1117;
-            padding: 18px 12px;
-            border-radius: 24px;
+            padding: 14px 8px;
+            border-radius: 20px;
             text-align: center;
             border: 1px solid #2d3748;
         }
         .stat-number {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
             color: #6c8cff;
         }
         .stat-label {
-            font-size: 12px;
+            font-size: 11px;
             color: #9ca3af;
-            margin-top: 6px;
+            margin-top: 4px;
         }
 
         .menu-scroll {
             overflow-x: auto;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             -webkit-overflow-scrolling: touch;
         }
         .menu-items {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             min-width: min-content;
             padding-bottom: 4px;
         }
         .menu-btn {
-            padding: 10px 22px;
+            padding: 8px 18px;
             background: #0f1117;
             border: 1px solid #2d3748;
-            border-radius: 40px;
+            border-radius: 30px;
             color: #9ca3af;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.2s;
-        }
-        .menu-btn:hover {
-            background: #1e2a3a;
-            color: #fff;
         }
         .menu-btn.active {
             background: #6c8cff;
@@ -147,9 +138,9 @@
 
         .content {
             background: #1a1e2a;
-            border-radius: 28px;
-            padding: 24px;
-            min-height: 500px;
+            border-radius: 24px;
+            padding: 20px;
+            min-height: 450px;
             border: 1px solid #2d3748;
         }
         .page {
@@ -157,102 +148,193 @@
         }
         .page.active { display: block; }
         .page h3 {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
             border-bottom: 1px solid #2d3748;
-            color: #fff;
         }
 
         /* Доска объявлений */
         .board-item {
             background: #0f1117;
-            padding: 18px;
-            border-radius: 24px;
-            margin-bottom: 16px;
+            padding: 14px;
+            border-radius: 20px;
+            margin-bottom: 12px;
             border: 1px solid #2d3748;
         }
         .board-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #6c8cff;
         }
         .board-date {
-            font-size: 12px;
+            font-size: 11px;
             color: #f59e0b;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .board-desc {
-            font-size: 14px;
+            font-size: 13px;
             color: #9ca3af;
-            margin-bottom: 12px;
-            line-height: 1.4;
+            margin-bottom: 10px;
         }
         .board-tech {
-            background: #2d3748;
-            padding: 12px;
-            border-radius: 16px;
-            margin: 12px 0;
-            font-size: 13px;
-            color: #e5e7eb;
-        }
-        .board-tech strong {
-            color: #6c8cff;
+            background: #1a1e2a;
+            padding: 10px;
+            border-radius: 14px;
+            margin: 10px 0;
+            font-size: 12px;
+            border-left: 3px solid #6c8cff;
         }
         .participate-btn {
             background: #10b98120;
             border: 1px solid #10b98140;
-            padding: 10px 20px;
-            border-radius: 40px;
+            padding: 8px 16px;
+            border-radius: 30px;
             color: #10b981;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 13px;
+        }
+        .already-participating {
+            background: #6c8cff20;
+            padding: 8px 16px;
+            border-radius: 30px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* Задачи */
+        .task-item {
+            background: #0f1117;
+            padding: 14px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            border: 1px solid #2d3748;
+        }
+        .task-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .task-desc {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 6px;
+        }
+        .deadline {
+            font-size: 11px;
+            margin: 6px 0;
+            padding: 3px 10px;
+            border-radius: 16px;
+            display: inline-block;
+        }
+        .deadline-normal { background: #f59e0b20; color: #f59e0b; }
+        .deadline-urgent { background: #f8717120; color: #f87171; }
+        .task-status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            margin-top: 6px;
+        }
+        .status-pending { background: #f59e0b20; color: #f59e0b; }
+        .status-completed { background: #10b98120; color: #10b981; }
+        .status-expired { background: #f8717120; color: #f87171; }
+        
+        .btn-complete {
+            background: #10b98120;
+            border: none;
+            padding: 10px;
+            border-radius: 30px;
+            color: #10b981;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             margin-top: 10px;
             width: 100%;
-            transition: all 0.2s;
         }
-        .participate-btn:hover {
-            background: #10b98140;
-        }
-        .already-participating {
-            background: #6c8cff20;
-            color: #6c8cff;
-            padding: 10px 20px;
-            border-radius: 40px;
-            text-align: center;
-            font-size: 14px;
+        .link-input {
+            width: 100%;
+            padding: 10px;
+            background: #0f1117;
+            border: 1px solid #2d3748;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 13px;
             margin-top: 10px;
         }
-        .task-link {
+        .sent-links {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #2d3748;
+        }
+        .sent-links-title {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 6px;
+        }
+        .sent-link {
+            display: inline-block;
+            background: #1a1e2a;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 11px;
+            margin: 0 4px 4px 0;
             color: #6c8cff;
             text-decoration: none;
-            word-break: break-all;
+        }
+        .sent-count {
+            font-size: 11px;
+            color: #10b981;
+            margin-top: 8px;
         }
 
+        .history-item {
+            background: #0f1117;
+            padding: 10px 14px;
+            border-radius: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+        }
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .ranking-table th, .ranking-table td {
+            padding: 10px 6px;
+            text-align: left;
+            border-bottom: 1px solid #2d3748;
+            font-size: 13px;
+        }
         .toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 16px;
             left: 50%;
             transform: translateX(-50%);
             background: #1a1e2a;
-            padding: 12px 24px;
-            border-radius: 50px;
+            padding: 10px 20px;
+            border-radius: 40px;
             z-index: 1000;
             border-left: 4px solid #6c8cff;
-            font-size: 13px;
+            font-size: 12px;
         }
         .empty-state {
             text-align: center;
-            padding: 50px 20px;
+            padding: 40px 16px;
             color: #9ca3af;
+            font-size: 13px;
         }
 
         @media (max-width: 600px) {
             .container { padding: 12px; }
             .stat-number { font-size: 24px; }
             .content { padding: 16px; }
+            .board-title { font-size: 15px; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -267,9 +349,9 @@
         <div class="card">
             <div class="header">
                 <div class="logo"><h2>📰 Кабинет шеф-редактора</h2></div>
-                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <span class="district-badge" id="districtDisplay">Загрузка...</span>
-                    <button class="reset-btn" onclick="resetAndExit()">Сменить округ</button>
+                    <button class="reset-btn" onclick="resetAndExit()">Сменить</button>
                 </div>
             </div>
         </div>
@@ -282,54 +364,34 @@
 
         <div class="menu-scroll">
             <div class="menu-items">
-                <button class="menu-btn" data-page="board">📢 Доска объявлений</button>
-                <button class="menu-btn" data-page="tasks">📋 Мои задачи</button>
-                <button class="menu-btn active" data-page="rating">🏆 Рейтинг округов</button>
+                <button class="menu-btn" data-page="board">📢 Доска</button>
+                <button class="menu-btn active" data-page="tasks">📋 Задачи</button>
+                <button class="menu-btn" data-page="rating">🏆 Рейтинг</button>
                 <button class="menu-btn" data-page="history">📜 История</button>
-                <button class="menu-btn" data-page="help">❓ Справка</button>
+                <button class="menu-btn" data-page="help">❓</button>
             </div>
         </div>
 
         <div class="content">
-            <!-- Доска объявлений -->
             <div id="board" class="page">
                 <h3>📢 Доска объявлений</h3>
-                <div id="boardList" class="empty-state">⏳ Загрузка заданий...</div>
+                <div id="boardList" class="empty-state">⏳ Загрузка...</div>
             </div>
-
-            <!-- Мои задачи -->
-            <div id="tasks" class="page">
+            <div id="tasks" class="page active">
                 <h3>📋 Мои задачи</h3>
                 <div id="tasksList" class="empty-state">⏳ Загрузка задач...</div>
             </div>
-
-            <!-- Рейтинг -->
-            <div id="rating" class="page active">
+            <div id="rating" class="page">
                 <h3>🏆 Рейтинг округов</h3>
-                <div style="overflow-x: auto;">
-                    <table class="ranking-table" style="width:100%; border-collapse:collapse;">
-                        <thead><tr><th>Округ</th><th>Всего баллов</th></tr></thead>
-                        <tbody id="ratingList"></tbody>
-                    </table>
-                </div>
+                <div style="overflow-x: auto;"><table class="ranking-table"><thead>   </thead><tbody id="ratingList"></tbody> </div>
             </div>
-
-            <!-- История -->
             <div id="history" class="page">
-                <h3>📜 История операций</h3>
-                <div id="historyList" class="empty-state">⏳ Загрузка истории...</div>
+                <h3>📜 История</h3>
+                <div id="historyList" class="empty-state">⏳ Загрузка...</div>
             </div>
-
-            <!-- Справка -->
             <div id="help" class="page">
                 <h3>❓ Справка</h3>
-                <p style="color: #9ca3af; line-height: 1.6;">
-                    • <strong>Доска объявлений</strong> — здесь публикуются задания от координатора<br>
-                    • Нажмите "Участвую" чтобы закрепить задание за собой<br>
-                    • После участия задание появится в "Моих задачах"<br>
-                    • Выполняйте задачи и прикрепляйте ссылки<br>
-                    • 1 ссылка = 1 балл
-                </p>
+                <p style="color:#9ca3af; font-size:13px; line-height:1.5;">• Участвуйте в заданиях с доски<br>• Выполняйте задачи и прикрепляйте ссылки<br>• 1 ссылка = 1 балл<br>• Можно отправить несколько ссылок до дедлайна</p>
             </div>
         </div>
     </div>
@@ -345,255 +407,157 @@
         let districtId = localStorage.getItem('chiefDistrictId');
         
         if (!chiefId) {
-            document.getElementById('boardList').innerHTML = '<div class="empty-state">⚠️ Не выбран округ. <a href="index.html" style="color:#6c8cff;">На главную</a></div>';
+            document.getElementById('tasksList').innerHTML = '<div class="empty-state">⚠️ Ошибка. <a href="index.html" style="color:#6c8cff;">На главную</a></div>';
             document.getElementById('districtDisplay').innerHTML = 'Ошибка';
         } else {
             document.getElementById('districtDisplay').innerHTML = '📍 ' + (districtName || 'Неизвестно') + (branchType === 'primary' ? ' • Первичка' : '');
         }
         
-        function isTaskExpired(deadline) {
+        function isExpired(deadline) {
             if (!deadline) return false;
             return new Date(deadline) < new Date();
         }
         
-        // Загрузка доски объявлений (задания от координатора)
+        // Загрузка доски
         async function loadBoard() {
             const container = document.getElementById('boardList');
             container.innerHTML = '<div class="empty-state">⏳ Загрузка...</div>';
-            
             try {
-                // Получаем все активные задания с доски
-                const { data, error } = await sb
-                    .from('board_tasks')
-                    .select('*')
-                    .eq('is_active', true)
-                    .order('deadline', { ascending: true });
+                const { data } = await sb.from('board_tasks').select('*').eq('is_active', true).order('deadline');
+                if (!data?.length) { container.innerHTML = '<div class="empty-state">📢 Нет активных заданий</div>'; return; }
                 
-                if (error) throw error;
-                
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<div class="empty-state">📢 Нет активных заданий</div>';
-                    return;
-                }
-                
-                // Получаем задания, в которых шеф уже участвует
-                const { data: myParticipations } = await sb
-                    .from('board_participants')
-                    .select('board_task_id')
-                    .eq('chief_id', chiefId);
-                
-                const myParticipationsSet = new Set();
-                if (myParticipations) {
-                    for (let p of myParticipations) {
-                        myParticipationsSet.add(p.board_task_id);
-                    }
-                }
+                const { data: myParts } = await sb.from('board_participants').select('board_task_id').eq('chief_id', chiefId);
+                const mySet = new Set(myParts?.map(p => p.board_task_id) || []);
                 
                 let html = '';
-                for (let task of data) {
-                    const isParticipating = myParticipationsSet.has(task.id);
-                    const deadlineDate = new Date(task.deadline);
-                    const isExpired = deadlineDate < new Date();
-                    
-                    html += `
-                        <div class="board-item">
-                            <div class="board-title">${task.title}</div>
-                            <div class="board-date">📅 До: ${deadlineDate.toLocaleString()} ${isExpired ? '(просрочено!)' : ''}</div>
-                            <div class="board-desc">${task.description || ''}</div>
-                            <div class="board-tech">
-                                <strong>📋 ТЗ:</strong><br>
-                                ${task.technical_task || 'Нет описания'}
-                            </div>
-                    `;
-                    
-                    if (isParticipating) {
-                        html += `<div class="already-participating">✅ Вы уже участвуете в этом задании</div>`;
-                    } else if (!isExpired) {
-                        html += `<button class="participate-btn" onclick="participateInBoardTask(${task.id})">🎯 Участвовать</button>`;
+                for (let t of data) {
+                    const expired = isExpired(t.deadline);
+                    html += `<div class="board-item">
+                        <div class="board-title">${t.title}</div>
+                        <div class="board-date">📅 До: ${new Date(t.deadline).toLocaleString()} ${expired ? '(просрочено)' : ''}</div>
+                        <div class="board-desc">${t.description || ''}</div>
+                        <div class="board-tech"><strong>📋 ТЗ:</strong><br>${t.technical_task || 'Нет описания'}</div>`;
+                    if (mySet.has(t.id)) {
+                        html += `<div class="already-participating">✅ Вы уже участвуете</div>`;
+                    } else if (!expired) {
+                        html += `<button class="participate-btn" onclick="participate(${t.id})">🎯 Участвовать</button>`;
                     } else {
                         html += `<div class="already-participating" style="background:#f8717120; color:#f87171;">⏰ Срок истёк</div>`;
                     }
-                    
                     html += `</div>`;
                 }
                 container.innerHTML = html;
-            } catch (err) {
-                console.error(err);
-                container.innerHTML = '<div class="empty-state">⚠️ Ошибка загрузки: ' + err.message + '</div>';
-            }
+            } catch(e) { container.innerHTML = '<div class="empty-state">⚠️ Ошибка</div>'; }
         }
         
-        // Участие в задании с доски
-        window.participateInBoardTask = async function(boardTaskId) {
+        window.participate = async function(boardTaskId) {
             try {
-                // Получаем данные задания
-                const { data: boardTask, error: taskError } = await sb
-                    .from('board_tasks')
-                    .select('*')
-                    .eq('id', boardTaskId)
-                    .single();
-                
-                if (taskError) throw taskError;
-                
-                // Добавляем участника
-                const { error: participantError } = await sb
-                    .from('board_participants')
-                    .insert([{
-                        board_task_id: boardTaskId,
-                        chief_id: chiefId,
-                        district_id: districtId,
-                        status: 'pending'
-                    }]);
-                
-                if (participantError) throw participantError;
-                
-                // Создаём задачу в assignments для этого шефа
-                const { error: assignmentError } = await sb
-                    .from('assignments')
-                    .insert([{
-                        template_id: 2, // тип события
-                        chief_id: chiefId,
-                        district_id: districtId,
-                        link: null,
-                        coordinator_comment: boardTask.technical_task,
-                        deadline: boardTask.deadline,
-                        status: 'pending',
-                        type: 'event',
-                        title: boardTask.title,
-                        description: boardTask.description
-                    }]);
-                
-                if (assignmentError) throw assignmentError;
-                
-                showToast('✅ Вы участвуете в задании! Оно появилось в "Мои задачи"');
-                loadBoard();
-                loadTasks();
-            } catch (err) {
-                console.error(err);
-                alert('Ошибка: ' + err.message);
-            }
+                const { data: task } = await sb.from('board_tasks').select('*').eq('id', boardTaskId).single();
+                await sb.from('board_participants').insert([{ board_task_id: boardTaskId, chief_id: chiefId, district_id: districtId }]);
+                await sb.from('assignments').insert([{
+                    template_id: 2, title: task.title, description: task.description,
+                    chief_id: chiefId, district_id: districtId, coordinator_comment: task.technical_task,
+                    deadline: task.deadline, status: 'pending', type: 'event'
+                }]);
+                showToast('✅ Вы участвуете! Задача появилась в "Мои задачи"');
+                loadBoard(); loadTasks();
+            } catch(e) { alert('Ошибка: ' + e.message); }
         };
         
-        // Загрузка моих задач
+        // Загрузка задач (с подсчётом отправленных ссылок)
         async function loadTasks() {
             const container = document.getElementById('tasksList');
             container.innerHTML = '<div class="empty-state">⏳ Загрузка...</div>';
-            
             try {
-                const { data, error } = await sb
-                    .from('assignments')
-                    .select('*, task_templates(*)')
-                    .eq('chief_id', chiefId)
-                    .order('created_at', { ascending: false });
+                const { data: tasks } = await sb.from('assignments').select('*, task_templates(*)').eq('chief_id', chiefId).order('created_at', { ascending: false });
+                if (!tasks?.length) { container.innerHTML = '<div class="empty-state">📭 Нет задач</div>'; return; }
                 
-                if (error) throw error;
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<div class="empty-state">📭 Нет задач</div>';
-                    return;
-                }
-                
-                // Получаем уже отправленные ссылки
-                const { data: historyLinks } = await sb
-                    .from('operations_history')
-                    .select('assignment_id, description')
-                    .eq('chief_id', chiefId)
-                    .ilike('action', '%ссылка%');
-                
+                // Получаем отправленные ссылки
+                const { data: history } = await sb.from('operations_history').select('assignment_id, description').eq('chief_id', chiefId).ilike('action', '%ссылка%');
                 const sentMap = {};
-                if (historyLinks) {
-                    for (let h of historyLinks) {
-                        if (!sentMap[h.assignment_id]) sentMap[h.assignment_id] = [];
-                        const match = h.description.match(/ссылка: (https?:\/\/[^\s]+)/);
-                        if (match) sentMap[h.assignment_id].push(match[1]);
-                    }
+                for (let h of history || []) {
+                    if (!sentMap[h.assignment_id]) sentMap[h.assignment_id] = [];
+                    const match = h.description.match(/ссылка: (https?:\/\/[^\s]+)/);
+                    if (match) sentMap[h.assignment_id].push(match[1]);
                 }
                 
                 let html = '';
-                for (let task of data) {
-                    const expired = isTaskExpired(task.deadline);
-                    const isEvent = task.task_templates?.type === 'event' || task.type === 'event';
+                for (let task of tasks) {
+                    const expired = isExpired(task.deadline);
                     const sentLinks = sentMap[task.id] || [];
+                    const isEvent = task.type === 'event' || task.task_templates?.type === 'event';
                     
                     let deadlineHtml = '';
                     if (task.deadline) {
-                        const deadlineDate = new Date(task.deadline);
-                        deadlineHtml = '<div class="deadline ' + (expired ? 'deadline-urgent' : 'deadline-normal') + '">⏰ Срок: ' + deadlineDate.toLocaleString() + (expired ? ' (просрочено!)' : '') + '</div>';
+                        deadlineHtml = `<div class="deadline ${expired ? 'deadline-urgent' : 'deadline-normal'}">⏰ Срок: ${new Date(task.deadline).toLocaleString()} ${expired ? '(просрочено)' : ''}</div>`;
                     }
                     
-                    let linksHtml = '';
-                    if (sentLinks.length) {
-                        linksHtml = '<div style="margin-top:12px;"><div style="font-size:11px; color:#9ca3af;">✅ Отправленные:</div><div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">' +
-                            sentLinks.map(l => `<a href="${l}" target="_blank" style="color:#6c8cff; background:#0f1117; padding:4px 10px; border-radius:16px; font-size:12px; text-decoration:none;">🔗 ${l.length > 40 ? l.substring(0,40)+'...' : l}</a>`).join('') +
-                            '</div></div>';
+                    let sentHtml = '';
+                    if (sentLinks.length > 0) {
+                        sentHtml = `<div class="sent-links">
+                            <div class="sent-links-title">✅ Отправленные ссылки (${sentLinks.length} шт.):</div>
+                            <div>${sentLinks.map(l => `<a href="${l}" target="_blank" class="sent-link">🔗 ${l.length > 35 ? l.substring(0,35)+'...' : l}</a>`).join('')}</div>
+                        </div>`;
                     }
                     
-                    html += '<div class="task-item" style="background:#0f1117; padding:18px; border-radius:24px; margin-bottom:14px; border:1px solid #2d3748;">' +
-                        '<div class="task-title" style="font-size:17px; font-weight:600; margin-bottom:6px;">' + (task.title || task.task_templates?.title || 'Задача') + '</div>' +
-                        '<div class="task-desc" style="font-size:13px; color:#9ca3af; margin-bottom:8px;">' + (task.description || task.task_templates?.description || '') + '</div>' +
-                        deadlineHtml +
-                        (task.link ? '<div style="margin-top:6px;"><strong>Ссылки от координатора:</strong><br>' + task.link.split(', ').map(l => `<a href="${l}" target="_blank" style="color:#6c8cff;">🔗 ${l}</a>`).join(' ') + '</div>' : '') +
-                        (task.coordinator_comment ? '<div style="font-size:12px; margin-top:8px; color:#6c8cff;">💬 ' + task.coordinator_comment + '</div>' : '') +
-                        linksHtml +
-                        '<div><span class="task-status ' + (expired && task.status === 'pending' ? 'status-expired' : (task.status === 'pending' ? 'status-pending' : 'status-completed')) + '" style="display:inline-block; padding:4px 12px; border-radius:30px; font-size:11px; margin-top:8px;">' + 
-                            (task.status === 'pending' ? (expired ? '⏰ Просрочено' : '⏳ Ожидает') : '✅ Выполнено') + 
-                        '</span></div>';
+                    html += `<div class="task-item">
+                        <div class="task-title">${task.title || task.task_templates?.title || 'Задача'}</div>
+                        <div class="task-desc">${task.description || task.task_templates?.description || ''}</div>
+                        ${deadlineHtml}
+                        ${task.coordinator_comment ? `<div style="font-size:12px; margin-top:6px; color:#6c8cff;">💬 ${task.coordinator_comment}</div>` : ''}
+                        ${sentHtml}
+                        <div><span class="task-status ${task.status === 'pending' ? (expired ? 'status-expired' : 'status-pending') : 'status-completed'}">${task.status === 'pending' ? (expired ? '⏰ Просрочено' : '⏳ Ожидает') : '✅ Выполнено'}</span></div>`;
                     
+                    // Поле ввода не закрывается до дедлайна
                     if (task.status === 'pending' && !expired) {
-                        html += '<input type="text" id="link_' + task.id + '" class="link-input" style="width:100%; padding:12px; background:#0f1117; border:1px solid #2d3748; border-radius:24px; color:#fff; margin-top:12px;" placeholder="Вставьте ссылку на выполненное задание">' +
-                                '<button class="btn-complete" onclick="completeTask(' + task.id + ')" style="background:#10b98120; border:none; padding:12px; border-radius:40px; color:#10b981; font-size:14px; font-weight:600; cursor:pointer; margin-top:12px; width:100%;">✅ Выполнить +1 балл</button>';
+                        html += `<input type="text" id="link_${task.id}" class="link-input" placeholder="Вставьте ссылку (t.me/vk.com или любую для событий)">
+                                <button class="btn-complete" onclick="sendLink(${task.id})">📤 Отправить ссылку +1 балл</button>`;
                     } else if (task.status === 'pending' && expired) {
-                        html += '<button class="btn-complete" disabled style="opacity:0.5; cursor:not-allowed;">❌ Просрочено</button>';
+                        html += `<button class="btn-complete" disabled style="opacity:0.5;">❌ Просрочено</button>`;
                     }
-                    html += '</div>';
+                    html += `</div>`;
                 }
                 container.innerHTML = html;
-            } catch (err) {
-                container.innerHTML = '<div class="empty-state">⚠️ Ошибка: ' + err.message + '</div>';
-            }
+                loadStats();
+            } catch(e) { container.innerHTML = '<div class="empty-state">⚠️ Ошибка</div>'; }
         }
         
-        window.completeTask = async function(taskId) {
-            const link = document.getElementById('link_' + taskId)?.value.trim();
+        // Отправка ссылки (не закрывает задачу, просто добавляет балл)
+        window.sendLink = async function(taskId) {
+            const link = document.getElementById(`link_${taskId}`)?.value.trim();
             if (!link) { alert('Вставьте ссылку'); return; }
             
-            const isDuplicate = await checkDuplicateLink(taskId, link);
-            if (isDuplicate) { alert('❌ Эта ссылка уже была отправлена!'); return; }
+            // Проверка на повтор
+            const { data: existing } = await sb.from('operations_history').select('id').eq('chief_id', chiefId).eq('assignment_id', taskId).ilike('description', `%${link}%`);
+            if (existing?.length) { alert('❌ Эта ссылка уже была отправлена!'); return; }
+            
+            // Для распуша проверка t.me/vk.com
+            const { data: task } = await sb.from('assignments').select('type, task_templates(type)').eq('id', taskId).single();
+            const taskType = task?.type || task?.task_templates?.type;
+            if (taskType === 'raspush' && !link.includes('t.me') && !link.includes('vk.com')) {
+                alert('Для распуша ссылка должна быть на t.me или vk.com');
+                return;
+            }
             
             try {
-                await sb.from('assignments').update({ status: 'completed', link: link, completed_at: new Date() }).eq('id', taskId);
                 await sb.from('operations_history').insert([{ chief_id: chiefId, assignment_id: taskId, action: `Отправлена ссылка: ${link}` }]);
-                
                 const { data: cur } = await sb.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
                 await sb.from('chief_scores').upsert({ chief_id: chiefId, total_score: (cur?.total_score || 0) + 1, updated_at: new Date() });
                 
-                if (districtId) await updateDistrictScore(districtId);
+                // Обновляем баллы округа
+                const { data: chiefs } = await sb.from('chiefs').select('id').eq('district_id', districtId);
+                let total = 0;
+                for (let c of chiefs || []) {
+                    const { data: s } = await sb.from('chief_scores').select('total_score').eq('chief_id', c.id).single();
+                    total += s?.total_score || 0;
+                }
+                await sb.from('district_scores').upsert({ district_id: districtId, total_score: total, updated_at: new Date() });
                 
-                loadTasks(); loadStats(); loadHistory(); loadRating();
+                document.getElementById(`link_${taskId}`).value = '';
+                loadTasks(); loadHistory(); loadRating();
                 showToast('✅ +1 балл!');
-            } catch (err) {
-                alert('Ошибка: ' + err.message);
-            }
+            } catch(e) { alert('Ошибка: ' + e.message); }
         };
-        
-        async function checkDuplicateLink(taskId, link) {
-            const { data } = await sb
-                .from('operations_history')
-                .select('description')
-                .eq('chief_id', chiefId)
-                .eq('assignment_id', taskId)
-                .ilike('description', `%${link}%`);
-            return data && data.length > 0;
-        }
-        
-        async function updateDistrictScore(districtId) {
-            const { data: chiefs } = await sb.from('chiefs').select('id').eq('district_id', districtId);
-            let total = 0;
-            for (let c of chiefs) {
-                const { data: s } = await sb.from('chief_scores').select('total_score').eq('chief_id', c.id).single();
-                total += s?.total_score || 0;
-            }
-            await sb.from('district_scores').upsert({ district_id: districtId, total_score: total, updated_at: new Date() });
-        }
         
         async function loadStats() {
             if (!chiefId) return;
@@ -612,25 +576,25 @@
                 if (!data?.length) { container.innerHTML = '<div class="empty-state">📭 История пуста</div>'; return; }
                 let html = '';
                 for (let h of data) {
-                    let action = h.action.length > 60 ? h.action.substring(0,60)+'...' : h.action;
-                    html += `<div class="history-item" style="background:#0f1117; padding:12px; border-radius:16px; margin-bottom:8px; display:flex; justify-content:space-between;"><span>${action}</span><span style="color:#6b7280;">${new Date(h.created_at).toLocaleString()}</span></div>`;
+                    let action = h.action.length > 55 ? h.action.substring(0,55)+'...' : h.action;
+                    html += `<div class="history-item"><span>${action}</span><span style="color:#6b7280;">${new Date(h.created_at).toLocaleString()}</span></div>`;
                 }
                 container.innerHTML = html;
-            } catch (err) { container.innerHTML = '<div class="empty-state">⚠️ Ошибка</div>'; }
+            } catch(e) { container.innerHTML = '<div class="empty-state">⚠️ Ошибка</div>'; }
         }
         
         async function loadRating() {
             const container = document.getElementById('ratingList');
-            container.innerHTML = '<tr><td colspan="2" class="empty-state">⏳ Загрузка...</td></tr>';
+            container.innerHTML = '发展<td colspan="2" class="empty-state">⏳ Загрузка...<\/td><\/tr>';
             try {
                 const { data } = await sb.from('district_scores').select('*, districts(name)').order('total_score', { ascending: false });
-                if (!data?.length) { container.innerHTML = '<tr><td colspan="2" class="empty-state">Нет данных</td></tr>'; return; }
+                if (!data?.length) { container.innerHTML = '发展<td colspan="2" class="empty-state">Нет данных<\/td><\/tr>'; return; }
                 let html = '';
                 for (let d of data) {
-                    html += `<tr><td style="font-weight:500;">${d.districts?.name || 'Неизвестно'}</td><td style="color:#6c8cff;">${d.total_score} баллов</td></tr>`;
+                    html += `<tr><td style="font-weight:500;">${d.districts?.name || 'Неизвестно'}<\/td><td style="color:#6c8cff;">${d.total_score} баллов<\/td><\/tr>`;
                 }
                 container.innerHTML = html;
-            } catch (err) { container.innerHTML = '<tr><td colspan="2" class="empty-state">⚠️ Ошибка</td></tr>'; }
+            } catch(e) { container.innerHTML = '发展<td colspan="2" class="empty-state">⚠️ Ошибка<\/td><\/tr>'; }
         }
         
         function showToast(msg) {
@@ -640,25 +604,23 @@
         
         window.resetAndExit = function() { localStorage.clear(); window.location.href = 'index.html'; };
         
-        // Меню
         const btns = document.querySelectorAll('.menu-btn');
-        for (let i = 0; i < btns.length; i++) {
-            btns[i].onclick = function() {
-                for (let j = 0; j < btns.length; j++) btns[j].classList.remove('active');
-                this.classList.add('active');
-                for (let j = 0; j < document.querySelectorAll('.page').length; j++) document.querySelectorAll('.page')[j].classList.remove('active');
-                document.getElementById(this.dataset.page).classList.add('active');
-                if (this.dataset.page === 'board') loadBoard();
-                if (this.dataset.page === 'tasks') loadTasks();
-                if (this.dataset.page === 'rating') loadRating();
-                if (this.dataset.page === 'history') loadHistory();
+        for (let b of btns) {
+            b.onclick = () => {
+                for (let bb of btns) bb.classList.remove('active');
+                b.classList.add('active');
+                for (let p of document.querySelectorAll('.page')) p.classList.remove('active');
+                document.getElementById(b.dataset.page).classList.add('active');
+                if (b.dataset.page === 'board') loadBoard();
+                if (b.dataset.page === 'tasks') loadTasks();
+                if (b.dataset.page === 'rating') loadRating();
+                if (b.dataset.page === 'history') loadHistory();
             };
         }
         
         if (chiefId) {
-            loadStats(); loadBoard(); loadTasks(); loadHistory(); loadRating();
+            loadBoard(); loadTasks(); loadHistory(); loadRating();
             setInterval(loadTasks, 30000);
-            setInterval(loadBoard, 60000);
         }
     </script>
 </body>
