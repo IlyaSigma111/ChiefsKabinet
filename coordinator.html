@@ -399,7 +399,7 @@
             <!-- Панель отправки -->
             <div class="panel">
                 <h2>🚀 Отправить задачу</h2>
-                <div class="info-box">
+                <div class="info-box" id="infoBox">
                     🔥 <strong>РАСПУШ</strong> — можно добавить несколько ссылок (для разных соцсетей)<br>
                     🎉 <strong>СОБЫТИЕ</strong> — можно отправить без ссылки<br>
                     ⭐ <strong>ПО ЖЕЛАНИЮ</strong> — дополнительное задание<br>
@@ -409,16 +409,18 @@
                     ⚡ Выбран шаблон: <strong id="selectedTemplateName">не выбран</strong>
                 </div>
                 
-                <!-- Блок для нескольких ссылок -->
-                <div class="links-container" id="linksContainer">
-                    <div class="link-input-group">
-                        <input type="text" id="taskLink1" placeholder="🔗 Ссылка 1 (обязательно для РАСПУШ)">
-                        <div class="remove-link" onclick="removeLink(1)" style="display: none;">✖</div>
+                <!-- Блок для ссылок (разный для разных типов) -->
+                <div id="linksBlock">
+                    <div class="links-container" id="linksContainer">
+                        <div class="link-input-group">
+                            <input type="text" id="taskLink1" placeholder="🔗 Ссылка 1">
+                            <div class="remove-link" onclick="removeLink(1)" style="display: none;">✖</div>
+                        </div>
                     </div>
+                    <button type="button" class="add-link-btn" id="addLinkBtn" onclick="addLinkInput()" style="display: none;">+ Добавить ещё ссылку</button>
                 </div>
-                <button type="button" class="add-link-btn" onclick="addLinkInput()">+ Добавить ещё ссылку</button>
                 
-                <input type="datetime-local" id="taskDeadline" placeholder="📅 Срок выполнения (обязательно для РАСПУШ)">
+                <input type="datetime-local" id="taskDeadline" placeholder="📅 Срок выполнения">
                 <textarea id="taskComment" placeholder="💬 Комментарий для шефов (опционально)"></textarea>
                 <button class="mass-btn" onclick="sendToAll()">📤 ОТПРАВИТЬ ЗАДАЧУ ВСЕМ ШЕФАМ</button>
                 <div id="requiredWarning" class="required-warning">⚠️ Для задачи "РАСПУШ" обязательны ссылки и срок выполнения!</div>
@@ -448,8 +450,49 @@
         let selectedTemplateType = null;
         let linkCounter = 1;
 
+        // Обновление интерфейса в зависимости от типа шаблона
+        function updateInterfaceForType(type) {
+            const addLinkBtn = document.getElementById('addLinkBtn');
+            const linksContainer = document.getElementById('linksContainer');
+            const deadlineInput = document.getElementById('taskDeadline');
+            const warning = document.getElementById('requiredWarning');
+            const infoBox = document.getElementById('infoBox');
+            
+            if (type === 'raspush') {
+                // Распуш: показываем кнопку добавления ссылок, ссылки обязательны, срок обязателен
+                addLinkBtn.style.display = 'block';
+                deadlineInput.required = true;
+                deadlineInput.placeholder = '📅 Срок выполнения (обязательно)';
+                warning.style.display = 'block';
+                // Меняем placeholder у первого поля
+                const firstInput = document.querySelector('#linksContainer input');
+                if (firstInput) firstInput.placeholder = '🔗 Ссылка 1 (обязательно)';
+                infoBox.innerHTML = '🔥 <strong>РАСПУШ</strong> — можно добавить несколько ссылок (для разных соцсетей)<br>• Ссылки и срок обязательны!';
+            } else {
+                // Событие или По желанию: скрываем кнопку добавления, ссылки не обязательны
+                addLinkBtn.style.display = 'none';
+                deadlineInput.required = false;
+                deadlineInput.placeholder = '📅 Срок выполнения (опционально)';
+                warning.style.display = 'none';
+                // Очищаем лишние поля, оставляем только одно
+                while (linksContainer.children.length > 1) {
+                    linksContainer.removeChild(linksContainer.lastChild);
+                }
+                const firstInput = document.querySelector('#linksContainer input');
+                if (firstInput) {
+                    firstInput.placeholder = type === 'event' ? '🔗 Ссылка на выполненное задание (опционально)' : '🔗 Ссылка (опционально)';
+                }
+                if (type === 'event') {
+                    infoBox.innerHTML = '🎉 <strong>СОБЫТИЕ</strong> — можно отправить ссылку на фото/видео<br>• Ссылка не обязательна, срок опционально';
+                } else {
+                    infoBox.innerHTML = '⭐ <strong>ПО ЖЕЛАНИЮ</strong> — дополнительное задание<br>• Ссылка не обязательна, срок опционально';
+                }
+            }
+        }
+
         // Добавление нового поля для ссылки
         window.addLinkInput = function() {
+            if (selectedTemplateType !== 'raspush') return;
             linkCounter++;
             const container = document.getElementById('linksContainer');
             const newDiv = document.createElement('div');
@@ -526,12 +569,8 @@
             });
             event.currentTarget.classList.add('selected');
             
-            const warning = document.getElementById('requiredWarning');
-            if (type === 'raspush') {
-                warning.style.display = 'block';
-            } else {
-                warning.style.display = 'none';
-            }
+            // Обновляем интерфейс в зависимости от типа
+            updateInterfaceForType(type);
         };
 
         // Загрузка активных задач
@@ -720,7 +759,7 @@
             // Очищаем поля
             document.getElementById('linksContainer').innerHTML = `
                 <div class="link-input-group" id="link-group-1">
-                    <input type="text" id="taskLink1" placeholder="🔗 Ссылка 1 (обязательно для РАСПУШ)">
+                    <input type="text" id="taskLink1" placeholder="🔗 Ссылка 1">
                     <div class="remove-link" onclick="removeLink(1)" style="display: none;">✖</div>
                 </div>
             `;
