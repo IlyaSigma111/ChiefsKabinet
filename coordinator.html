@@ -14,38 +14,9 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #0a0c10;
-            color: rgba(255, 255, 255, 0.95);
+            background: #f5f7fa;
+            color: #1a202c;
             min-height: 100vh;
-        }
-
-        .dark-glow {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .glow-sphere {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.4;
-        }
-
-        .sphere-1 { width: 600px; height: 600px; top: -200px; right: -200px; background: linear-gradient(135deg, #667eea, #764ba2); }
-        .sphere-2 { width: 500px; height: 500px; bottom: -200px; left: -100px; background: linear-gradient(135deg, #ff6b6b, #ff8e53); }
-        .sphere-3 { width: 400px; height: 400px; top: 50%; left: 30%; background: linear-gradient(135deg, #4facfe, #00f2fe); }
-
-        .glass-card {
-            background: rgba(20, 25, 35, 0.35);
-            backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 32px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
         }
 
         .container {
@@ -54,9 +25,16 @@
             padding: 24px;
         }
 
-        .header {
+        .card {
+            background: white;
+            border-radius: 24px;
             padding: 20px 28px;
             margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -65,16 +43,14 @@
         }
 
         h1 {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 700;
-            background: linear-gradient(135deg, #fff, #b0c4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #1a202c;
         }
 
         .subtitle {
-            font-size: 14px;
-            opacity: 0.6;
+            font-size: 13px;
+            color: #64748b;
         }
 
         .tabs {
@@ -82,7 +58,7 @@
             gap: 12px;
             flex-wrap: wrap;
             margin-bottom: 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid #e2e8f0;
             padding-bottom: 12px;
         }
 
@@ -91,30 +67,28 @@
             background: transparent;
             border: none;
             border-radius: 40px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 15px;
+            color: #64748b;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .tab-btn:hover {
-            color: #fff;
-            background: rgba(108, 140, 255, 0.1);
+            background: #f1f5f9;
         }
 
         .tab-btn.active {
-            background: rgba(108, 140, 255, 0.3);
-            color: #fff;
+            background: #3b82f6;
+            color: white;
         }
 
         .panel {
             display: none;
-            background: rgba(20, 25, 35, 0.3);
-            backdrop-filter: blur(20px);
-            border-radius: 28px;
+            background: white;
+            border-radius: 24px;
             padding: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid #e2e8f0;
         }
 
         .panel.active {
@@ -122,10 +96,10 @@
         }
 
         .panel h2 {
-            font-size: 20px;
+            font-size: 18px;
             margin-bottom: 20px;
             padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid #e2e8f0;
             font-weight: 600;
         }
 
@@ -137,19 +111,21 @@
 
         input, select, textarea {
             width: 100%;
-            padding: 12px 16px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            color: white;
+            padding: 12px 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            color: #1a202c;
             font-size: 14px;
             margin-bottom: 14px;
             font-family: inherit;
+            transition: all 0.2s;
         }
 
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: rgba(108, 140, 255, 0.4);
+            border-color: #3b82f6;
+            background: white;
         }
 
         textarea {
@@ -160,8 +136,8 @@
         button {
             width: 100%;
             padding: 12px;
-            background: rgba(108, 140, 255, 0.3);
-            border: 1px solid rgba(108, 140, 255, 0.4);
+            background: #3b82f6;
+            border: none;
             border-radius: 40px;
             color: white;
             font-weight: 600;
@@ -171,43 +147,47 @@
         }
 
         button:hover {
-            background: rgba(108, 140, 255, 0.45);
+            background: #2563eb;
             transform: translateY(-1px);
         }
 
         .mass-btn {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(236, 72, 153, 0.4));
-            border-color: rgba(168, 85, 247, 0.5);
+            background: #8b5cf6;
+        }
+
+        .mass-btn:hover {
+            background: #7c3aed;
         }
 
         .info-box {
-            background: rgba(108, 140, 255, 0.1);
-            border-left: 4px solid #a855f7;
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
             padding: 14px 18px;
             border-radius: 20px;
             margin-bottom: 24px;
             font-size: 13px;
+            color: #1e40af;
             line-height: 1.5;
         }
 
         .template-item, .board-item {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 14px 16px;
+            background: #f8fafc;
+            padding: 12px 16px;
             border-radius: 20px;
             margin-bottom: 12px;
             cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid #e2e8f0;
             transition: all 0.2s;
         }
 
         .template-item:hover, .board-item:hover {
-            background: rgba(108, 140, 255, 0.1);
-            transform: translateX(5px);
+            background: #f1f5f9;
+            transform: translateX(4px);
         }
 
         .template-item.selected {
-            background: rgba(108, 140, 255, 0.2);
-            border-color: rgba(108, 140, 255, 0.4);
+            background: #eff6ff;
+            border-color: #3b82f6;
         }
 
         .template-item strong {
@@ -219,12 +199,24 @@
             padding: 2px 8px;
             border-radius: 12px;
             font-size: 10px;
+            font-weight: 500;
             margin-left: 8px;
         }
 
-        .type-raspush { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .type-event { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .type-optional { background: rgba(108, 140, 255, 0.2); color: #6c8cff; }
+        .type-raspush {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .type-event {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .type-optional {
+            background: #e0e7ff;
+            color: #4f46e5;
+        }
 
         .link-group {
             display: flex;
@@ -239,25 +231,31 @@
         }
 
         .remove-link {
-            background: rgba(239, 68, 68, 0.2);
-            color: #f87171;
+            background: #fee2e2;
+            color: #dc2626;
             padding: 12px;
             border-radius: 20px;
             cursor: pointer;
             width: 44px;
             text-align: center;
+            transition: all 0.2s;
+        }
+
+        .remove-link:hover {
+            background: #fecaca;
         }
 
         .selected-info {
-            background: rgba(0, 0, 0, 0.4);
+            background: #f1f5f9;
             padding: 14px;
             border-radius: 20px;
             margin-bottom: 20px;
             text-align: center;
+            font-size: 14px;
         }
 
         .warning-text {
-            color: #f87171;
+            color: #dc2626;
             font-size: 12px;
             margin-top: -8px;
             margin-bottom: 12px;
@@ -266,10 +264,11 @@
         }
 
         .task-item {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 14px;
+            background: #f8fafc;
+            padding: 12px;
             border-radius: 20px;
             margin-bottom: 12px;
+            border: 1px solid #e2e8f0;
         }
 
         .task-header {
@@ -281,50 +280,91 @@
         }
 
         .task-status {
-            background: rgba(245, 158, 11, 0.2);
-            color: #f59e0b;
-            padding: 4px 12px;
-            border-radius: 30px;
+            background: #fef3c7;
+            color: #d97706;
+            padding: 3px 10px;
+            border-radius: 20px;
             font-size: 11px;
+            font-weight: 500;
         }
 
         .delete-btn {
-            background: rgba(239, 68, 68, 0.2);
-            color: #f87171;
+            background: #fee2e2;
+            color: #dc2626;
             margin-top: 10px;
             padding: 8px;
             border: none;
             border-radius: 30px;
             cursor: pointer;
+            width: auto;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #fecaca;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a202c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            z-index: 1000;
+            font-size: 13px;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
         }
 
         .empty-state {
             text-align: center;
             padding: 40px 20px;
-            opacity: 0.6;
+            color: #64748b;
         }
 
         @media (max-width: 768px) {
-            .container { padding: 16px; }
-            .grid-2cols { grid-template-columns: 1fr; gap: 20px; }
-            .panel { padding: 20px; }
-            h1 { font-size: 22px; }
-            .tab-btn { padding: 8px 16px; font-size: 13px; }
+            .container {
+                padding: 16px;
+            }
+            .grid-2cols {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .panel {
+                padding: 20px;
+            }
+            .tab-btn {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div class="dark-glow">
-        <div class="glow-sphere sphere-1"></div>
-        <div class="glow-sphere sphere-2"></div>
-        <div class="glow-sphere sphere-3"></div>
-    </div>
-
     <div class="container">
-        <div class="header glass-card">
-            <h1>🎛️ Медиакоординатор</h1>
-            <div class="subtitle">Управление задачами и доской объявлений</div>
+        <div class="card">
+            <div class="header">
+                <h1>🎛️ Медиакоординатор</h1>
+                <div class="subtitle">Управление задачами и доской объявлений</div>
+            </div>
         </div>
 
         <div class="tabs">
@@ -338,10 +378,10 @@
         <div id="board-panel" class="panel active">
             <div class="grid-2cols">
                 <div>
-                    <h2>📢 Создать задание</h2>
+                    <h2>📢 Создать задание на доску</h2>
                     <input type="text" id="boardTitle" placeholder="Название задания">
-                    <textarea id="boardDesc" placeholder="Краткое описание"></textarea>
-                    <textarea id="boardTech" placeholder="📋 ТЗ (формат видео, требования, куда загружать...)"></textarea>
+                    <textarea id="boardDesc" placeholder="Краткое описание задания"></textarea>
+                    <textarea id="boardTech" placeholder="📋 ТЗ (техническое задание): формат видео, требования, куда загружать, примеры..."></textarea>
                     <input type="datetime-local" id="boardDeadline" placeholder="Срок выполнения">
                     <button onclick="createBoardTask()">📢 Опубликовать на доску</button>
                 </div>
@@ -362,8 +402,8 @@
                 <div>
                     <h2>➕ Создать новый шаблон</h2>
                     <input type="text" id="newTemplateTitle" placeholder="Название шаблона">
-                    <textarea id="newTemplateDesc" placeholder="Описание"></textarea>
-                    <select id="templateType">
+                    <textarea id="newTemplateDesc" placeholder="Описание шаблона"></textarea>
+                    <select id="templateTypeSelect">
                         <option value="raspush">📢 Распуш (обязательны ссылки и срок)</option>
                         <option value="event">🎉 Событие (участие + ссылка)</option>
                         <option value="optional">⭐ По желанию (дополнительное задание)</option>
@@ -379,9 +419,10 @@
                 <div>
                     <h2>🚀 Отправить задачу всем шефам</h2>
                     <div class="info-box" id="infoBox">
-                        🔥 <strong>РАСПУШ</strong> — можно добавить несколько ссылок<br>
+                        🔥 <strong>РАСПУШ</strong> — можно добавить несколько ссылок (для разных соцсетей)<br>
                         🎉 <strong>СОБЫТИЕ</strong> — можно отправить без ссылки<br>
-                        ⭐ <strong>ПО ЖЕЛАНИЮ</strong> — дополнительное задание
+                        ⭐ <strong>ПО ЖЕЛАНИЮ</strong> — дополнительное задание<br>
+                        • Задача отправляется ВСЕМ шефам всех округов
                     </div>
                     <div class="selected-info">
                         ⚡ Выбран шаблон: <strong id="selectedTemplateName">не выбран</strong>
@@ -394,7 +435,7 @@
                                 <div class="remove-link" onclick="removeLink(1)" style="display: none;">✖</div>
                             </div>
                         </div>
-                        <button type="button" id="addLinkBtn" onclick="addLinkInput()" style="background: rgba(45, 55, 72, 0.8); margin-top: 8px; display: none;">+ Добавить ещё ссылку</button>
+                        <button type="button" id="addLinkBtn" onclick="addLinkInput()" style="background: #f1f5f9; margin-top: 8px; display: none;">+ Добавить ещё ссылку</button>
                     </div>
 
                     <input type="datetime-local" id="taskDeadline" placeholder="📅 Срок выполнения">
@@ -411,7 +452,7 @@
 
         <!-- Панель активных задач (отдельная вкладка) -->
         <div id="active-panel" class="panel">
-            <h2>📊 Активные задачи</h2>
+            <h2>📊 Активные задачи (все шефы)</h2>
             <div id="activeTasksList2" class="empty-state">Загрузка активных задач...</div>
         </div>
     </div>
@@ -428,52 +469,59 @@
 
         // ========== ДОСКА ОБЪЯВЛЕНИЙ ==========
         async function loadBoardTasks() {
-            const { data, error } = await sb
-                .from('board_tasks')
-                .select('*')
-                .order('created_at', { ascending: false });
+            try {
+                const { data, error } = await sb
+                    .from('board_tasks')
+                    .select('*')
+                    .order('created_at', { ascending: false });
 
-            const container = document.getElementById('boardTasksList');
-            if (error) {
-                container.innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
-                return;
-            }
-            if (!data || data.length === 0) {
-                container.innerHTML = '<div class="empty-state">📭 Нет заданий на доске</div>';
-                return;
-            }
+                const container = document.getElementById('boardTasksList');
+                if (error) throw error;
 
-            const { data: participants } = await sb.from('board_participants').select('board_task_id');
-            const counts = {};
-            if (participants) {
-                for (let p of participants) {
-                    counts[p.board_task_id] = (counts[p.board_task_id] || 0) + 1;
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">📭 Нет заданий на доске</div>';
+                    return;
                 }
-            }
 
-            let html = '';
-            for (let task of data) {
-                const count = counts[task.id] || 0;
-                html += `
-                    <div class="board-item">
-                        <strong>${task.title}</strong>
-                        <div style="font-size: 11px; opacity: 0.7; margin-top: 4px;">📅 До: ${new Date(task.deadline).toLocaleString()}</div>
-                        <div style="font-size: 12px; margin-top: 6px;">${task.description || ''}</div>
-                        <div style="font-size: 11px; margin-top: 6px; color: #6c8cff;">📋 ТЗ: ${task.technical_task || '-'}</div>
-                        <div style="font-size: 11px; margin-top: 4px;">👥 Участников: ${count}</div>
-                        <button class="delete-btn" onclick="deleteBoardTask(${task.id})">🗑 Удалить</button>
-                    </div>
-                `;
+                const { data: participants } = await sb.from('board_participants').select('board_task_id');
+                const counts = {};
+                if (participants) {
+                    for (let p of participants) {
+                        counts[p.board_task_id] = (counts[p.board_task_id] || 0) + 1;
+                    }
+                }
+
+                let html = '';
+                for (let task of data) {
+                    const count = counts[task.id] || 0;
+                    html += `
+                        <div class="board-item">
+                            <strong>${escapeHtml(task.title)}</strong>
+                            <div style="font-size: 11px; color: #64748b; margin-top: 4px;">📅 До: ${new Date(task.deadline).toLocaleString()}</div>
+                            <div style="font-size: 12px; margin-top: 6px; color: #475569;">${escapeHtml(task.description || '')}</div>
+                            <div style="font-size: 11px; margin-top: 6px; color: #4f46e5;">📋 ТЗ: ${escapeHtml(task.technical_task || '-')}</div>
+                            <div style="font-size: 11px; margin-top: 4px;">👥 Участников: ${count}</div>
+                            <button class="delete-btn" onclick="deleteBoardTask(${task.id})">🗑 Удалить задание</button>
+                        </div>
+                    `;
+                }
+                container.innerHTML = html;
+            } catch (err) {
+                console.error('Ошибка загрузки досок:', err);
+                document.getElementById('boardTasksList').innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
             }
-            container.innerHTML = html;
         }
 
         window.deleteBoardTask = async function(id) {
             if (!confirm('Удалить задание? Участники потеряют доступ.')) return;
-            await sb.from('board_participants').delete().eq('board_task_id', id);
-            await sb.from('board_tasks').delete().eq('id', id);
-            loadBoardTasks();
-            showToast('✅ Задание удалено');
+            try {
+                await sb.from('board_participants').delete().eq('board_task_id', id);
+                await sb.from('board_tasks').delete().eq('id', id);
+                loadBoardTasks();
+                showToast('✅ Задание удалено');
+            } catch (err) {
+                alert('Ошибка: ' + err.message);
+            }
         };
 
         window.createBoardTask = async function() {
@@ -482,62 +530,81 @@
             const tech = document.getElementById('boardTech').value;
             const deadline = document.getElementById('boardDeadline').value;
 
-            if (!title) { alert('Введите название задания'); return; }
-            if (!deadline) { alert('Укажите срок выполнения'); return; }
-
-            const { error } = await sb.from('board_tasks').insert([{
-                title: title,
-                description: desc,
-                technical_task: tech,
-                deadline: new Date(deadline).toISOString(),
-                is_active: true
-            }]);
-
-            if (error) {
-                alert('Ошибка: ' + error.message);
+            if (!title) {
+                alert('Введите название задания');
+                return;
+            }
+            if (!deadline) {
+                alert('Укажите срок выполнения');
                 return;
             }
 
-            document.getElementById('boardTitle').value = '';
-            document.getElementById('boardDesc').value = '';
-            document.getElementById('boardTech').value = '';
-            document.getElementById('boardDeadline').value = '';
-            loadBoardTasks();
-            showToast('✅ Задание опубликовано на доске');
+            try {
+                const { error } = await sb.from('board_tasks').insert([{
+                    title: title,
+                    description: desc,
+                    technical_task: tech,
+                    deadline: new Date(deadline).toISOString(),
+                    is_active: true
+                }]);
+
+                if (error) throw error;
+
+                document.getElementById('boardTitle').value = '';
+                document.getElementById('boardDesc').value = '';
+                document.getElementById('boardTech').value = '';
+                document.getElementById('boardDeadline').value = '';
+                loadBoardTasks();
+                showToast('✅ Задание опубликовано на доске');
+            } catch (err) {
+                alert('Ошибка: ' + err.message);
+            }
         };
 
         // ========== ШАБЛОНЫ ==========
         async function loadTemplates() {
-            const { data, error } = await sb
-                .from('task_templates')
-                .select('*')
-                .eq('is_active', true)
-                .order('id');
+            try {
+                const { data, error } = await sb
+                    .from('task_templates')
+                    .select('*')
+                    .eq('is_active', true)
+                    .order('id');
 
-            const container = document.getElementById('templatesList');
-            if (error) {
-                container.innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
-                return;
-            }
-            if (!data || data.length === 0) {
-                container.innerHTML = '<div class="empty-state">📭 Нет шаблонов. Создайте первый!</div>';
-                return;
-            }
+                const container = document.getElementById('templatesList');
+                if (error) throw error;
 
-            container.innerHTML = data.map(t => {
-                let typeLabel = '';
-                let typeClass = '';
-                if (t.type === 'raspush') { typeLabel = '📢 Распуш'; typeClass = 'type-raspush'; }
-                else if (t.type === 'event') { typeLabel = '🎉 Событие'; typeClass = 'type-event'; }
-                else { typeLabel = '⭐ По желанию'; typeClass = 'type-optional'; }
-                return `
-                    <div class="template-item" onclick="selectTemplate(${t.id}, '${t.title.replace(/'/g, "\\'")}', '${t.type || 'raspush'}')">
-                        <strong>${t.title}</strong>
-                        <span class="type-badge ${typeClass}">${typeLabel}</span>
-                        <div style="font-size: 12px; opacity: 0.6; margin-top: 4px;">${t.description || ''}</div>
-                    </div>
-                `;
-            }).join('');
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">📭 Нет шаблонов. Создайте первый!</div>';
+                    return;
+                }
+
+                let html = '';
+                for (let t of data) {
+                    let typeLabel = '';
+                    let typeClass = '';
+                    if (t.type === 'raspush') {
+                        typeLabel = '📢 Распуш';
+                        typeClass = 'type-raspush';
+                    } else if (t.type === 'event') {
+                        typeLabel = '🎉 Событие';
+                        typeClass = 'type-event';
+                    } else {
+                        typeLabel = '⭐ По желанию';
+                        typeClass = 'type-optional';
+                    }
+                    html += `
+                        <div class="template-item" onclick="selectTemplate(${t.id}, '${escapeHtml(t.title).replace(/'/g, "\\'")}', '${t.type || 'raspush'}')">
+                            <strong>${escapeHtml(t.title)}</strong>
+                            <span class="type-badge ${typeClass}">${typeLabel}</span>
+                            <div style="font-size: 12px; color: #64748b; margin-top: 4px;">${escapeHtml(t.description || '')}</div>
+                        </div>
+                    `;
+                }
+                container.innerHTML = html;
+            } catch (err) {
+                console.error('Ошибка загрузки шаблонов:', err);
+                document.getElementById('templatesList').innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
+            }
         }
 
         window.selectTemplate = function(id, title, type) {
@@ -558,15 +625,15 @@
             if (type === 'raspush') {
                 addLinkBtn.style.display = 'block';
                 warning.style.display = 'block';
-                infoBox.innerHTML = '🔥 <strong>РАСПУШ</strong> — можно добавить несколько ссылок<br>• Ссылки и срок обязательны!';
+                infoBox.innerHTML = '🔥 <strong>РАСПУШ</strong> — можно добавить несколько ссылок (для разных соцсетей)<br>• Ссылки и срок обязательны!';
                 document.querySelector('#linksContainer input').placeholder = '🔗 Ссылка 1 (обязательно)';
             } else {
                 addLinkBtn.style.display = 'none';
                 warning.style.display = 'none';
                 if (type === 'event') {
-                    infoBox.innerHTML = '🎉 <strong>СОБЫТИЕ</strong> — можно отправить ссылку<br>• Ссылка не обязательна';
+                    infoBox.innerHTML = '🎉 <strong>СОБЫТИЕ</strong> — можно отправить ссылку на фото/видео<br>• Ссылка не обязательна, срок опционально';
                 } else {
-                    infoBox.innerHTML = '⭐ <strong>ПО ЖЕЛАНИЮ</strong> — дополнительное задание<br>• Ссылка не обязательна';
+                    infoBox.innerHTML = '⭐ <strong>ПО ЖЕЛАНИЮ</strong> — дополнительное задание<br>• Ссылка не обязательна, срок опционально';
                 }
                 document.querySelector('#linksContainer input').placeholder = '🔗 Ссылка (опционально)';
             }
@@ -626,177 +693,204 @@
 
             const allLinks = links.join(', ');
 
-            const { data: allChiefs, error: chiefsError } = await sb
-                .from('chiefs')
-                .select('id, district_id');
+            try {
+                const { data: allChiefs, error: chiefsError } = await sb
+                    .from('chiefs')
+                    .select('id, district_id');
 
-            if (chiefsError) {
-                alert('Ошибка получения списка шефов: ' + chiefsError.message);
-                return;
-            }
+                if (chiefsError) throw chiefsError;
 
-            if (!allChiefs || allChiefs.length === 0) {
-                alert('Нет шефов для отправки.');
-                return;
-            }
-
-            let successCount = 0;
-            let errorCount = 0;
-
-            for (const chief of allChiefs) {
-                const { error: insertError } = await sb
-                    .from('assignments')
-                    .insert([{
-                        template_id: selectedTemplateId,
-                        chief_id: chief.id,
-                        district_id: chief.district_id,
-                        link: allLinks || null,
-                        coordinator_comment: comment || null,
-                        deadline: deadline ? new Date(deadline).toISOString() : null,
-                        status: 'pending',
-                        type: selectedTemplateType
-                    }]);
-
-                if (insertError) {
-                    errorCount++;
-                    console.error('Ошибка для шефа', chief.id, insertError);
-                } else {
-                    successCount++;
+                if (!allChiefs || allChiefs.length === 0) {
+                    alert('Нет шефов для отправки.');
+                    return;
                 }
+
+                let successCount = 0;
+                let errorCount = 0;
+
+                for (const chief of allChiefs) {
+                    const { error: insertError } = await sb
+                        .from('assignments')
+                        .insert([{
+                            template_id: selectedTemplateId,
+                            chief_id: chief.id,
+                            district_id: chief.district_id,
+                            link: allLinks || null,
+                            coordinator_comment: comment || null,
+                            deadline: deadline ? new Date(deadline).toISOString() : null,
+                            status: 'pending',
+                            type: selectedTemplateType
+                        }]);
+
+                    if (insertError) {
+                        errorCount++;
+                        console.error('Ошибка для шефа', chief.id, insertError);
+                    } else {
+                        successCount++;
+                    }
+                }
+
+                alert(`✅ Задача "${selectedTemplateTitle}" отправлена ${successCount} шефам!\n❌ Ошибок: ${errorCount}`);
+
+                // Очищаем поля
+                document.getElementById('linksContainer').innerHTML = `
+                    <div class="link-group">
+                        <input type="text" id="taskLink1" placeholder="🔗 Ссылка 1">
+                        <div class="remove-link" onclick="removeLink(1)" style="display: none;">✖</div>
+                    </div>
+                `;
+                linkCounter = 1;
+                document.getElementById('taskDeadline').value = '';
+                document.getElementById('taskComment').value = '';
+
+                loadActiveTasks();
+                loadActiveTasks2();
+            } catch (err) {
+                alert('Ошибка: ' + err.message);
             }
-
-            alert(`✅ Задача "${selectedTemplateTitle}" отправлена ${successCount} шефам!\n❌ Ошибок: ${errorCount}`);
-
-            document.getElementById('linksContainer').innerHTML = `
-                <div class="link-group">
-                    <input type="text" id="taskLink1" placeholder="🔗 Ссылка 1">
-                    <div class="remove-link" onclick="removeLink(1)" style="display: none;">✖</div>
-                </div>
-            `;
-            linkCounter = 1;
-            document.getElementById('taskDeadline').value = '';
-            document.getElementById('taskComment').value = '';
-
-            loadActiveTasks();
-            loadActiveTasks2();
         };
 
         // ========== АКТИВНЫЕ ЗАДАЧИ ==========
         async function loadActiveTasks() {
-            const { data, error } = await sb
-                .from('assignments')
-                .select('*, task_templates(*), chiefs(name, primary_branch_id)')
-                .neq('status', 'completed')
-                .order('created_at', { ascending: false })
-                .limit(40);
+            try {
+                const { data, error } = await sb
+                    .from('assignments')
+                    .select('*, task_templates(*), chiefs(name, primary_branch_id)')
+                    .neq('status', 'completed')
+                    .order('created_at', { ascending: false })
+                    .limit(40);
 
-            const container = document.getElementById('activeTasksList');
-            if (error) {
-                container.innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
-                return;
-            }
-            if (!data || data.length === 0) {
-                container.innerHTML = '<div class="empty-state">✅ Нет активных задач</div>';
-                return;
-            }
+                const container = document.getElementById('activeTasksList');
+                if (error) throw error;
 
-            container.innerHTML = data.map(task => {
-                let deadlineHtml = '';
-                if (task.deadline) {
-                    deadlineHtml = `<div style="font-size: 11px; margin-top: 4px;">⏰ Срок: ${new Date(task.deadline).toLocaleString()}</div>`;
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">✅ Нет активных задач</div>';
+                    return;
                 }
-                return `
-                    <div class="task-item">
-                        <div class="task-header">
-                            <strong>${task.task_templates?.title || 'Задача'}</strong>
-                            <span class="task-status">${task.status === 'pending' ? '⏳ Ожидает' : '🔄 В работе'}</span>
+
+                let html = '';
+                for (let task of data) {
+                    let deadlineHtml = '';
+                    if (task.deadline) {
+                        deadlineHtml = `<div style="font-size: 11px; margin-top: 4px; color: #d97706;">⏰ Срок: ${new Date(task.deadline).toLocaleString()}</div>`;
+                    }
+                    html += `
+                        <div class="task-item">
+                            <div class="task-header">
+                                <strong>${escapeHtml(task.task_templates?.title || 'Задача')}</strong>
+                                <span class="task-status">${task.status === 'pending' ? '⏳ Ожидает' : '🔄 В работе'}</span>
+                            </div>
+                            <div style="font-size: 12px; margin-top: 6px; color: #64748b;">Шеф: ${escapeHtml(task.chiefs?.name || 'Шеф')} | ${task.chiefs?.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</div>
+                            ${deadlineHtml}
+                            ${task.link ? `<a href="${task.link.split(',')[0]}" target="_blank" style="color: #3b82f6; font-size: 11px;">🔗 Ссылка</a>` : ''}
                         </div>
-                        <div style="font-size: 12px; margin-top: 6px;">Шеф: ${task.chiefs?.name} | ${task.chiefs?.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</div>
-                        ${deadlineHtml}
-                        ${task.link ? `<a href="${task.link.split(',')[0]}" target="_blank" style="color: #6c8cff; font-size: 11px;">🔗 Ссылка</a>` : ''}
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }
+                container.innerHTML = html;
+            } catch (err) {
+                console.error('Ошибка загрузки активных задач:', err);
+                document.getElementById('activeTasksList').innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
+            }
         }
 
         async function loadActiveTasks2() {
-            const { data, error } = await sb
-                .from('assignments')
-                .select('*, task_templates(*), chiefs(name, primary_branch_id)')
-                .neq('status', 'completed')
-                .order('created_at', { ascending: false })
-                .limit(40);
+            try {
+                const { data, error } = await sb
+                    .from('assignments')
+                    .select('*, task_templates(*), chiefs(name, primary_branch_id)')
+                    .neq('status', 'completed')
+                    .order('created_at', { ascending: false })
+                    .limit(40);
 
-            const container = document.getElementById('activeTasksList2');
-            if (error) {
-                container.innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
-                return;
-            }
-            if (!data || data.length === 0) {
-                container.innerHTML = '<div class="empty-state">✅ Нет активных задач</div>';
-                return;
-            }
+                const container = document.getElementById('activeTasksList2');
+                if (error) throw error;
 
-            container.innerHTML = data.map(task => {
-                let deadlineHtml = '';
-                if (task.deadline) {
-                    deadlineHtml = `<div style="font-size: 11px; margin-top: 4px;">⏰ Срок: ${new Date(task.deadline).toLocaleString()}</div>`;
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">✅ Нет активных задач</div>';
+                    return;
                 }
-                return `
-                    <div class="task-item">
-                        <div class="task-header">
-                            <strong>${task.task_templates?.title || 'Задача'}</strong>
-                            <span class="task-status">${task.status === 'pending' ? '⏳ Ожидает' : '🔄 В работе'}</span>
+
+                let html = '';
+                for (let task of data) {
+                    let deadlineHtml = '';
+                    if (task.deadline) {
+                        deadlineHtml = `<div style="font-size: 11px; margin-top: 4px; color: #d97706;">⏰ Срок: ${new Date(task.deadline).toLocaleString()}</div>`;
+                    }
+                    html += `
+                        <div class="task-item">
+                            <div class="task-header">
+                                <strong>${escapeHtml(task.task_templates?.title || 'Задача')}</strong>
+                                <span class="task-status">${task.status === 'pending' ? '⏳ Ожидает' : '🔄 В работе'}</span>
+                            </div>
+                            <div style="font-size: 12px; margin-top: 6px; color: #64748b;">Шеф: ${escapeHtml(task.chiefs?.name || 'Шеф')} | ${task.chiefs?.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</div>
+                            ${deadlineHtml}
+                            ${task.link ? `<a href="${task.link.split(',')[0]}" target="_blank" style="color: #3b82f6; font-size: 11px;">🔗 Ссылка</a>` : ''}
                         </div>
-                        <div style="font-size: 12px; margin-top: 6px;">Шеф: ${task.chiefs?.name} | ${task.chiefs?.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</div>
-                        ${deadlineHtml}
-                        ${task.link ? `<a href="${task.link.split(',')[0]}" target="_blank" style="color: #6c8cff; font-size: 11px;">🔗 Ссылка</a>` : ''}
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }
+                container.innerHTML = html;
+            } catch (err) {
+                console.error('Ошибка загрузки активных задач:', err);
+                document.getElementById('activeTasksList2').innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
+            }
         }
 
         // ========== СОЗДАНИЕ ШАБЛОНА ==========
         window.createTemplate = async function() {
             const title = document.getElementById('newTemplateTitle').value;
             const desc = document.getElementById('newTemplateDesc').value;
-            const type = document.getElementById('templateType').value;
+            const type = document.getElementById('templateTypeSelect').value;
 
             if (!title) {
                 alert('Введите название шаблона');
                 return;
             }
 
-            const { error } = await sb
-                .from('task_templates')
-                .insert([{ title, description: desc, type: type, is_active: true }]);
+            try {
+                const { error } = await sb
+                    .from('task_templates')
+                    .insert([{ title: title, description: desc, type: type, is_active: true }]);
 
-            if (error) {
-                alert('Ошибка: ' + error.message);
-                return;
+                if (error) throw error;
+
+                document.getElementById('newTemplateTitle').value = '';
+                document.getElementById('newTemplateDesc').value = '';
+                loadTemplates();
+                showToast('✅ Шаблон создан');
+            } catch (err) {
+                alert('Ошибка: ' + err.message);
             }
-
-            document.getElementById('newTemplateTitle').value = '';
-            document.getElementById('newTemplateDesc').value = '';
-            loadTemplates();
-            showToast('✅ Шаблон создан');
         };
+
+        // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
 
         function showToast(msg) {
             const toast = document.createElement('div');
             toast.className = 'toast';
             toast.innerText = msg;
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2500);
+            setTimeout(() => {
+                toast.remove();
+            }, 2500);
         }
 
-        // Переключение вкладок
+        // ========== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ==========
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.onclick = () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
                 document.getElementById(btn.dataset.tab + '-panel').classList.add('active');
+                
                 if (btn.dataset.tab === 'board') loadBoardTasks();
                 if (btn.dataset.tab === 'templates') loadTemplates();
                 if (btn.dataset.tab === 'send') loadActiveTasks();
@@ -804,12 +898,13 @@
             };
         });
 
-        // Инициализация
+        // ========== ЗАПУСК ==========
         loadBoardTasks();
         loadTemplates();
         loadActiveTasks();
         loadActiveTasks2();
 
+        // Автообновление
         setInterval(() => {
             if (document.querySelector('.tab-btn.active')?.dataset.tab === 'send') loadActiveTasks();
             if (document.querySelector('.tab-btn.active')?.dataset.tab === 'active') loadActiveTasks2();
