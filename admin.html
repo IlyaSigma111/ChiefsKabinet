@@ -47,12 +47,11 @@
         }
 
         .card {
-            background: rgba(26, 30, 42, 0.9);
-            backdrop-filter: blur(10px);
+            background: #1a1e2a;
             border-radius: 28px;
             padding: 20px 28px;
             margin-bottom: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid #2d3748;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
@@ -67,19 +66,18 @@
         h1 {
             font-size: 26px;
             font-weight: 700;
-            background: linear-gradient(135deg, #fff, #a0a0ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #fff;
         }
 
         .status-badge {
-            background: rgba(0, 0, 0, 0.5);
+            background: #0f1117;
             padding: 6px 16px;
             border-radius: 30px;
             font-size: 12px;
+            border: 1px solid #2d3748;
         }
-        .status-badge.online { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .status-badge.offline { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .status-badge.online { background: #10b98120; color: #10b981; border-color: #10b98140; }
+        .status-badge.offline { background: #f8717120; color: #f87171; border-color: #f8717140; }
 
         .tabs {
             display: flex;
@@ -89,31 +87,31 @@
         }
         .tab-btn {
             padding: 10px 24px;
-            background: rgba(0, 0, 0, 0.4);
-            border: none;
+            background: #0f1117;
+            border: 1px solid #2d3748;
             border-radius: 40px;
-            color: rgba(255, 255, 255, 0.7);
+            color: #9ca3af;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
         }
         .tab-btn:hover {
-            background: rgba(108, 140, 255, 0.2);
+            background: #1e2a3a;
+            color: #fff;
         }
         .tab-btn.active {
-            background: rgba(108, 140, 255, 0.3);
-            border: 1px solid rgba(108, 140, 255, 0.5);
-            color: white;
+            background: #6c8cff;
+            border-color: #6c8cff;
+            color: #fff;
         }
 
         .panel {
             display: none;
-            background: rgba(26, 30, 42, 0.7);
-            backdrop-filter: blur(10px);
+            background: #1a1e2a;
             border-radius: 24px;
             padding: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid #2d3748;
         }
         .panel.active {
             display: block;
@@ -122,23 +120,20 @@
             font-size: 20px;
             margin-bottom: 20px;
             padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #2d3748;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: #fff;
         }
 
         .search-input {
             width: 100%;
             padding: 14px 18px;
-            background: rgba(15, 17, 23, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #0f1117;
+            border: 1px solid #2d3748;
             border-radius: 24px;
             color: #fff;
             font-size: 14px;
             margin-bottom: 20px;
-            transition: all 0.2s;
         }
         .search-input:focus {
             outline: none;
@@ -148,8 +143,6 @@
         .table-wrapper {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            margin: 0 -4px;
-            padding: 0 4px;
         }
         table {
             width: 100%;
@@ -159,16 +152,12 @@
         th, td {
             padding: 14px 12px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid #2d3748;
             font-size: 13px;
         }
         th {
             font-weight: 600;
-            opacity: 0.7;
-            letter-spacing: 0.5px;
-        }
-        tr:hover td {
-            background: rgba(108, 140, 255, 0.05);
+            color: #9ca3af;
         }
 
         .delete-btn, .add-points-btn, .remove-points-btn {
@@ -182,35 +171,35 @@
             transition: all 0.2s;
         }
         .delete-btn {
-            background: rgba(239, 68, 68, 0.2);
+            background: #f8717120;
             color: #f87171;
         }
         .delete-btn:hover {
-            background: rgba(239, 68, 68, 0.4);
+            background: #f8717140;
         }
         .add-points-btn {
-            background: rgba(16, 185, 129, 0.2);
+            background: #10b98120;
             color: #10b981;
         }
         .add-points-btn:hover {
-            background: rgba(16, 185, 129, 0.4);
+            background: #10b98140;
         }
         .remove-points-btn {
-            background: rgba(245, 158, 11, 0.2);
+            background: #f59e0b20;
             color: #f59e0b;
         }
         .remove-points-btn:hover {
-            background: rgba(245, 158, 11, 0.4);
+            background: #f59e0b40;
         }
 
         .danger-zone {
             margin-top: 24px;
             padding-top: 20px;
-            border-top: 2px solid rgba(239, 68, 68, 0.3);
+            border-top: 2px solid #f8717140;
         }
         .danger-btn {
-            background: rgba(239, 68, 68, 0.3);
-            border: 1px solid rgba(239, 68, 68, 0.5);
+            background: #f8717120;
+            border: 1px solid #f8717140;
             padding: 12px 20px;
             border-radius: 40px;
             color: #f87171;
@@ -221,7 +210,7 @@
             transition: all 0.2s;
         }
         .danger-btn:hover {
-            background: rgba(239, 68, 68, 0.5);
+            background: #f8717140;
         }
 
         .status-badge-small {
@@ -232,17 +221,17 @@
             font-weight: 500;
         }
         .status-active {
-            background: rgba(16, 185, 129, 0.2);
+            background: #10b98120;
             color: #10b981;
         }
         .status-inactive {
-            background: rgba(239, 68, 68, 0.2);
+            background: #f8717120;
             color: #f87171;
         }
 
         .task-stats {
             font-size: 11px;
-            opacity: 0.7;
+            color: #9ca3af;
             margin-top: 2px;
         }
 
@@ -251,7 +240,7 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.95);
+            background: #1a1e2a;
             backdrop-filter: blur(12px);
             padding: 12px 24px;
             border-radius: 50px;
@@ -262,54 +251,23 @@
             text-align: center;
             white-space: normal;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.3s ease;
-        }
-        @keyframes slideUp {
-            from {
-                transform: translateX(-50%) translateY(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(-50%) translateY(0);
-                opacity: 1;
-            }
         }
 
         .empty-state {
             text-align: center;
             padding: 50px 20px;
-            opacity: 0.6;
-            font-size: 14px;
+            color: #9ca3af;
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 12px;
-            }
-            .card {
-                padding: 16px 20px;
-            }
-            h1 {
-                font-size: 22px;
-            }
-            .tab-btn {
-                padding: 8px 18px;
-                font-size: 13px;
-            }
-            .panel {
-                padding: 18px;
-            }
-            .panel h2 {
-                font-size: 18px;
-            }
-            th, td {
-                padding: 10px 8px;
-                font-size: 11px;
-            }
-            .delete-btn, .add-points-btn, .remove-points-btn {
-                padding: 4px 10px;
-                font-size: 10px;
-            }
+            .container { padding: 12px; }
+            .card { padding: 16px 20px; }
+            h1 { font-size: 22px; }
+            .tab-btn { padding: 8px 18px; font-size: 13px; }
+            .panel { padding: 18px; }
+            .panel h2 { font-size: 18px; }
+            th, td { padding: 10px 8px; font-size: 11px; }
+            .delete-btn, .add-points-btn, .remove-points-btn { padding: 4px 10px; font-size: 10px; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -336,14 +294,13 @@
             <button class="tab-btn" data-tab="ratingPrimary">📊 Рейтинг первичек</button>
         </div>
 
-        <!-- Панель задач -->
         <div id="tasks-panel" class="panel active">
             <h2>📋 Управление задачами</h2>
             <input type="text" id="taskSearch" class="search-input" placeholder="🔍 Поиск по названию задачи...">
             <div class="table-wrapper">
-                <table>
+                 <table>
                     <thead>
-                        <tr>
+                         <tr>
                             <th>ID</th>
                             <th>Задача</th>
                             <th>Описание</th>
@@ -360,14 +317,13 @@
             </div>
         </div>
 
-        <!-- Панель шефов -->
         <div id="chiefs-panel" class="panel">
             <h2>👥 Управление баллами шефов</h2>
             <input type="text" id="chiefSearch" class="search-input" placeholder="🔍 Поиск по имени или округу...">
             <div class="table-wrapper">
                 <table>
                     <thead>
-                        <tr>
+                         <tr>
                             <th>Шеф</th>
                             <th>Округ</th>
                             <th>Тип</th>
@@ -380,26 +336,24 @@
             </div>
         </div>
 
-        <!-- Рейтинг местных отделений -->
         <div id="ratingMain-panel" class="panel">
             <h2>🏆 Рейтинг местных отделений</h2>
             <div class="table-wrapper">
                 <table>
                     <thead>
-                        <tr><th>Округ</th><th>Всего баллов</th><th>Количество шефов</th><th>Средний балл</th></tr>
+                         <tr><th>Округ</th><th>Всего баллов</th><th>Количество шефов</th><th>Средний балл</th></tr>
                     </thead>
                     <tbody id="ratingMainTable"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Рейтинг первичек -->
         <div id="ratingPrimary-panel" class="panel">
             <h2>📊 Рейтинг первичных отделений</h2>
             <div class="table-wrapper">
                 <table>
                     <thead>
-                        <tr><th>Округ</th><th>Всего баллов</th><th>Количество первичек</th><th>Средний балл</th></tr>
+                         <tr><th>Округ</th><th>Всего баллов</th><th>Количество первичек</th><th>Средний балл</th></tr>
                     </thead>
                     <tbody id="ratingPrimaryTable"></tbody>
                 </table>
@@ -427,7 +381,6 @@
             }
         }
 
-        // ========== ЗАДАЧИ ==========
         async function loadTasks() {
             const { data: templates } = await sb.from('task_templates').select('*').order('id');
             const { data: assignments } = await sb.from('assignments').select('template_id, status');
@@ -441,7 +394,7 @@
             const filtered = allTemplates.filter(t => t.title.toLowerCase().includes(search));
             const tbody = document.getElementById('tasksTable');
             if (!filtered.length) {
-                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">📭 Нет задач</td></tr>';
+                tbody.innerHTML = '发展<td colspan="6" class="empty-state">📭 Нет задач<\/td><\/tr>';
                 return;
             }
             
@@ -452,55 +405,41 @@
                 const completed = tasks.filter(a => a.status === 'completed').length;
                 html += `
                     <tr>
-                        <td style="font-family: monospace;">${t.id}</td>
-                        <td><strong>${t.title}</strong></td>
-                        <td>${t.description || '-'}</td>
+                        <td style="font-family: monospace;">${t.id}<\/td>
+                        <td><strong>${t.title}</strong><\/td>
+                        <td>${t.description || '-'}<\/td>
                         <td>
                             <div>Всего: ${total}</div>
                             <div class="task-stats">✅ Выполнено: ${completed}</div>
                             <div class="task-stats">⏳ Ожидает: ${total - completed}</div>
-                        </td>
-                        <td><span class="status-badge-small status-active">${t.type === 'event' ? '🎉 Событие' : '📢 Распуш'}</span></td>
-                        <td><button class="delete-btn" onclick="deleteTaskByTemplate(${t.id}, '${t.title.replace(/'/g, "\\'")}')">🗑 Удалить у всех</button></td>
-                    </tr>
+                        <\/td>
+                        <td><span class="status-badge-small status-active">${t.type === 'event' ? '🎉 Событие' : '📢 Распуш'}</span><\/td>
+                        <td><button class="delete-btn" onclick="deleteTaskByTemplate(${t.id}, '${t.title.replace(/'/g, "\\'")}')">🗑 Удалить у всех</button><\/td>
+                    <\/tr>
                 `;
             }
             tbody.innerHTML = html;
         }
 
-        // Удалить конкретную задачу у всех шефов
         window.deleteTaskByTemplate = async function(templateId, templateTitle) {
-            if (!confirm(`Удалить ВСЕ задачи "${templateTitle}" у ВСЕХ шефов? Это действие нельзя отменить.`)) return;
-            
-            const { data: tasksToDelete } = await sb.from('assignments').select('id').eq('template_id', templateId);
-            if (tasksToDelete && tasksToDelete.length > 0) {
-                for (let t of tasksToDelete) {
-                    await sb.from('operations_history').delete().eq('assignment_id', t.id);
-                }
+            if (!confirm(`Удалить ВСЕ задачи "${templateTitle}" у ВСЕХ шефов?`)) return;
+            const { data: tasks } = await sb.from('assignments').select('id').eq('template_id', templateId);
+            if (tasks?.length) {
+                for (let t of tasks) await sb.from('operations_history').delete().eq('assignment_id', t.id);
                 await sb.from('assignments').delete().eq('template_id', templateId);
             }
-            loadTasks();
-            loadChiefs();
-            loadRatingMain();
-            loadRatingPrimary();
-            showToast(`✅ Все задачи "${templateTitle}" удалены у всех шефов`);
+            loadTasks(); loadChiefs(); loadRatingMain(); loadRatingPrimary();
+            showToast(`✅ Задачи "${templateTitle}" удалены`);
         };
 
-        // Удалить ВСЕ задачи (всех шаблонов, всех шефов)
         window.deleteAllTasks = async function() {
-            if (!confirm('⚠️ УДАЛИТЬ ВСЕ ЗАДАЧИ У ВСЕХ ШЕФОВ? Это действие нельзя отменить! Все данные будут потеряны!')) return;
-            
+            if (!confirm('⚠️ УДАЛИТЬ ВСЕ ЗАДАЧИ У ВСЕХ ШЕФОВ? Это действие нельзя отменить!')) return;
             await sb.from('operations_history').delete().neq('id', 0);
             await sb.from('assignments').delete().neq('id', 0);
-            
-            loadTasks();
-            loadChiefs();
-            loadRatingMain();
-            loadRatingPrimary();
+            loadTasks(); loadChiefs(); loadRatingMain(); loadRatingPrimary();
             showToast('✅ Все задачи удалены');
         };
 
-        // ========== ШЕФЫ ==========
         async function loadChiefs() {
             const { data: chiefs } = await sb.from('chiefs').select('*, districts(name)').order('name');
             const { data: scores } = await sb.from('chief_scores').select('*');
@@ -509,96 +448,76 @@
             const list = (chiefs || []).map(c => ({ ...c, score: scoreMap[c.id] || 0 }));
             const tbody = document.getElementById('chiefsTable');
             if (!list.length) {
-                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">👥 Нет шефов</td></tr>';
+                tbody.innerHTML = '发展<td colspan="5" class="empty-state">👥 Нет шефов<\/td><\/tr>';
                 return;
             }
-            
             let html = '';
             for (let c of list) {
                 html += `
                     <tr>
-                        <td>${c.name || '-'}</td>
-                        <td>${c.districts?.name || '-'}</td>
-                        <td><span class="status-badge-small status-active">${c.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</span></td>
-                        <td style="color: #6c8cff; font-weight: 600;">${c.score} баллов</td>
+                        <td>${c.name || '-'}<\/td>
+                        <td>${c.districts?.name || '-'}<\/td>
+                        <td><span class="status-badge-small status-active">${c.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</span><\/td>
+                        <td style="color: #6c8cff;">${c.score} баллов<\/td>
                         <td>
                             <button class="add-points-btn" onclick="addPoints('${c.id}')">+1</button>
                             <button class="remove-points-btn" onclick="removePoints('${c.id}')">-1</button>
-                        </td>
-                    </tr>
+                        <\/td>
+                    <\/tr>
                 `;
             }
             tbody.innerHTML = html;
         }
 
-        window.addPoints = async function(chiefId) {
-            const { data: current } = await sb.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
-            const newScore = (current?.total_score || 0) + 1;
-            await sb.from('chief_scores').upsert({ chief_id: chiefId, total_score: newScore, updated_at: new Date() });
-            await sb.from('operations_history').insert([{ chief_id: chiefId, action: 'Админ начислил +1 балл' }]);
-            
-            const { data: chief } = await sb.from('chiefs').select('district_id').eq('id', chiefId).single();
+        window.addPoints = async function(id) {
+            const { data: cur } = await sb.from('chief_scores').select('total_score').eq('chief_id', id).single();
+            const newScore = (cur?.total_score || 0) + 1;
+            await sb.from('chief_scores').upsert({ chief_id: id, total_score: newScore, updated_at: new Date() });
+            await sb.from('operations_history').insert([{ chief_id: id, action: 'Админ +1 балл' }]);
+            const { data: chief } = await sb.from('chiefs').select('district_id').eq('id', id).single();
             if (chief) await updateDistrictScore(chief.district_id);
-            
-            loadChiefs();
-            loadRatingMain();
-            loadRatingPrimary();
-            showToast('✅ Начислен 1 балл');
+            loadChiefs(); loadRatingMain(); loadRatingPrimary();
+            showToast('✅ +1 балл');
         };
 
-        window.removePoints = async function(chiefId) {
-            const { data: current } = await sb.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
-            const newScore = Math.max(0, (current?.total_score || 0) - 1);
-            await sb.from('chief_scores').upsert({ chief_id: chiefId, total_score: newScore, updated_at: new Date() });
-            await sb.from('operations_history').insert([{ chief_id: chiefId, action: 'Админ снял 1 балл' }]);
-            
-            const { data: chief } = await sb.from('chiefs').select('district_id').eq('id', chiefId).single();
+        window.removePoints = async function(id) {
+            const { data: cur } = await sb.from('chief_scores').select('total_score').eq('chief_id', id).single();
+            const newScore = Math.max(0, (cur?.total_score || 0) - 1);
+            await sb.from('chief_scores').upsert({ chief_id: id, total_score: newScore, updated_at: new Date() });
+            await sb.from('operations_history').insert([{ chief_id: id, action: 'Админ -1 балл' }]);
+            const { data: chief } = await sb.from('chiefs').select('district_id').eq('id', id).single();
             if (chief) await updateDistrictScore(chief.district_id);
-            
-            loadChiefs();
-            loadRatingMain();
-            loadRatingPrimary();
-            showToast('⚠️ Снят 1 балл');
+            loadChiefs(); loadRatingMain(); loadRatingPrimary();
+            showToast('⚠️ -1 балл');
         };
 
         async function updateDistrictScore(districtId) {
             const { data: chiefs } = await sb.from('chiefs').select('id').eq('district_id', districtId);
-            let totalScore = 0;
+            let total = 0;
             for (let c of chiefs) {
                 const { data: s } = await sb.from('chief_scores').select('total_score').eq('chief_id', c.id).single();
-                totalScore += s?.total_score || 0;
+                total += s?.total_score || 0;
             }
-            await sb.from('district_scores').upsert({
-                district_id: districtId,
-                total_score: totalScore,
-                updated_at: new Date()
-            });
+            await sb.from('district_scores').upsert({ district_id: districtId, total_score: total, updated_at: new Date() });
         }
 
-        // ========== РЕЙТИНГИ ==========
         async function loadRatingMain() {
-            const { data: districtScores } = await sb
-                .from('district_scores')
-                .select('*, districts(name)')
-                .order('total_score', { ascending: false });
-            
+            const { data } = await sb.from('district_scores').select('*, districts(name)').order('total_score', { ascending: false });
             const tbody = document.getElementById('ratingMainTable');
-            if (!districtScores || districtScores.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="empty-state">🏆 Нет данных</td></tr>';
+            if (!data?.length) {
+                tbody.innerHTML = '发展<td colspan="4" class="empty-state">Нет данных<\/td><\/tr>';
                 return;
             }
-            
             let html = '';
-            for (let d of districtScores) {
+            for (let d of data) {
                 const { count } = await sb.from('chiefs').select('*', { count: 'exact', head: true }).eq('district_id', d.district_id);
-                const avg = count > 0 ? Math.round(d.total_score / count) : 0;
                 html += `
                     <tr>
-                        <td style="font-weight: 500;">${d.districts?.name || 'Неизвестно'}</td>
-                        <td style="color: #6c8cff; font-weight: 600;">${d.total_score} баллов</td>
-                        <td>${count || 0} шефов</td>
-                        <td>${avg} баллов</td>
-                    </tr>
+                        <td style="font-weight:500;">${d.districts?.name || 'Неизвестно'}<\/td>
+                        <td style="color:#6c8cff;">${d.total_score} баллов<\/td>
+                        <td>${count || 0} шефов<\/td>
+                        <td>${count > 0 ? Math.round(d.total_score / count) : 0} баллов<\/td>
+                    <\/tr>
                 `;
             }
             tbody.innerHTML = html;
@@ -607,10 +526,8 @@
         async function loadRatingPrimary() {
             const { data: chiefs } = await sb.from('chiefs').select('id, district_id, districts(name), primary_branch_id');
             const { data: scores } = await sb.from('chief_scores').select('*');
-            
             const scoreMap = {};
             if (scores) for (let s of scores) scoreMap[s.chief_id] = s.total_score || 0;
-            
             const districts = {};
             for (let c of (chiefs || [])) {
                 if (!c.primary_branch_id) continue;
@@ -619,29 +536,20 @@
                 districts[name].total += scoreMap[c.id] || 0;
                 districts[name].count++;
             }
-            
-            const sorted = Object.entries(districts)
-                .map(([name, d]) => ({ name, total: d.total, count: d.count, avg: Math.round(d.total / d.count) }))
-                .sort((a, b) => b.total - a.total);
-            
+            const sorted = Object.entries(districts).map(([n, d]) => ({ name: n, total: d.total, count: d.count, avg: Math.round(d.total/d.count) })).sort((a,b) => b.total - a.total);
             const tbody = document.getElementById('ratingPrimaryTable');
             if (!sorted.length) {
-                tbody.innerHTML = '<tr><td colspan="4" class="empty-state">📊 Нет данных</td></tr>';
+                tbody.innerHTML = '发展<td colspan="4" class="empty-state">Нет данных<\/td><\/tr>';
                 return;
             }
-            
-            let html = '';
-            for (let r of sorted) {
-                html += `
-                    <tr>
-                        <td style="font-weight: 500;">${r.name}</td>
-                        <td style="color: #6c8cff; font-weight: 600;">${r.total} баллов</td>
-                        <td>${r.count} первичек</td>
-                        <td>${r.avg} баллов</td>
-                    </tr>
-                `;
-            }
-            tbody.innerHTML = html;
+            tbody.innerHTML = sorted.map(r => `
+                <tr>
+                    <td style="font-weight:500;">${r.name}<\/td>
+                    <td style="color:#6c8cff;">${r.total} баллов<\/td>
+                    <td>${r.count} первичек<\/td>
+                    <td>${r.avg} баллов<\/td>
+                <\/tr>
+            `).join('');
         }
 
         function showToast(msg) {
@@ -652,41 +560,27 @@
             setTimeout(() => toast.remove(), 2500);
         }
 
-        // Переключение вкладок
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        for (let btn of tabBtns) {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.onclick = () => {
-                for (let b of tabBtns) b.classList.remove('active');
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                for (let p of document.querySelectorAll('.panel')) p.classList.remove('active');
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
                 document.getElementById(btn.dataset.tab + '-panel').classList.add('active');
-                
                 if (btn.dataset.tab === 'tasks') loadTasks();
                 if (btn.dataset.tab === 'chiefs') loadChiefs();
                 if (btn.dataset.tab === 'ratingMain') loadRatingMain();
                 if (btn.dataset.tab === 'ratingPrimary') loadRatingPrimary();
             };
-        }
+        });
 
-        // Поиск
         document.getElementById('taskSearch')?.addEventListener('input', renderTasksTable);
         document.getElementById('chiefSearch')?.addEventListener('input', () => loadChiefs());
 
-        // Инициализация
         checkConnection();
         loadTasks();
         loadChiefs();
         loadRatingMain();
         loadRatingPrimary();
-        
-        // Автообновление
-        setInterval(() => {
-            const active = document.querySelector('.tab-btn.active');
-            if (active?.dataset.tab === 'tasks') loadTasks();
-            if (active?.dataset.tab === 'chiefs') loadChiefs();
-            if (active?.dataset.tab === 'ratingMain') loadRatingMain();
-            if (active?.dataset.tab === 'ratingPrimary') loadRatingPrimary();
-        }, 30000);
     </script>
 </body>
 </html>
