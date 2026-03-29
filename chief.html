@@ -46,12 +46,11 @@
         }
 
         .card {
-            background: rgba(26, 30, 42, 0.9);
-            backdrop-filter: blur(10px);
+            background: #1a1e2a;
             border-radius: 28px;
             padding: 20px 24px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid #2d3748;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
@@ -66,23 +65,21 @@
         .logo h2 {
             font-size: 22px;
             font-weight: 700;
-            background: linear-gradient(135deg, #fff, #a0a0ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #fff;
         }
 
         .district-badge {
-            background: rgba(108, 140, 255, 0.2);
+            background: #2d3748;
             padding: 8px 20px;
             border-radius: 40px;
             font-size: 14px;
             font-weight: 500;
-            border: 1px solid rgba(108, 140, 255, 0.3);
+            color: #fff;
         }
 
         .reset-btn {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            background: #f8717120;
+            border: 1px solid #f8717140;
             padding: 8px 20px;
             border-radius: 40px;
             color: #f87171;
@@ -90,6 +87,9 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
+        }
+        .reset-btn:hover {
+            background: #f8717140;
         }
         .reset-btn:active { transform: scale(0.96); }
 
@@ -100,22 +100,20 @@
             margin-bottom: 20px;
         }
         .stat-card {
-            background: rgba(0, 0, 0, 0.5);
+            background: #0f1117;
             padding: 18px 12px;
             border-radius: 24px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid #2d3748;
         }
         .stat-number {
             font-size: 32px;
             font-weight: 800;
-            background: linear-gradient(135deg, #fff, #b0c4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #6c8cff;
         }
         .stat-label {
             font-size: 12px;
-            opacity: 0.6;
+            color: #9ca3af;
             margin-top: 6px;
         }
 
@@ -132,29 +130,32 @@
         }
         .menu-btn {
             padding: 10px 22px;
-            background: rgba(0, 0, 0, 0.4);
-            border: none;
+            background: #0f1117;
+            border: 1px solid #2d3748;
             border-radius: 40px;
-            color: rgba(255, 255, 255, 0.7);
+            color: #9ca3af;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             white-space: nowrap;
             transition: all 0.2s;
         }
+        .menu-btn:hover {
+            background: #1e2a3a;
+            color: #fff;
+        }
         .menu-btn.active {
-            background: rgba(108, 140, 255, 0.3);
-            border: 1px solid rgba(108, 140, 255, 0.5);
-            color: white;
+            background: #6c8cff;
+            border-color: #6c8cff;
+            color: #fff;
         }
 
         .content {
-            background: rgba(26, 30, 42, 0.7);
-            backdrop-filter: blur(10px);
+            background: #1a1e2a;
             border-radius: 28px;
             padding: 24px;
             min-height: 450px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid #2d3748;
         }
         .page {
             display: none;
@@ -165,24 +166,26 @@
             font-weight: 600;
             margin-bottom: 20px;
             padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #2d3748;
+            color: #fff;
         }
 
         .task-item {
-            background: rgba(15, 17, 23, 0.8);
+            background: #0f1117;
             padding: 18px;
             border-radius: 24px;
             margin-bottom: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid #2d3748;
         }
         .task-title {
             font-size: 17px;
             font-weight: 600;
             margin-bottom: 6px;
+            color: #fff;
         }
         .task-desc {
             font-size: 13px;
-            opacity: 0.7;
+            color: #9ca3af;
             margin-bottom: 8px;
         }
         .deadline {
@@ -192,8 +195,14 @@
             border-radius: 20px;
             display: inline-block;
         }
-        .deadline-normal { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .deadline-urgent { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .deadline-normal {
+            background: #f59e0b20;
+            color: #f59e0b;
+        }
+        .deadline-urgent {
+            background: #f8717120;
+            color: #f87171;
+        }
         .task-status {
             display: inline-block;
             padding: 4px 12px;
@@ -202,11 +211,20 @@
             font-weight: 500;
             margin-top: 8px;
         }
-        .status-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .status-completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .status-expired { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .status-pending {
+            background: #f59e0b20;
+            color: #f59e0b;
+        }
+        .status-completed {
+            background: #10b98120;
+            color: #10b981;
+        }
+        .status-expired {
+            background: #f8717120;
+            color: #f87171;
+        }
         .btn-complete, .btn-participate {
-            background: rgba(16, 185, 129, 0.2);
+            background: #10b98120;
             border: none;
             padding: 12px;
             border-radius: 40px;
@@ -219,15 +237,18 @@
             transition: all 0.2s;
         }
         .btn-participate {
-            background: rgba(108, 140, 255, 0.2);
+            background: #6c8cff20;
             color: #6c8cff;
+        }
+        .btn-complete:hover, .btn-participate:hover {
+            filter: brightness(1.1);
         }
         .btn-complete:active, .btn-participate:active { transform: scale(0.98); }
         .link-input {
             width: 100%;
             padding: 12px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #0f1117;
+            border: 1px solid #2d3748;
             border-radius: 24px;
             color: #fff;
             font-size: 14px;
@@ -240,7 +261,7 @@
             gap: 8px;
         }
         .history-item {
-            background: rgba(15, 17, 23, 0.6);
+            background: #0f1117;
             padding: 12px 16px;
             border-radius: 18px;
             margin-bottom: 10px;
@@ -249,6 +270,7 @@
             font-size: 12px;
             flex-wrap: wrap;
             gap: 8px;
+            border: 1px solid #2d3748;
         }
         .ranking-table {
             width: 100%;
@@ -257,20 +279,19 @@
         .ranking-table th, .ranking-table td {
             padding: 12px 8px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid #2d3748;
             font-size: 14px;
         }
         .ranking-table th {
             font-weight: 600;
-            opacity: 0.7;
+            color: #9ca3af;
         }
         .toast {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(12px);
+            background: #1a1e2a;
             padding: 12px 24px;
             border-radius: 50px;
             z-index: 1000;
@@ -284,7 +305,7 @@
         .empty-state {
             text-align: center;
             padding: 50px 20px;
-            opacity: 0.6;
+            color: #9ca3af;
         }
 
         @media (max-width: 600px) {
@@ -343,8 +364,7 @@
                     <table class="ranking-table">
                         <thead>   </thead>
                         <tbody id="ratingList"></tbody>
-                    </table>
-                </div>
+                     </div>
             </div>
             <div id="history" class="page">
                 <h3>История операций</h3>
@@ -352,7 +372,7 @@
             </div>
             <div id="help" class="page">
                 <h3>Справка</h3>
-                <p style="opacity: 0.7; line-height: 1.6; font-size: 14px;">
+                <p style="color: #9ca3af; line-height: 1.6; font-size: 14px;">
                     • Выполняйте задачи и прикрепляйте ссылки<br>
                     • Для Распуш — ссылки на t.me или vk.com<br>
                     • Для Событий — любая ссылка (Google Drive, Яндекс Диск, ВК)<br>
@@ -460,14 +480,14 @@
                         const isExpired = expired;
                         deadlineHtml = '<div class="deadline ' + (isExpired ? 'deadline-urgent' : 'deadline-normal') + '">⏰ Срок: ' + deadlineDate.toLocaleString() + (isExpired ? ' (просрочено!)' : '') + '</div>';
                         if (isExpired && task.status === 'pending') {
-                            expiredWarning = '<div class="expired-warning" style="background:rgba(239,68,68,0.2); padding:8px 12px; border-radius:12px; margin-top:10px; font-size:12px; color:#f87171;">⚠️ Срок выполнения истёк! Задача просрочена.</div>';
+                            expiredWarning = '<div style="background:#f8717120; padding:8px 12px; border-radius:12px; margin-top:10px; font-size:12px; color:#f87171;">⚠️ Срок выполнения истёк! Задача просрочена.</div>';
                         }
                     }
                     
                     let linksHtml = '';
                     if (sentLinks.length > 0) {
-                        linksHtml = '<div style="margin-top:12px;"><div style="font-size:11px; opacity:0.6; margin-bottom:6px;">✅ Отправленные ссылки:</div><div class="links-list">' +
-                            sentLinks.map(l => `<a href="${l}" target="_blank" style="color:#6c8cff; background:rgba(108,140,255,0.1); padding:4px 10px; border-radius:16px; font-size:12px; text-decoration:none;">🔗 ${l.length > 40 ? l.substring(0,40)+'...' : l}</a>`).join('') +
+                        linksHtml = '<div style="margin-top:12px;"><div style="font-size:11px; color:#9ca3af; margin-bottom:6px;">✅ Отправленные ссылки:</div><div class="links-list">' +
+                            sentLinks.map(l => `<a href="${l}" target="_blank" style="color:#6c8cff; background:#0f1117; padding:4px 10px; border-radius:16px; font-size:12px; text-decoration:none; border:1px solid #2d3748;">🔗 ${l.length > 40 ? l.substring(0,40)+'...' : l}</a>`).join('') +
                             '</div></div>';
                     }
                     
@@ -589,7 +609,7 @@
                 for (let i = 0; i < data.length; i++) {
                     let displayAction = data[i].action;
                     if (displayAction.length > 60) displayAction = displayAction.substring(0, 60) + '...';
-                    html += '<div class="history-item"><span>' + displayAction + '</span><span style="opacity:0.5;">' + new Date(data[i].created_at).toLocaleString() + '</span></div>';
+                    html += '<div class="history-item"><span>' + displayAction + '</span><span style="color:#6b7280;">' + new Date(data[i].created_at).toLocaleString() + '</span></div>';
                 }
                 container.innerHTML = html;
             } catch (err) { container.innerHTML = '<div class="empty-state">⚠️ Ошибка загрузки истории</div>'; }
