@@ -266,6 +266,7 @@
             const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
             
             if (typeof supabase === 'undefined') {
+                console.error('Supabase не загружен');
                 document.getElementById('districtSelect').innerHTML = '<option>Ошибка загрузки</option>';
                 return;
             }
@@ -275,11 +276,27 @@
             let selectedBranchType = 'main';
 
             async function loadDistricts() {
-                const { data, error } = await sb.from('districts').select('*').order('name');
-                if (data && data.length) {
-                    districtsList = data;
-                    const select = document.getElementById('districtSelect');
-                    select.innerHTML = '<option value="">Выберите округ</option>' + data.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+                try {
+                    const { data, error } = await sb.from('districts').select('*').order('name');
+                    if (error) {
+                        console.error('Ошибка загрузки округов:', error);
+                        document.getElementById('districtSelect').innerHTML = '<option>Ошибка загрузки</option>';
+                        return;
+                    }
+                    if (data && data.length > 0) {
+                        districtsList = data;
+                        const select = document.getElementById('districtSelect');
+                        let options = '<option value="">Выберите округ</option>';
+                        for (let i = 0; i < data.length; i++) {
+                            options += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                        }
+                        select.innerHTML = options;
+                    } else {
+                        document.getElementById('districtSelect').innerHTML = '<option>Нет данных</option>';
+                    }
+                } catch (err) {
+                    console.error('Ошибка:', err);
+                    document.getElementById('districtSelect').innerHTML = '<option>Ошибка подключения</option>';
                 }
             }
 
@@ -293,32 +310,59 @@
 
             document.getElementById('districtSelect').addEventListener('change', (e) => {
                 const group = document.getElementById('branchGroup');
-                if (e.target.value) group.classList.add('show');
-                else group.classList.remove('show');
+                if (e.target.value) {
+                    group.classList.add('show');
+                } else {
+                    group.classList.remove('show');
+                }
             });
 
             document.getElementById('enterBtn').addEventListener('click', async () => {
                 const districtId = document.getElementById('districtSelect').value;
-                if (!districtId) { alert('Выберите округ'); return; }
+                if (!districtId) {
+                    alert('Выберите округ');
+                    return;
+                }
                 
                 const district = districtsList.find(d => d.id == districtId);
-                const chiefId = selectedBranchType === 'main' ? `chief_${districtId}_main` : `chief_${districtId}_primary`;
+                if (!district) {
+                    alert('Ошибка: округ не найден');
+                    return;
+                }
+                
+                let chiefId = '';
+                if (selectedBranchType === 'main') {
+                    chiefId = 'chief_' + districtId + '_main';
+                } else {
+                    chiefId = 'chief_' + districtId + '_primary';
+                }
                 
                 localStorage.setItem('chiefId', chiefId);
                 localStorage.setItem('chiefDistrictName', district.name);
                 localStorage.setItem('chiefBranchType', selectedBranchType);
                 localStorage.setItem('chiefDistrictId', districtId);
                 
-                const { data: existing } = await sb.from('chiefs').select('id').eq('id', chiefId).maybeSingle();
-                if (!existing) {
-                    await sb.from('chiefs').insert([{
-                        id: chiefId,
-                        name: `Шеф ${district.name}${selectedBranchType === 'primary' ? ' (Первичка)' : ''}`,
-                        district_id: parseInt(districtId),
-                        primary_branch_id: selectedBranchType === 'primary' ? 1 : null
-                    }]);
+                try {
+                    const { data: existing } = await sb
+                        .from('chiefs')
+                        .select('id')
+                        .eq('id', chiefId)
+                        .maybeSingle();
+                    
+                    if (!existing) {
+                        await sb.from('chiefs').insert([{
+                            id: chiefId,
+                            name: 'Шеф ' + district.name + (selectedBranchType === 'primary' ? ' (Первичка)' : ''),
+                            district_id: parseInt(districtId),
+                            primary_branch_id: selectedBranchType === 'primary' ? 1 : null
+                        }]);
+                    }
+                    
+                    window.location.href = 'chief.html';
+                } catch (err) {
+                    console.error('Ошибка при входе:', err);
+                    alert('Ошибка: ' + err.message);
                 }
-                window.location.href = 'chief.html';
             });
 
             loadDistricts();
