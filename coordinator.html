@@ -19,7 +19,6 @@
             min-height: 100vh;
         }
 
-        /* Фоновые свечения */
         .glow-bg {
             position: fixed;
             top: 0;
@@ -40,14 +39,13 @@
         .glow-3 { width: 350px; height: 350px; top: 50%; left: 30%; background: #3b82f6; }
 
         .container {
-            max-width: 1300px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
             position: relative;
             z-index: 1;
         }
 
-        /* Карточки */
         .card {
             background: rgba(26, 30, 42, 0.9);
             backdrop-filter: blur(10px);
@@ -79,7 +77,6 @@
             opacity: 0.6;
         }
 
-        /* Сетка */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
@@ -102,7 +99,6 @@
             font-weight: 600;
         }
 
-        /* Формы */
         input, select, textarea {
             width: 100%;
             padding: 14px;
@@ -122,7 +118,7 @@
         }
 
         textarea {
-            min-height: 90px;
+            min-height: 80px;
             resize: vertical;
         }
 
@@ -152,7 +148,6 @@
             margin-top: 8px;
         }
 
-        /* Шаблоны */
         .template-item {
             background: rgba(15, 17, 23, 0.7);
             padding: 14px 16px;
@@ -183,7 +178,6 @@
             margin-top: 4px;
         }
 
-        /* Задачи */
         .task-item {
             background: rgba(15, 17, 23, 0.7);
             padding: 14px 16px;
@@ -235,7 +229,6 @@
             margin-top: 6px;
         }
 
-        /* Инфо-бокс */
         .info-box {
             background: rgba(108, 140, 255, 0.1);
             border-left: 4px solid #a855f7;
@@ -264,15 +257,38 @@
             text-align: center;
         }
 
-        /* Пустые состояния */
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            opacity: 0.6;
-            font-size: 14px;
+        /* Блок участников событий */
+        .district-block {
+            margin-bottom: 24px;
+        }
+        .district-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: rgba(108, 140, 255, 0.2);
+            border-radius: 16px;
+            display: inline-block;
+        }
+        .event-participant {
+            background: rgba(15, 17, 23, 0.7);
+            padding: 14px 16px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            border-left: 3px solid #10b981;
+        }
+        .participant-link {
+            color: #6c8cff;
+            text-decoration: none;
+            word-break: break-all;
         }
 
-        /* Адаптация */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            opacity: 0.6;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 12px;
@@ -318,6 +334,10 @@
                 <div id="templatesList" class="empty-state">Загрузка шаблонов...</div>
                 <input type="text" id="newTemplateTitle" placeholder="Название шаблона">
                 <textarea id="newTemplateDesc" placeholder="Описание шаблона"></textarea>
+                <select id="templateType">
+                    <option value="raspush">📢 Распуш (ссылки)</option>
+                    <option value="event">🎉 Событие (участие + ссылка)</option>
+                </select>
                 <button onclick="createTemplate()">+ Создать шаблон</button>
             </div>
 
@@ -326,6 +346,7 @@
                 <h2>🚀 Отправить задачу</h2>
                 <div class="info-box">
                     🔥 <strong>РАСПУШ</strong> — обязательны ссылка и срок!<br>
+                    🎉 <strong>СОБЫТИЕ</strong> — можно отправить без ссылки, шефы увидят кнопку "Участвовать"<br>
                     • Задача отправляется ВСЕМ шефам всех округов<br>
                     • Каждый шеф может отправить несколько ссылок до дедлайна<br>
                     • Повторные ссылки не засчитываются
@@ -349,6 +370,12 @@
                 <div id="activeTasksList" class="empty-state">Загрузка активных задач...</div>
             </div>
         </div>
+
+        <!-- Блок участников событий -->
+        <div class="card" style="margin-top: 24px;">
+            <h2 style="margin-bottom: 20px;">🎉 Участники событий (выполненные задания)</h2>
+            <div id="participantsList" class="empty-state">Загрузка участников...</div>
+        </div>
     </div>
 
     <script>
@@ -358,6 +385,7 @@
         
         let selectedTemplateId = null;
         let selectedTemplateTitle = null;
+        let selectedTemplateType = null;
 
         // Загрузка шаблонов
         async function loadTemplates() {
@@ -379,28 +407,27 @@
             }
             
             container.innerHTML = data.map(t => `
-                <div class="template-item" onclick="selectTemplate(${t.id}, '${t.title.replace(/'/g, "\\'")}')">
+                <div class="template-item" onclick="selectTemplate(${t.id}, '${t.title.replace(/'/g, "\\'")}', '${t.type || 'raspush'}')">
                     <strong>${t.title}</strong>
-                    <div class="template-desc">${t.description || ''}</div>
+                    <div class="template-desc">${t.description || ''}<br>${t.type === 'event' ? '🎉 Событие' : '📢 Распуш'}</div>
                 </div>
             `).join('');
         }
 
         // Выбор шаблона
-        window.selectTemplate = function(id, title) {
+        window.selectTemplate = function(id, title, type) {
             selectedTemplateId = id;
             selectedTemplateTitle = title;
+            selectedTemplateType = type;
             document.getElementById('selectedTemplateName').innerText = title;
             
-            // Подсветка выбранного
             document.querySelectorAll('.template-item').forEach(item => {
                 item.classList.remove('selected');
             });
             event.currentTarget.classList.add('selected');
             
-            // Показываем предупреждение для РАСПУШ (id=1)
             const warning = document.getElementById('requiredWarning');
-            if (id === 1) {
+            if (type === 'raspush') {
                 warning.style.display = 'block';
             } else {
                 warning.style.display = 'none';
@@ -450,10 +477,58 @@
             }).join('');
         }
 
+        // Загрузка участников событий
+        async function loadParticipants() {
+            const { data, error } = await sb
+                .from('assignments')
+                .select('*, task_templates(*), chiefs(name, district_id, primary_branch_id, districts(name))')
+                .eq('status', 'completed')
+                .eq('type', 'event')
+                .order('created_at', { ascending: false });
+            
+            const container = document.getElementById('participantsList');
+            if (error) {
+                container.innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
+                return;
+            }
+            
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div class="empty-state">🎉 Нет участников событий</div>';
+                return;
+            }
+            
+            // Группируем по округам
+            const byDistrict = {};
+            for (let a of data) {
+                const district = a.chiefs?.districts?.name || 'Неизвестно';
+                if (!byDistrict[district]) byDistrict[district] = [];
+                byDistrict[district].push(a);
+            }
+            
+            let html = '';
+            for (let [district, items] of Object.entries(byDistrict)) {
+                html += `<div class="district-block">`;
+                html += `<div class="district-title">📌 ${district}</div>`;
+                for (let a of items) {
+                    html += `
+                        <div class="event-participant">
+                            <strong>${a.task_templates?.title || 'Событие'}</strong><br>
+                            👤 ${a.chiefs?.name}<br>
+                            📎 <a href="${a.link}" target="_blank" class="participant-link">${a.link}</a><br>
+                            <span style="font-size: 11px; opacity: 0.5;">${new Date(a.created_at).toLocaleString()}</span>
+                        </div>
+                    `;
+                }
+                html += `</div>`;
+            }
+            container.innerHTML = html;
+        }
+
         // Создание шаблона
         window.createTemplate = async function() {
             const title = document.getElementById('newTemplateTitle').value;
             const desc = document.getElementById('newTemplateDesc').value;
+            const type = document.getElementById('templateType').value;
             
             if (!title) {
                 alert('Введите название шаблона');
@@ -462,7 +537,7 @@
             
             const { error } = await sb
                 .from('task_templates')
-                .insert([{ title, description: desc }]);
+                .insert([{ title, description: desc, type: type, is_active: true }]);
             
             if (error) {
                 alert('Ошибка: ' + error.message);
@@ -486,8 +561,8 @@
             const deadline = document.getElementById('taskDeadline').value;
             const comment = document.getElementById('taskComment').value;
             
-            // Проверка для РАСПУШ (id=1)
-            if (selectedTemplateId === 1) {
+            // Проверка для РАСПУШ
+            if (selectedTemplateType === 'raspush') {
                 if (!link) {
                     alert('⚠️ Для задачи "РАСПУШ" необходимо указать ссылку!');
                     return;
@@ -526,7 +601,8 @@
                         link: link || null,
                         coordinator_comment: comment || null,
                         deadline: deadline ? new Date(deadline).toISOString() : null,
-                        status: 'pending'
+                        status: 'pending',
+                        type: selectedTemplateType
                     }]);
                 
                 if (insertError) {
@@ -539,33 +615,22 @@
             
             alert(`✅ Задача "${selectedTemplateTitle}" отправлена ${successCount} шефам!\n❌ Ошибок: ${errorCount}`);
             
-            // Очищаем поля
             document.getElementById('taskLink').value = '';
             document.getElementById('taskDeadline').value = '';
             document.getElementById('taskComment').value = '';
             
-            // Обновляем список активных задач
             loadActiveTasks();
+            loadParticipants();
         };
-
-        // Загрузка количества шефов
-        async function loadChiefsCount() {
-            const { count, error } = await sb
-                .from('chiefs')
-                .select('*', { count: 'exact', head: true });
-            
-            if (!error && count) {
-                console.log(`Всего шефов: ${count}`);
-            }
-        }
 
         // Инициализация
         loadTemplates();
         loadActiveTasks();
-        loadChiefsCount();
+        loadParticipants();
         
-        // Автообновление активных задач каждые 15 секунд
+        // Автообновление
         setInterval(loadActiveTasks, 15000);
+        setInterval(loadParticipants, 30000);
     </script>
 </body>
 </html>
