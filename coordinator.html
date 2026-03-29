@@ -47,12 +47,11 @@
         }
 
         .card {
-            background: rgba(26, 30, 42, 0.9);
-            backdrop-filter: blur(10px);
+            background: #1a1e2a;
             border-radius: 28px;
             padding: 20px 28px;
             margin-bottom: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid #2d3748;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
@@ -67,14 +66,12 @@
         h1 {
             font-size: 26px;
             font-weight: 700;
-            background: linear-gradient(135deg, #fff, #a0a0ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #fff;
         }
 
         .subtitle {
             font-size: 14px;
-            opacity: 0.6;
+            color: #9ca3af;
         }
 
         .grid {
@@ -84,26 +81,26 @@
         }
 
         .panel {
-            background: rgba(26, 30, 42, 0.7);
-            backdrop-filter: blur(10px);
+            background: #1a1e2a;
             border-radius: 24px;
             padding: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid #2d3748;
         }
 
         .panel h2 {
             font-size: 20px;
             margin-bottom: 20px;
             padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #2d3748;
             font-weight: 600;
+            color: #fff;
         }
 
         input, select, textarea {
             width: 100%;
             padding: 14px;
-            background: rgba(15, 17, 23, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #0f1117;
+            border: 1px solid #2d3748;
             border-radius: 20px;
             color: #fff;
             font-size: 14px;
@@ -125,8 +122,8 @@
         button {
             width: 100%;
             padding: 14px;
-            background: rgba(108, 140, 255, 0.3);
-            border: 1px solid rgba(108, 140, 255, 0.4);
+            background: #6c8cff;
+            border: none;
             border-radius: 40px;
             color: #fff;
             font-weight: 600;
@@ -136,54 +133,54 @@
         }
 
         button:hover {
-            background: rgba(108, 140, 255, 0.45);
+            background: #5a7cff;
             transform: translateY(-1px);
         }
 
         .mass-btn {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(236, 72, 153, 0.4));
-            border-color: rgba(168, 85, 247, 0.5);
-            font-size: 16px;
-            padding: 16px;
-            margin-top: 8px;
+            background: #a855f7;
+        }
+        .mass-btn:hover {
+            background: #9747ff;
         }
 
         .template-item {
-            background: rgba(15, 17, 23, 0.7);
+            background: #0f1117;
             padding: 14px 16px;
             border-radius: 20px;
             margin-bottom: 12px;
             cursor: pointer;
             transition: all 0.2s;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid #2d3748;
         }
 
         .template-item:hover {
-            background: rgba(108, 140, 255, 0.15);
+            background: #1e2a3a;
             transform: translateX(5px);
         }
 
         .template-item.selected {
-            background: rgba(108, 140, 255, 0.25);
+            background: #2d3a4a;
             border-color: #6c8cff;
         }
 
         .template-item strong {
             font-size: 16px;
+            color: #fff;
         }
 
         .template-desc {
             font-size: 12px;
-            opacity: 0.6;
+            color: #9ca3af;
             margin-top: 4px;
         }
 
         .task-item {
-            background: rgba(15, 17, 23, 0.7);
+            background: #0f1117;
             padding: 14px 16px;
             border-radius: 20px;
             margin-bottom: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid #2d3748;
         }
 
         .task-header {
@@ -197,6 +194,7 @@
         .task-title {
             font-size: 15px;
             font-weight: 600;
+            color: #fff;
         }
 
         .task-status {
@@ -205,13 +203,13 @@
             border-radius: 30px;
             font-size: 11px;
             font-weight: 500;
-            background: rgba(245, 158, 11, 0.2);
+            background: #f59e0b20;
             color: #f59e0b;
         }
 
         .task-info {
             font-size: 12px;
-            opacity: 0.7;
+            color: #9ca3af;
             margin-top: 8px;
         }
 
@@ -230,22 +228,24 @@
         }
 
         .info-box {
-            background: rgba(108, 140, 255, 0.1);
+            background: #2d3748;
             border-left: 4px solid #a855f7;
             padding: 14px 18px;
             border-radius: 20px;
             margin-bottom: 24px;
             font-size: 13px;
             line-height: 1.5;
+            color: #e5e7eb;
         }
 
         .selected-template-info {
-            background: rgba(0, 0, 0, 0.4);
+            background: #0f1117;
             padding: 14px;
             border-radius: 20px;
             margin-bottom: 20px;
             text-align: center;
             font-size: 14px;
+            border: 1px solid #2d3748;
         }
 
         .required-warning {
@@ -257,7 +257,6 @@
             text-align: center;
         }
 
-        /* Блок участников событий */
         .district-block {
             margin-bottom: 24px;
         }
@@ -266,12 +265,13 @@
             font-weight: 600;
             margin-bottom: 12px;
             padding: 8px 12px;
-            background: rgba(108, 140, 255, 0.2);
+            background: #2d3748;
             border-radius: 16px;
             display: inline-block;
+            color: #fff;
         }
         .event-participant {
-            background: rgba(15, 17, 23, 0.7);
+            background: #0f1117;
             padding: 14px 16px;
             border-radius: 20px;
             margin-bottom: 12px;
@@ -286,7 +286,7 @@
         .empty-state {
             text-align: center;
             padding: 40px 20px;
-            opacity: 0.6;
+            color: #9ca3af;
         }
 
         @media (max-width: 768px) {
@@ -335,8 +335,8 @@
                 <input type="text" id="newTemplateTitle" placeholder="Название шаблона">
                 <textarea id="newTemplateDesc" placeholder="Описание шаблона"></textarea>
                 <select id="templateType">
-                    <option value="raspush">📢 Распуш (ссылки)</option>
-                    <option value="event">🎉 Событие (участие + ссылка)</option>
+                    <option value="raspush">📢 Распуш (ссылки t.me/vk.com)</option>
+                    <option value="event">🎉 Событие (участие + любая ссылка)</option>
                 </select>
                 <button onclick="createTemplate()">+ Создать шаблон</button>
             </div>
@@ -346,17 +346,12 @@
                 <h2>🚀 Отправить задачу</h2>
                 <div class="info-box">
                     🔥 <strong>РАСПУШ</strong> — обязательны ссылка и срок!<br>
-                    🎉 <strong>СОБЫТИЕ</strong> — можно отправить без ссылки, шефы увидят кнопку "Участвовать"<br>
-                    • Задача отправляется ВСЕМ шефам всех округов<br>
-                    • Каждый шеф может отправить несколько ссылок до дедлайна<br>
-                    • Повторные ссылки не засчитываются
+                    🎉 <strong>СОБЫТИЕ</strong> — можно отправить без ссылки<br>
+                    • Задача отправляется ВСЕМ шефам всех округов
                 </div>
                 <div class="selected-template-info">
                     ⚡ Выбран шаблон: <strong id="selectedTemplateName">не выбран</strong>
                 </div>
-                <select id="targetSelect">
-                    <option value="all">🌍 Всем шефам (все округа, местные и первички)</option>
-                </select>
                 <input type="text" id="taskLink" placeholder="🔗 Ссылка на материал (обязательно для РАСПУШ)">
                 <input type="datetime-local" id="taskDeadline" placeholder="📅 Срок выполнения (обязательно для РАСПУШ)">
                 <textarea id="taskComment" placeholder="💬 Комментарий для шефов (опционально)"></textarea>
@@ -515,7 +510,7 @@
                             <strong>${a.task_templates?.title || 'Событие'}</strong><br>
                             👤 ${a.chiefs?.name}<br>
                             📎 <a href="${a.link}" target="_blank" class="participant-link">${a.link}</a><br>
-                            <span style="font-size: 11px; opacity: 0.5;">${new Date(a.created_at).toLocaleString()}</span>
+                            <span style="font-size: 11px; color: #6b7280;">${new Date(a.created_at).toLocaleString()}</span>
                         </div>
                     `;
                 }
