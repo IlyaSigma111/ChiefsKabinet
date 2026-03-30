@@ -190,10 +190,6 @@
             border-color: #3b82f6;
         }
 
-        .template-item strong {
-            font-size: 15px;
-        }
-
         .type-badge {
             display: inline-block;
             padding: 2px 8px;
@@ -203,20 +199,9 @@
             margin-left: 8px;
         }
 
-        .type-raspush {
-            background: #fef3c7;
-            color: #d97706;
-        }
-
-        .type-event {
-            background: #dcfce7;
-            color: #16a34a;
-        }
-
-        .type-optional {
-            background: #e0e7ff;
-            color: #4f46e5;
-        }
+        .type-raspush { background: #fef3c7; color: #d97706; }
+        .type-event { background: #dcfce7; color: #16a34a; }
+        .type-optional { background: #e0e7ff; color: #4f46e5; }
 
         .link-group {
             display: flex;
@@ -238,11 +223,6 @@
             cursor: pointer;
             width: 44px;
             text-align: center;
-            transition: all 0.2s;
-        }
-
-        .remove-link:hover {
-            background: #fecaca;
         }
 
         .selected-info {
@@ -251,7 +231,6 @@
             border-radius: 20px;
             margin-bottom: 20px;
             text-align: center;
-            font-size: 14px;
         }
 
         .warning-text {
@@ -285,7 +264,6 @@
             padding: 3px 10px;
             border-radius: 20px;
             font-size: 11px;
-            font-weight: 500;
         }
 
         .delete-btn {
@@ -296,11 +274,6 @@
             border: none;
             border-radius: 30px;
             cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .delete-btn:hover {
-            background: #fecaca;
         }
 
         .date-input-group {
@@ -318,6 +291,67 @@
         .date-input-group select {
             width: auto;
             min-width: 110px;
+        }
+
+        /* Стили для блока участников */
+        .submissions-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .district-group {
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .district-header {
+            background: #f1f5f9;
+            padding: 12px 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .district-header:hover {
+            background: #e2e8f0;
+        }
+
+        .submission-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .submission-item:last-child {
+            border-bottom: none;
+        }
+
+        .submission-link {
+            color: #3b82f6;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .submission-link:hover {
+            text-decoration: underline;
+        }
+
+        .submission-date {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .badge {
+            background: #3b82f6;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 11px;
         }
 
         .toast {
@@ -352,26 +386,12 @@
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 16px;
-            }
-            .grid-2cols {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .panel {
-                padding: 20px;
-            }
-            .tab-btn {
-                padding: 8px 16px;
-                font-size: 13px;
-            }
-            .date-input-group {
-                flex-direction: column;
-            }
-            .date-input-group select {
-                width: 100%;
-            }
+            .container { padding: 16px; }
+            .grid-2cols { grid-template-columns: 1fr; gap: 20px; }
+            .panel { padding: 20px; }
+            .tab-btn { padding: 8px 16px; font-size: 13px; }
+            .date-input-group { flex-direction: column; }
+            .date-input-group select { width: 100%; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -387,6 +407,7 @@
 
         <div class="tabs">
             <button class="tab-btn active" data-tab="board">📢 Доска объявлений</button>
+            <button class="tab-btn" data-tab="submissions">📥 Отклики участников</button>
             <button class="tab-btn" data-tab="templates">📋 Шаблоны задач</button>
             <button class="tab-btn" data-tab="send">🚀 Отправить задачу</button>
             <button class="tab-btn" data-tab="active">📊 Активные задачи</button>
@@ -421,6 +442,12 @@
             </div>
         </div>
 
+        <!-- Панель откликов участников -->
+        <div id="submissions-panel" class="panel">
+            <h2>📥 Отклики участников (ссылки на выполненные работы)</h2>
+            <div id="submissionsList" class="empty-state">Загрузка...</div>
+        </div>
+
         <!-- Панель шаблонов -->
         <div id="templates-panel" class="panel">
             <div class="grid-2cols">
@@ -448,10 +475,9 @@
                 <div>
                     <h2>🚀 Отправить задачу всем шефам</h2>
                     <div class="info-box" id="infoBox">
-                        🔥 <strong>РАСПУШ</strong> — можно добавить несколько ссылок (для разных соцсетей)<br>
+                        🔥 <strong>РАСПУШ</strong> — можно добавить несколько ссылок<br>
                         🎉 <strong>СОБЫТИЕ</strong> — можно отправить без ссылки<br>
-                        ⭐ <strong>ПО ЖЕЛАНИЮ</strong> — дополнительное задание<br>
-                        • Задача отправляется ВСЕМ шефам всех округов
+                        ⭐ <strong>ПО ЖЕЛАНИЮ</strong> — дополнительное задание
                     </div>
                     <div class="selected-info">
                         ⚡ Выбран шаблон: <strong id="selectedTemplateName">не выбран</strong>
@@ -490,7 +516,7 @@
             </div>
         </div>
 
-        <!-- Панель активных задач (отдельная вкладка) -->
+        <!-- Панель активных задач -->
         <div id="active-panel" class="panel">
             <h2>📊 Активные задачи (все шефы)</h2>
             <div id="activeTasksList2" class="empty-state">Загрузка активных задач...</div>
@@ -507,7 +533,6 @@
         let selectedTemplateType = null;
         let linkCounter = 1;
 
-        // ========== ФУНКЦИИ РАБОТЫ С ДАТОЙ ==========
         function buildDateFromInputs(dayId, monthId, yearId, hourId, minuteId) {
             const day = parseInt(document.getElementById(dayId)?.value);
             const month = parseInt(document.getElementById(monthId)?.value);
@@ -533,6 +558,11 @@
             });
         }
 
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
         // ========== ДОСКА ОБЪЯВЛЕНИЙ ==========
         async function loadBoardTasks() {
             try {
@@ -549,24 +579,14 @@
                     return;
                 }
 
-                const { data: participants } = await sb.from('board_participants').select('board_task_id');
-                const counts = {};
-                if (participants) {
-                    for (let p of participants) {
-                        counts[p.board_task_id] = (counts[p.board_task_id] || 0) + 1;
-                    }
-                }
-
                 let html = '';
                 for (let task of data) {
-                    const count = counts[task.id] || 0;
                     html += `
                         <div class="board-item">
                             <strong>${escapeHtml(task.title)}</strong>
                             <div style="font-size: 11px; color: #64748b; margin-top: 4px;">📅 До: ${formatDateForDisplay(task.deadline)}</div>
                             <div style="font-size: 12px; margin-top: 6px;">${escapeHtml(task.description || '')}</div>
                             <div style="font-size: 11px; margin-top: 6px; color: #4f46e5;">📋 ТЗ: ${escapeHtml(task.technical_task || '-')}</div>
-                            <div style="font-size: 11px; margin-top: 4px;">👥 Участников: ${count}</div>
                             <button class="delete-btn" onclick="deleteBoardTask(${task.id})">🗑 Удалить задание</button>
                         </div>
                     `;
@@ -579,11 +599,12 @@
         }
 
         window.deleteBoardTask = async function(id) {
-            if (!confirm('Удалить задание? Участники потеряют доступ.')) return;
+            if (!confirm('Удалить задание? Все отклики участников будут удалены.')) return;
             try {
-                await sb.from('board_participants').delete().eq('board_task_id', id);
+                await sb.from('board_submissions').delete().eq('board_task_id', id);
                 await sb.from('board_tasks').delete().eq('id', id);
                 loadBoardTasks();
+                loadSubmissions();
                 showToast('✅ Задание удалено');
             } catch (err) {
                 alert('Ошибка: ' + err.message);
@@ -627,6 +648,69 @@
                 showToast('✅ Задание опубликовано на доске');
             } catch (err) {
                 alert('Ошибка: ' + err.message);
+            }
+        };
+
+        // ========== ОТКЛИКИ УЧАСТНИКОВ ==========
+        async function loadSubmissions() {
+            try {
+                const { data, error } = await sb
+                    .from('board_submissions')
+                    .select('*, board_tasks(title), chiefs(name), districts(name)')
+                    .order('created_at', { ascending: false });
+
+                const container = document.getElementById('submissionsList');
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="empty-state">📭 Пока нет откликов от участников</div>';
+                    return;
+                }
+
+                // Группируем по округам
+                const groupedByDistrict = {};
+                for (let sub of data) {
+                    const districtName = sub.districts?.name || 'Неизвестный округ';
+                    if (!groupedByDistrict[districtName]) {
+                        groupedByDistrict[districtName] = [];
+                    }
+                    groupedByDistrict[districtName].push(sub);
+                }
+
+                let html = '<div class="submissions-container">';
+                for (let [districtName, submissions] of Object.entries(groupedByDistrict)) {
+                    html += `
+                        <div class="district-group">
+                            <div class="district-header" onclick="toggleDistrict(this)">
+                                <span>📌 ${districtName}</span>
+                                <span class="badge">${submissions.length} откликов</span>
+                            </div>
+                            <div class="district-content" style="display: block;">
+                    `;
+                    for (let sub of submissions) {
+                        html += `
+                            <div class="submission-item">
+                                <div><strong>📋 ${escapeHtml(sub.board_tasks?.title || 'Задание')}</strong></div>
+                                <div>👤 ${escapeHtml(sub.chiefs?.name || 'Шеф')}</div>
+                                <div>🔗 <a href="${sub.link}" target="_blank" class="submission-link">${sub.link}</a></div>
+                                <div class="submission-date">📅 ${new Date(sub.created_at).toLocaleString()}</div>
+                            </div>
+                        `;
+                    }
+                    html += `</div></div>`;
+                }
+                html += `</div>`;
+                container.innerHTML = html;
+            } catch (err) {
+                console.error('Ошибка загрузки откликов:', err);
+                document.getElementById('submissionsList').innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
+            }
+        }
+
+        window.toggleDistrict = function(header) {
+            const content = header.nextElementSibling;
+            if (content) {
+                content.style.display = content.style.display === 'none' ? 'block' : 'none';
             }
         };
 
@@ -694,15 +778,15 @@
             if (type === 'raspush') {
                 addLinkBtn.style.display = 'block';
                 warning.style.display = 'block';
-                infoBox.innerHTML = '🔥 <strong>РАСПУШ</strong> — можно добавить несколько ссылок (для разных соцсетей)<br>• Ссылки и срок обязательны!';
+                infoBox.innerHTML = '🔥 <strong>РАСПУШ</strong> — можно добавить несколько ссылок<br>• Ссылки и срок обязательны!';
                 document.querySelector('#linksContainer input').placeholder = '🔗 Ссылка 1 (обязательно)';
             } else {
                 addLinkBtn.style.display = 'none';
                 warning.style.display = 'none';
                 if (type === 'event') {
-                    infoBox.innerHTML = '🎉 <strong>СОБЫТИЕ</strong> — можно отправить ссылку на фото/видео<br>• Ссылка не обязательна, срок опционально';
+                    infoBox.innerHTML = '🎉 <strong>СОБЫТИЕ</strong> — можно отправить ссылку<br>• Ссылка не обязательна';
                 } else {
-                    infoBox.innerHTML = '⭐ <strong>ПО ЖЕЛАНИЮ</strong> — дополнительное задание<br>• Ссылка не обязательна, срок опционально';
+                    infoBox.innerHTML = '⭐ <strong>ПО ЖЕЛАНИЮ</strong> — дополнительное задание<br>• Ссылка не обязательна';
                 }
                 document.querySelector('#linksContainer input').placeholder = '🔗 Ссылка (опционально)';
             }
@@ -723,17 +807,14 @@
         };
 
         window.removeLink = function(id) {
-            const group = document.getElementById(`link-group-${id}`);
-            if (group) group.remove();
+            document.getElementById(`link-group-${id}`)?.remove();
         };
 
         function getAllLinks() {
             const links = [];
             for (let i = 1; i <= linkCounter; i++) {
                 const input = document.getElementById(`taskLink${i}`);
-                if (input && input.value.trim()) {
-                    links.push(input.value.trim());
-                }
+                if (input && input.value.trim()) links.push(input.value.trim());
             }
             return links;
         }
@@ -801,7 +882,6 @@
 
                 alert(`✅ Задача "${selectedTemplateTitle}" отправлена ${successCount} шефам!\n❌ Ошибок: ${errorCount}`);
 
-                // Очищаем поля
                 document.getElementById('linksContainer').innerHTML = `
                     <div class="link-group">
                         <input type="text" id="taskLink1" placeholder="🔗 Ссылка 1">
@@ -933,28 +1013,14 @@
             }
         };
 
-        // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
-        }
-
         function showToast(msg) {
             const toast = document.createElement('div');
             toast.className = 'toast';
             toast.innerText = msg;
             document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.remove();
-            }, 2500);
+            setTimeout(() => toast.remove(), 2500);
         }
 
-        // ========== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ==========
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.onclick = () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -963,22 +1029,23 @@
                 document.getElementById(btn.dataset.tab + '-panel').classList.add('active');
                 
                 if (btn.dataset.tab === 'board') loadBoardTasks();
+                if (btn.dataset.tab === 'submissions') loadSubmissions();
                 if (btn.dataset.tab === 'templates') loadTemplates();
                 if (btn.dataset.tab === 'send') loadActiveTasks();
                 if (btn.dataset.tab === 'active') loadActiveTasks2();
             };
         });
 
-        // ========== ЗАПУСК ==========
         loadBoardTasks();
+        loadSubmissions();
         loadTemplates();
         loadActiveTasks();
         loadActiveTasks2();
 
-        // Автообновление
         setInterval(() => {
             if (document.querySelector('.tab-btn.active')?.dataset.tab === 'send') loadActiveTasks();
             if (document.querySelector('.tab-btn.active')?.dataset.tab === 'active') loadActiveTasks2();
+            if (document.querySelector('.tab-btn.active')?.dataset.tab === 'submissions') loadSubmissions();
         }, 15000);
     </script>
 </body>
