@@ -156,6 +156,7 @@
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 6px;
+            color: #1a202c;
         }
 
         .board-date {
@@ -183,6 +184,20 @@
             border-left: 3px solid #3b82f6;
         }
 
+        .participate-section {
+            margin-top: 12px;
+        }
+
+        .participate-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
         .participate-btn {
             background: #dcfce7;
             border: none;
@@ -204,6 +219,23 @@
             color: #4f46e5;
         }
 
+        .my-links-list {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .my-link-item {
+            display: inline-block;
+            background: #e0e7ff;
+            padding: 4px 8px;
+            border-radius: 16px;
+            font-size: 11px;
+            margin: 2px;
+            color: #4f46e5;
+            text-decoration: none;
+        }
+
         /* Задачи */
         .task-item {
             background: #f8fafc;
@@ -217,12 +249,22 @@
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 6px;
+            color: #1a202c;
         }
 
         .task-desc {
             font-size: 13px;
             color: #64748b;
             margin-bottom: 8px;
+        }
+
+        .task-detail {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 16px;
+            margin: 10px 0;
+            font-size: 13px;
+            border-left: 3px solid #3b82f6;
         }
 
         .coordinator-link {
@@ -237,10 +279,6 @@
         .coordinator-link a {
             color: #4f46e5;
             text-decoration: none;
-        }
-
-        .coordinator-link a:hover {
-            text-decoration: underline;
         }
 
         .deadline {
@@ -259,15 +297,6 @@
         .deadline-urgent {
             background: #fee2e2;
             color: #dc2626;
-        }
-
-        .comment {
-            font-size: 12px;
-            color: #4f46e5;
-            margin: 8px 0;
-            padding: 8px 10px;
-            background: #eff6ff;
-            border-radius: 12px;
         }
 
         .task-status {
@@ -291,27 +320,6 @@
         .status-expired {
             background: #fee2e2;
             color: #dc2626;
-        }
-
-        .btn-complete {
-            background: #dcfce7;
-            border: none;
-            padding: 10px;
-            border-radius: 40px;
-            color: #16a34a;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 12px;
-        }
-
-        .link-input {
-            width: 100%;
-            padding: 10px 12px;
-            background: #f1f5f9;
-            border: 1px solid #e2e8f0;
-            border-radius: 20px;
-            margin-top: 10px;
         }
 
         .sent-links {
@@ -359,6 +367,31 @@
             text-align: center;
             padding: 40px 20px;
             color: #64748b;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a202c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            z-index: 1000;
+            font-size: 13px;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
         }
 
         @media (max-width: 768px) {
@@ -451,27 +484,79 @@
             return new Date(deadline) < new Date();
         }
         
+        function formatDateForDisplay(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+        
+        // ========== ДОСКА ОБЪЯВЛЕНИЙ ==========
         async function loadBoard() {
             try {
                 const { data: tasks } = await sb.from('board_tasks').select('*').eq('is_active', true).order('deadline');
-                const { data: parts } = await sb.from('board_participants').select('board_task_id').eq('chief_id', chiefId);
-                const mySet = new Set(parts?.map(p => p.board_task_id) || []);
+                const { data: mySubmissions } = await sb
+                    .from('board_submissions')
+                    .select('board_task_id, link')
+                    .eq('chief_id', chiefId);
+                
+                const mySubmissionsMap = {};
+                if (mySubmissions) {
+                    for (let s of mySubmissions) {
+                        if (!mySubmissionsMap[s.board_task_id]) mySubmissionsMap[s.board_task_id] = [];
+                        mySubmissionsMap[s.board_task_id].push(s.link);
+                    }
+                }
+                
                 const container = document.getElementById('boardList');
                 if (!tasks || tasks.length === 0) {
                     container.innerHTML = '<div class="empty-state">📢 Нет заданий</div>';
                     return;
                 }
+                
                 let html = '';
                 for (let task of tasks) {
                     const expired = isExpired(task.deadline);
-                    html += `<div class="board-item"><div class="board-title">${task.title}</div><div class="board-date">📅 До: ${new Date(task.deadline).toLocaleString()}</div><div class="board-desc">${task.description || ''}</div><div class="board-tech"><strong>📋 ТЗ:</strong><br>${task.technical_task || '-'}</div>`;
-                    if (mySet.has(task.id)) {
-                        html += `<div class="already-participating">✅ Вы участвуете</div>`;
-                    } else if (!expired) {
-                        html += `<button class="participate-btn" onclick="participate(${task.id})">🎯 Участвовать</button>`;
-                    } else {
-                        html += `<div class="already-participating" style="background:#fee2e2; color:#dc2626;">⏰ Срок истёк</div>`;
+                    const myLinks = mySubmissionsMap[task.id] || [];
+                    
+                    html += `
+                        <div class="board-item">
+                            <div class="board-title">${escapeHtml(task.title)}</div>
+                            <div class="board-date">📅 До: ${formatDateForDisplay(task.deadline)}</div>
+                            <div class="board-desc">${escapeHtml(task.description || '')}</div>
+                            <div class="board-tech"><strong>📋 ТЗ:</strong><br>${escapeHtml(task.technical_task || 'Нет описания')}</div>
+                    `;
+                    
+                    if (myLinks.length > 0) {
+                        html += `
+                            <div class="my-links-list">
+                                <div style="font-size: 11px; margin-bottom: 4px;">✅ Мои отправленные ссылки (${myLinks.length}):</div>
+                                <div>${myLinks.map(l => `<a href="${l}" target="_blank" class="my-link-item">🔗 ${l.length > 35 ? l.substring(0,35)+'...' : l}</a>`).join('')}</div>
+                            </div>
+                        `;
                     }
+                    
+                    if (!expired) {
+                        html += `
+                            <div class="participate-section">
+                                <input type="text" id="board_link_${task.id}" class="participate-input" placeholder="Вставьте ссылку на выполненную работу (Google Drive, Яндекс Диск, ВК)">
+                                <button class="participate-btn" onclick="submitBoardLink(${task.id})">📤 Отправить ссылку +1 балл</button>
+                            </div>
+                        `;
+                    } else {
+                        html += `<div class="already-participating" style="background:#fee2e2; color:#dc2626;">⏰ Срок выполнения истёк</div>`;
+                    }
+                    
                     html += `</div>`;
                 }
                 container.innerHTML = html;
@@ -480,29 +565,76 @@
             }
         }
         
-        window.participate = async (id) => {
+        window.submitBoardLink = async (taskId) => {
+            const linkInput = document.getElementById(`board_link_${taskId}`);
+            const link = linkInput ? linkInput.value.trim() : '';
+            
+            if (!link) {
+                alert('Вставьте ссылку на выполненную работу');
+                return;
+            }
+            
+            // Проверка на повтор
+            const { data: existing } = await sb
+                .from('board_submissions')
+                .select('id')
+                .eq('board_task_id', taskId)
+                .eq('chief_id', chiefId)
+                .eq('link', link);
+            
+            if (existing && existing.length > 0) {
+                alert('❌ Эта ссылка уже была отправлена!');
+                return;
+            }
+            
             try {
-                const { data: task } = await sb.from('board_tasks').select('*').eq('id', id).single();
-                await sb.from('board_participants').insert([{ board_task_id: id, chief_id: chiefId, district_id: districtId }]);
-                await sb.from('assignments').insert([{
-                    template_id: 2,
-                    title: task.title,
-                    description: task.description,
+                // Сохраняем ссылку в board_submissions
+                await sb.from('board_submissions').insert([{
+                    board_task_id: taskId,
                     chief_id: chiefId,
-                    district_id: districtId,
-                    coordinator_comment: task.technical_task,
-                    deadline: task.deadline,
-                    status: 'pending',
-                    type: 'event'
+                    link: link,
+                    district_id: districtId
                 }]);
-                showToast('✅ Вы участвуете!');
+                
+                // Начисляем балл
+                const { data: cur } = await sb.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
+                await sb.from('chief_scores').upsert({ 
+                    chief_id: chiefId, 
+                    total_score: (cur?.total_score || 0) + 1, 
+                    updated_at: new Date() 
+                });
+                
+                // Обновляем баллы округа
+                const { data: chiefs } = await sb.from('chiefs').select('id').eq('district_id', districtId);
+                let total = 0;
+                for (let c of chiefs || []) {
+                    const { data: s } = await sb.from('chief_scores').select('total_score').eq('chief_id', c.id).single();
+                    total += s?.total_score || 0;
+                }
+                await sb.from('district_scores').upsert({ 
+                    district_id: districtId, 
+                    total_score: total, 
+                    updated_at: new Date() 
+                });
+                
+                // Добавляем в историю
+                await sb.from('operations_history').insert([{ 
+                    chief_id: chiefId, 
+                    action: `Отправлена ссылка на задание "${escapeHtml(taskId)}": ${link}` 
+                }]);
+                
+                linkInput.value = '';
                 loadBoard();
                 loadTasks();
+                loadHistory();
+                loadRating();
+                showToast('✅ +1 балл! Ссылка добавлена');
             } catch (err) {
                 alert('Ошибка: ' + err.message);
             }
         };
         
+        // ========== ЗАДАЧИ (распуши от координатора) ==========
         async function loadTasks() {
             try {
                 const { data: tasks, error } = await sb
@@ -539,7 +671,6 @@
                     const expired = isExpired(task.deadline);
                     const sent = sentMap[task.id] || [];
                     
-                    // ========== ИСПРАВЛЕНИЕ: раздельные ссылки ==========
                     let coordinatorLinksHtml = '';
                     if (task.link) {
                         const links = task.link.split(',').map(l => l.trim());
@@ -547,27 +678,32 @@
                             <div class="coordinator-link">
                                 <strong>🔗 Ссылки для распуша:</strong>
                                 <div style="margin-top: 8px;">
-                                    ${links.map(l => `<div style="margin-bottom: 6px;"><a href="${l}" target="_blank" style="color: #4f46e5; word-break: break-all;">${l}</a></div>`).join('')}
+                                    ${links.map(l => `<div style="margin-bottom: 6px;"><a href="${l}" target="_blank" style="color: #4f46e5;">${l}</a></div>`).join('')}
                                 </div>
+                            </div>
+                        `;
+                    }
+                    
+                    let detailHtml = '';
+                    if (task.coordinator_comment) {
+                        detailHtml = `
+                            <div class="task-detail">
+                                <strong>📋 Подробности задания:</strong><br>
+                                ${escapeHtml(task.coordinator_comment).replace(/\n/g, '<br>')}
                             </div>
                         `;
                     }
                     
                     let deadlineHtml = '';
                     if (task.deadline) {
-                        deadlineHtml = `<div class="deadline ${expired ? 'deadline-urgent' : 'deadline-normal'}">⏰ Срок: ${new Date(task.deadline).toLocaleString()}${expired ? ' (просрочено!)' : ''}</div>`;
-                    }
-                    
-                    let commentHtml = '';
-                    if (task.coordinator_comment) {
-                        commentHtml = `<div class="comment">💬 ${task.coordinator_comment}</div>`;
+                        deadlineHtml = `<div class="deadline ${expired ? 'deadline-urgent' : 'deadline-normal'}">⏰ Срок: ${formatDateForDisplay(task.deadline)}${expired ? ' (просрочено!)' : ''}</div>`;
                     }
                     
                     let sentHtml = '';
                     if (sent.length > 0) {
                         sentHtml = `
                             <div class="sent-links">
-                                <div style="font-size: 11px; margin-bottom: 6px;">✅ Отправлено (${sent.length}):</div>
+                                <div style="font-size: 11px; margin-bottom: 6px;">✅ Отправленные ссылки (${sent.length}):</div>
                                 <div>${sent.map(l => `<a href="${l}" target="_blank" class="sent-link">🔗 ${l.length > 35 ? l.substring(0,35)+'...' : l}</a>`).join('')}</div>
                             </div>
                         `;
@@ -588,19 +724,19 @@
                     
                     html += `
                         <div class="task-item">
-                            <div class="task-title">${task.task_templates?.title || 'Задача'}</div>
-                            <div class="task-desc">${task.task_templates?.description || ''}</div>
+                            <div class="task-title">${escapeHtml(task.title || task.task_templates?.title || 'Задача')}</div>
+                            <div class="task-desc">${escapeHtml(task.description || task.task_templates?.description || '')}</div>
                             ${coordinatorLinksHtml}
+                            ${detailHtml}
                             ${deadlineHtml}
-                            ${commentHtml}
                             ${sentHtml}
                             <div><span class="task-status ${statusClass}">${statusText}</span></div>
                     `;
                     
                     if (task.status === 'pending' && !expired) {
                         html += `
-                            <input type="text" id="link_${task.id}" class="link-input" placeholder="Вставьте ссылку (t.me, vk.com, vk.ru)">
-                            <button class="btn-complete" onclick="sendLink(${task.id})">✅ Выполнить +1 балл</button>
+                            <input type="text" id="link_${task.id}" class="link-input" style="width:100%; padding:10px; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:20px; margin-top:10px;" placeholder="Вставьте ссылку (t.me, vk.com, vk.ru)">
+                            <button class="btn-complete" onclick="sendLink(${task.id})" style="width:100%; padding:8px; background:#dcfce7; border:none; border-radius:40px; color:#16a34a; font-weight:600; margin-top:10px; cursor:pointer;">✅ Выполнить +1 балл</button>
                         `;
                     }
                     html += `</div>`;
@@ -755,6 +891,7 @@
             loadHistory();
             loadRating();
             setInterval(loadTasks, 30000);
+            setInterval(loadBoard, 30000);
         }
     </script>
 </body>
