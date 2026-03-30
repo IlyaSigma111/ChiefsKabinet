@@ -13,7 +13,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
             background: #f5f7fa;
             color: #1a202c;
             min-height: 100vh;
@@ -296,12 +296,28 @@
             border: none;
             border-radius: 30px;
             cursor: pointer;
-            width: auto;
             transition: all 0.2s;
         }
 
         .delete-btn:hover {
             background: #fecaca;
+        }
+
+        .date-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .date-input-group input, .date-input-group select {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .date-input-group select {
+            width: auto;
+            min-width: 110px;
         }
 
         .toast {
@@ -350,9 +366,11 @@
                 padding: 8px 16px;
                 font-size: 13px;
             }
-            .header {
+            .date-input-group {
                 flex-direction: column;
-                text-align: center;
+            }
+            .date-input-group select {
+                width: 100%;
             }
         }
     </style>
@@ -381,8 +399,19 @@
                     <h2>📢 Создать задание на доску</h2>
                     <input type="text" id="boardTitle" placeholder="Название задания">
                     <textarea id="boardDesc" placeholder="Краткое описание задания"></textarea>
-                    <textarea id="boardTech" placeholder="📋 ТЗ (техническое задание): формат видео, требования, куда загружать, примеры..."></textarea>
-                    <input type="datetime-local" id="boardDeadline" placeholder="Срок выполнения">
+                    <textarea id="boardTech" placeholder="📋 ТЗ (техническое задание): формат видео, требования, куда загружать..."></textarea>
+                    <div class="date-input-group">
+                        <input type="number" id="boardDay" placeholder="День" min="1" max="31">
+                        <select id="boardMonth">
+                            <option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option>
+                            <option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option>
+                            <option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option>
+                            <option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option>
+                        </select>
+                        <input type="number" id="boardYear" placeholder="Год" min="2025" max="2030" value="2026">
+                        <input type="number" id="boardHour" placeholder="Час (0-23)" min="0" max="23" value="23">
+                        <input type="number" id="boardMinute" placeholder="Мин (0-59)" min="0" max="59" value="59">
+                    </div>
                     <button onclick="createBoardTask()">📢 Опубликовать на доску</button>
                 </div>
                 <div>
@@ -438,7 +467,18 @@
                         <button type="button" id="addLinkBtn" onclick="addLinkInput()" style="background: #f1f5f9; margin-top: 8px; display: none;">+ Добавить ещё ссылку</button>
                     </div>
 
-                    <input type="datetime-local" id="taskDeadline" placeholder="📅 Срок выполнения">
+                    <div class="date-input-group">
+                        <input type="number" id="taskDay" placeholder="День" min="1" max="31">
+                        <select id="taskMonth">
+                            <option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option>
+                            <option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option>
+                            <option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option>
+                            <option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option>
+                        </select>
+                        <input type="number" id="taskYear" placeholder="Год" min="2025" max="2030" value="2026">
+                        <input type="number" id="taskHour" placeholder="Час (0-23)" min="0" max="23" value="23">
+                        <input type="number" id="taskMinute" placeholder="Мин (0-59)" min="0" max="59" value="59">
+                    </div>
                     <textarea id="taskComment" placeholder="💬 Комментарий для шефов (опционально)"></textarea>
                     <button class="mass-btn" onclick="sendToAll()">📤 ОТПРАВИТЬ ВСЕМ ШЕФАМ</button>
                     <div id="requiredWarning" class="warning-text">⚠️ Для задачи "РАСПУШ" обязательны ссылки и срок выполнения!</div>
@@ -466,6 +506,32 @@
         let selectedTemplateTitle = null;
         let selectedTemplateType = null;
         let linkCounter = 1;
+
+        // ========== ФУНКЦИИ РАБОТЫ С ДАТОЙ ==========
+        function buildDateFromInputs(dayId, monthId, yearId, hourId, minuteId) {
+            const day = parseInt(document.getElementById(dayId)?.value);
+            const month = parseInt(document.getElementById(monthId)?.value);
+            const year = parseInt(document.getElementById(yearId)?.value);
+            const hour = parseInt(document.getElementById(hourId)?.value);
+            const minute = parseInt(document.getElementById(minuteId)?.value);
+            
+            if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+            
+            const date = new Date(year, month, day, isNaN(hour) ? 23 : hour, isNaN(minute) ? 59 : minute);
+            return date.toISOString();
+        }
+
+        function formatDateForDisplay(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
 
         // ========== ДОСКА ОБЪЯВЛЕНИЙ ==========
         async function loadBoardTasks() {
@@ -497,8 +563,8 @@
                     html += `
                         <div class="board-item">
                             <strong>${escapeHtml(task.title)}</strong>
-                            <div style="font-size: 11px; color: #64748b; margin-top: 4px;">📅 До: ${new Date(task.deadline).toLocaleString()}</div>
-                            <div style="font-size: 12px; margin-top: 6px; color: #475569;">${escapeHtml(task.description || '')}</div>
+                            <div style="font-size: 11px; color: #64748b; margin-top: 4px;">📅 До: ${formatDateForDisplay(task.deadline)}</div>
+                            <div style="font-size: 12px; margin-top: 6px;">${escapeHtml(task.description || '')}</div>
                             <div style="font-size: 11px; margin-top: 6px; color: #4f46e5;">📋 ТЗ: ${escapeHtml(task.technical_task || '-')}</div>
                             <div style="font-size: 11px; margin-top: 4px;">👥 Участников: ${count}</div>
                             <button class="delete-btn" onclick="deleteBoardTask(${task.id})">🗑 Удалить задание</button>
@@ -507,7 +573,7 @@
                 }
                 container.innerHTML = html;
             } catch (err) {
-                console.error('Ошибка загрузки досок:', err);
+                console.error('Ошибка загрузки доски:', err);
                 document.getElementById('boardTasksList').innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
             }
         }
@@ -528,14 +594,14 @@
             const title = document.getElementById('boardTitle').value;
             const desc = document.getElementById('boardDesc').value;
             const tech = document.getElementById('boardTech').value;
-            const deadline = document.getElementById('boardDeadline').value;
+            const deadline = buildDateFromInputs('boardDay', 'boardMonth', 'boardYear', 'boardHour', 'boardMinute');
 
             if (!title) {
                 alert('Введите название задания');
                 return;
             }
             if (!deadline) {
-                alert('Укажите срок выполнения');
+                alert('Укажите корректную дату и время');
                 return;
             }
 
@@ -544,7 +610,7 @@
                     title: title,
                     description: desc,
                     technical_task: tech,
-                    deadline: new Date(deadline).toISOString(),
+                    deadline: deadline,
                     is_active: true
                 }]);
 
@@ -553,7 +619,10 @@
                 document.getElementById('boardTitle').value = '';
                 document.getElementById('boardDesc').value = '';
                 document.getElementById('boardTech').value = '';
-                document.getElementById('boardDeadline').value = '';
+                document.getElementById('boardDay').value = '';
+                document.getElementById('boardYear').value = '2026';
+                document.getElementById('boardHour').value = '23';
+                document.getElementById('boardMinute').value = '59';
                 loadBoardTasks();
                 showToast('✅ Задание опубликовано на доске');
             } catch (err) {
@@ -677,7 +746,7 @@
             }
 
             const links = getAllLinks();
-            const deadline = document.getElementById('taskDeadline').value;
+            const deadline = buildDateFromInputs('taskDay', 'taskMonth', 'taskYear', 'taskHour', 'taskMinute');
             const comment = document.getElementById('taskComment').value;
 
             if (selectedTemplateType === 'raspush') {
@@ -717,7 +786,7 @@
                             district_id: chief.district_id,
                             link: allLinks || null,
                             coordinator_comment: comment || null,
-                            deadline: deadline ? new Date(deadline).toISOString() : null,
+                            deadline: deadline,
                             status: 'pending',
                             type: selectedTemplateType
                         }]);
@@ -740,7 +809,9 @@
                     </div>
                 `;
                 linkCounter = 1;
-                document.getElementById('taskDeadline').value = '';
+                document.getElementById('taskDay').value = '';
+                document.getElementById('taskHour').value = '23';
+                document.getElementById('taskMinute').value = '59';
                 document.getElementById('taskComment').value = '';
 
                 loadActiveTasks();
@@ -772,7 +843,7 @@
                 for (let task of data) {
                     let deadlineHtml = '';
                     if (task.deadline) {
-                        deadlineHtml = `<div style="font-size: 11px; margin-top: 4px; color: #d97706;">⏰ Срок: ${new Date(task.deadline).toLocaleString()}</div>`;
+                        deadlineHtml = `<div style="font-size: 11px; margin-top: 4px; color: #d97706;">⏰ Срок: ${formatDateForDisplay(task.deadline)}</div>`;
                     }
                     html += `
                         <div class="task-item">
@@ -814,7 +885,7 @@
                 for (let task of data) {
                     let deadlineHtml = '';
                     if (task.deadline) {
-                        deadlineHtml = `<div style="font-size: 11px; margin-top: 4px; color: #d97706;">⏰ Срок: ${new Date(task.deadline).toLocaleString()}</div>`;
+                        deadlineHtml = `<div style="font-size: 11px; margin-top: 4px; color: #d97706;">⏰ Срок: ${formatDateForDisplay(task.deadline)}</div>`;
                     }
                     html += `
                         <div class="task-item">
