@@ -170,7 +170,7 @@
             line-height: 1.5;
         }
 
-        .template-item, .board-item {
+        .template-item {
             background: #f8fafc;
             padding: 12px 16px;
             border-radius: 20px;
@@ -180,7 +180,7 @@
             transition: all 0.2s;
         }
 
-        .template-item:hover, .board-item:hover {
+        .template-item:hover {
             background: #f1f5f9;
             transform: translateX(4px);
         }
@@ -242,28 +242,30 @@
             text-align: center;
         }
 
-        .task-item {
+        .date-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .date-input-group input,
+        .date-input-group select {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .date-input-group select {
+            width: auto;
+            min-width: 110px;
+        }
+
+        .board-item {
             background: #f8fafc;
-            padding: 12px;
+            padding: 12px 16px;
             border-radius: 20px;
             margin-bottom: 12px;
             border: 1px solid #e2e8f0;
-        }
-
-        .task-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .task-status {
-            background: #fef3c7;
-            color: #d97706;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 11px;
         }
 
         .delete-btn {
@@ -274,23 +276,7 @@
             border: none;
             border-radius: 30px;
             cursor: pointer;
-        }
-
-        .date-input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-        }
-
-        .date-input-group input, .date-input-group select {
-            flex: 1;
-            margin-bottom: 0;
-        }
-
-        .date-input-group select {
-            width: auto;
-            min-width: 110px;
+            width: 100%;
         }
 
         .submissions-container {
@@ -339,10 +325,6 @@
             word-break: break-all;
         }
 
-        .submission-link:hover {
-            text-decoration: underline;
-        }
-
         .submission-date {
             font-size: 11px;
             color: #64748b;
@@ -355,6 +337,36 @@
             padding: 2px 8px;
             border-radius: 20px;
             font-size: 11px;
+        }
+
+        .task-item {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .task-status {
+            background: #fef3c7;
+            color: #d97706;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
         }
 
         .toast {
@@ -382,19 +394,27 @@
             }
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #64748b;
-        }
-
         @media (max-width: 768px) {
-            .container { padding: 16px; }
-            .grid-2cols { grid-template-columns: 1fr; gap: 20px; }
-            .panel { padding: 20px; }
-            .tab-btn { padding: 8px 16px; font-size: 13px; }
-            .date-input-group { flex-direction: column; }
-            .date-input-group select { width: 100%; }
+            .container {
+                padding: 16px;
+            }
+            .grid-2cols {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .panel {
+                padding: 20px;
+            }
+            .tab-btn {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+            .date-input-group {
+                flex-direction: column;
+            }
+            .date-input-group select {
+                width: 100%;
+            }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -542,7 +562,13 @@
         function formatDateForDisplay(dateStr) {
             if (!dateStr) return '';
             const date = new Date(dateStr);
-            return date.toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            return date.toLocaleString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
         }
 
         function escapeHtml(str) {
@@ -554,26 +580,43 @@
         // ========== ДОСКА ОБЪЯВЛЕНИЙ ==========
         async function loadBoardTasks() {
             try {
-                const { data, error } = await sb.from('board_tasks').select('*').order('created_at', { ascending: false });
+                const { data, error } = await sb
+                    .from('board_tasks')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
                 const container = document.getElementById('boardTasksList');
                 if (error) throw error;
                 if (!data || data.length === 0) {
                     container.innerHTML = '<div class="empty-state">📭 Нет заданий на доске</div>';
                     return;
                 }
+
                 let html = '';
                 for (let task of data) {
-                    html += `<div class="board-item"><strong>${escapeHtml(task.title)}</strong><div style="font-size: 11px; color: #64748b; margin-top: 4px;">📅 До: ${formatDateForDisplay(task.deadline)}</div><div style="font-size: 12px; margin-top: 6px;">${escapeHtml(task.description || '')}</div><div style="font-size: 11px; margin-top: 6px; color: #4f46e5;">📋 ТЗ: ${escapeHtml(task.technical_task || '-')}</div><button class="delete-btn" onclick="deleteBoardTask(${task.id})">🗑 Удалить задание</button></div>`;
+                    html += `
+                        <div class="board-item">
+                            <strong>${escapeHtml(task.title)}</strong>
+                            <div style="font-size: 11px; color: #64748b; margin-top: 4px;">📅 До: ${formatDateForDisplay(task.deadline)}</div>
+                            <div style="font-size: 12px; margin-top: 6px;">${escapeHtml(task.description || '')}</div>
+                            <div style="font-size: 11px; margin-top: 6px; color: #4f46e5;">📋 ТЗ: ${escapeHtml(task.technical_task || '-')}</div>
+                            <button class="delete-btn" onclick="deleteBoardTask(${task.id})">🗑 Удалить задание</button>
+                        </div>
+                    `;
                 }
                 container.innerHTML = html;
-            } catch (err) { console.error(err); }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('boardTasksList').innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
+            }
         }
 
         window.deleteBoardTask = async function(id) {
             if (!confirm('Удалить задание? Все отклики участников будут удалены.')) return;
             await sb.from('board_submissions').delete().eq('board_task_id', id);
             await sb.from('board_tasks').delete().eq('id', id);
-            loadBoardTasks(); loadSubmissions();
+            loadBoardTasks();
+            loadSubmissions();
             showToast('✅ Задание удалено');
         };
 
@@ -582,70 +625,133 @@
             const desc = document.getElementById('boardDesc').value;
             const tech = document.getElementById('boardTech').value;
             const deadline = buildDateFromInputs('boardDay', 'boardMonth', 'boardYear', 'boardHour', 'boardMinute');
-            if (!title) { alert('Введите название'); return; }
-            if (!deadline) { alert('Укажите дату'); return; }
-            await sb.from('board_tasks').insert([{ title, description: desc, technical_task: tech, deadline, is_active: true }]);
+
+            if (!title) {
+                alert('Введите название');
+                return;
+            }
+            if (!deadline) {
+                alert('Укажите дату');
+                return;
+            }
+
+            await sb.from('board_tasks').insert([{
+                title: title,
+                description: desc,
+                technical_task: tech,
+                deadline: deadline,
+                is_active: true
+            }]);
+
             document.getElementById('boardTitle').value = '';
             document.getElementById('boardDesc').value = '';
             document.getElementById('boardTech').value = '';
+            document.getElementById('boardDay').value = '';
+            document.getElementById('boardYear').value = '2026';
+            document.getElementById('boardHour').value = '23';
+            document.getElementById('boardMinute').value = '59';
             loadBoardTasks();
             showToast('✅ Задание опубликовано');
         };
 
-        // ========== ОТКЛИКИ С ДОСКИ (board_submissions) ==========
+        // ========== ОТКЛИКИ С ДОСКИ ==========
         async function loadSubmissions() {
             try {
                 const { data, error } = await sb
                     .from('board_submissions')
                     .select('*, board_tasks(title), chiefs(name), districts(name)')
                     .order('created_at', { ascending: false });
+
                 const container = document.getElementById('submissionsList');
                 if (error) throw error;
                 if (!data || data.length === 0) {
                     container.innerHTML = '<div class="empty-state">📭 Пока нет откликов от участников</div>';
                     return;
                 }
+
                 const grouped = {};
                 for (let sub of data) {
                     const district = sub.districts?.name || 'Неизвестный округ';
                     if (!grouped[district]) grouped[district] = [];
                     grouped[district].push(sub);
                 }
+
                 let html = '<div class="submissions-container">';
                 for (let [district, subs] of Object.entries(grouped)) {
-                    html += `<div class="district-group"><div class="district-header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'"><span>📌 ${district}</span><span class="badge">${subs.length} откликов</span></div><div class="district-content">`;
+                    html += `
+                        <div class="district-group">
+                            <div class="district-header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">
+                                <span>📌 ${district}</span>
+                                <span class="badge">${subs.length} откликов</span>
+                            </div>
+                            <div class="district-content">
+                    `;
                     for (let sub of subs) {
-                        html += `<div class="submission-item"><div><strong>📋 ${escapeHtml(sub.board_tasks?.title || 'Задание')}</strong></div><div>👤 ${escapeHtml(sub.chiefs?.name || 'Шеф')}</div><div>🔗 <a href="${sub.link}" target="_blank" class="submission-link">${sub.link}</a></div><div class="submission-date">📅 ${new Date(sub.created_at).toLocaleString()}</div></div>`;
+                        html += `
+                            <div class="submission-item">
+                                <div><strong>📋 ${escapeHtml(sub.board_tasks?.title || 'Задание')}</strong></div>
+                                <div>👤 ${escapeHtml(sub.chiefs?.name || 'Шеф')}</div>
+                                <div>🔗 <a href="${sub.link}" target="_blank" class="submission-link">${sub.link}</a></div>
+                                <div class="submission-date">📅 ${new Date(sub.created_at).toLocaleString()}</div>
+                            </div>
+                        `;
                     }
                     html += `</div></div>`;
                 }
                 html += `</div>`;
                 container.innerHTML = html;
-            } catch (err) { console.error(err); }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('submissionsList').innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
+            }
         }
 
         // ========== ШАБЛОНЫ ==========
         async function loadTemplates() {
             const { data } = await sb.from('task_templates').select('*').eq('is_active', true).order('id');
             const container = document.getElementById('templatesList');
-            if (!data?.length) { container.innerHTML = '<div class="empty-state">Нет шаблонов</div>'; return; }
+            if (!data?.length) {
+                container.innerHTML = '<div class="empty-state">Нет шаблонов</div>';
+                return;
+            }
+
             container.innerHTML = data.map(t => {
                 let typeLabel = '', typeClass = '';
-                if (t.type === 'raspush') { typeLabel = '📢 Распуш'; typeClass = 'type-raspush'; }
-                else if (t.type === 'event') { typeLabel = '🎉 Событие'; typeClass = 'type-event'; }
-                else { typeLabel = '⭐ По желанию'; typeClass = 'type-optional'; }
-                return `<div class="template-item" onclick="selectTemplate(${t.id}, '${escapeHtml(t.title).replace(/'/g, "\\'")}', '${t.type}')"><strong>${escapeHtml(t.title)}</strong><span class="type-badge ${typeClass}">${typeLabel}</span><div style="font-size:12px; margin-top:4px;">${escapeHtml(t.description || '')}</div></div>`;
+                if (t.type === 'raspush') {
+                    typeLabel = '📢 Распуш';
+                    typeClass = 'type-raspush';
+                } else if (t.type === 'event') {
+                    typeLabel = '🎉 Событие';
+                    typeClass = 'type-event';
+                } else {
+                    typeLabel = '⭐ По желанию';
+                    typeClass = 'type-optional';
+                }
+                return `
+                    <div class="template-item" onclick="selectTemplate(${t.id}, '${escapeHtml(t.title).replace(/'/g, "\\'")}', '${t.type}')">
+                        <strong>${escapeHtml(t.title)}</strong>
+                        <span class="type-badge ${typeClass}">${typeLabel}</span>
+                        <div style="font-size: 12px; color: #64748b; margin-top: 4px;">${escapeHtml(t.description || '')}</div>
+                    </div>
+                `;
             }).join('');
         }
 
         window.selectTemplate = function(id, title, type) {
-            selectedTemplateId = id; selectedTemplateTitle = title; selectedTemplateType = type;
+            selectedTemplateId = id;
+            selectedTemplateTitle = title;
+            selectedTemplateType = type;
             document.getElementById('selectedTemplateName').innerText = title;
-            document.querySelectorAll('.template-item').forEach(i => i.classList.remove('selected'));
+
+            document.querySelectorAll('.template-item').forEach(item => {
+                item.classList.remove('selected');
+            });
             event.currentTarget.classList.add('selected');
+
             const addBtn = document.getElementById('addLinkBtn');
             const warning = document.getElementById('requiredWarning');
             const infoBox = document.getElementById('infoBox');
+
             if (type === 'raspush') {
                 addBtn.style.display = 'block';
                 warning.style.display = 'block';
@@ -666,11 +772,16 @@
             const div = document.createElement('div');
             div.className = 'link-group';
             div.id = `link-group-${linkCounter}`;
-            div.innerHTML = `<input type="text" id="taskLink${linkCounter}" placeholder="🔗 Ссылка ${linkCounter}"><div class="remove-link" onclick="removeLink(${linkCounter})">✖</div>`;
+            div.innerHTML = `
+                <input type="text" id="taskLink${linkCounter}" placeholder="🔗 Ссылка ${linkCounter}">
+                <div class="remove-link" onclick="removeLink(${linkCounter})">✖</div>
+            `;
             container.appendChild(div);
         };
 
-        window.removeLink = function(id) { document.getElementById(`link-group-${id}`)?.remove(); };
+        window.removeLink = function(id) {
+            document.getElementById(`link-group-${id}`)?.remove();
+        };
 
         function getAllLinks() {
             const links = [];
@@ -683,52 +794,122 @@
 
         // ========== ОТПРАВКА ЗАДАЧИ ==========
         window.sendToAll = async function() {
-            if (!selectedTemplateId) { alert('Выберите шаблон'); return; }
+            if (!selectedTemplateId) {
+                alert('Выберите шаблон');
+                return;
+            }
+
             const links = getAllLinks();
             const deadline = buildDateFromInputs('taskDay', 'taskMonth', 'taskYear', 'taskHour', 'taskMinute');
             const comment = document.getElementById('taskComment').value;
+
             if (selectedTemplateType === 'raspush' && (links.length === 0 || !deadline)) {
                 alert('Для распуша нужны ссылки и срок');
                 return;
             }
+
             const allLinks = links.join(', ');
             const { data: chiefs } = await sb.from('chiefs').select('id, district_id');
-            if (!chiefs?.length) { alert('Нет шефов'); return; }
+            if (!chiefs?.length) {
+                alert('Нет шефов');
+                return;
+            }
+
             let ok = 0;
             for (let c of chiefs) {
-                const { error } = await sb.from('assignments').insert([{ template_id: selectedTemplateId, chief_id: c.id, district_id: c.district_id, link: allLinks || null, coordinator_comment: comment || null, deadline, status: 'pending', type: selectedTemplateType }]);
+                const { error } = await sb.from('assignments').insert([{
+                    template_id: selectedTemplateId,
+                    chief_id: c.id,
+                    district_id: c.district_id,
+                    link: allLinks || null,
+                    coordinator_comment: comment || null,
+                    deadline: deadline,
+                    status: 'pending',
+                    type: selectedTemplateType
+                }]);
                 if (!error) ok++;
             }
+
             alert(`✅ Задача "${selectedTemplateTitle}" отправлена ${ok} шефам`);
-            document.getElementById('linksContainer').innerHTML = `<div class="link-group"><input type="text" id="taskLink1" placeholder="🔗 Ссылка 1"><div class="remove-link" onclick="removeLink(1)" style="display: none;">✖</div></div>`;
+            document.getElementById('linksContainer').innerHTML = `
+                <div class="link-group">
+                    <input type="text" id="taskLink1" placeholder="🔗 Ссылка 1">
+                    <div class="remove-link" onclick="removeLink(1)" style="display: none;">✖</div>
+                </div>
+            `;
             linkCounter = 1;
             document.getElementById('taskDay').value = '';
             document.getElementById('taskHour').value = '23';
             document.getElementById('taskMinute').value = '59';
             document.getElementById('taskComment').value = '';
-            loadActiveTasks(); loadActiveTasks2();
+
+            loadActiveTasks();
+            loadActiveTasks2();
         };
 
         // ========== АКТИВНЫЕ ЗАДАЧИ ==========
         async function loadActiveTasks() {
-            const { data } = await sb.from('assignments').select('*, task_templates(*), chiefs(name, primary_branch_id)').neq('status', 'completed').order('created_at', { ascending: false }).limit(40);
+            const { data } = await sb
+                .from('assignments')
+                .select('*, task_templates(*), chiefs(name, primary_branch_id)')
+                .neq('status', 'completed')
+                .order('created_at', { ascending: false })
+                .limit(40);
+
             const container = document.getElementById('activeTasksList');
-            if (!data?.length) { container.innerHTML = '<div class="empty-state">✅ Нет активных задач</div>'; return; }
-            container.innerHTML = data.map(t => `<div class="task-item"><div class="task-header"><strong>${escapeHtml(t.task_templates?.title || 'Задача')}</strong><span class="task-status">${t.status === 'pending' ? '⏳ Ожидает' : '🔄 В работе'}</span></div><div style="font-size:12px; margin-top:6px;">Шеф: ${escapeHtml(t.chiefs?.name)} | ${t.chiefs?.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</div>${t.deadline ? `<div style="font-size:11px; margin-top:4px;">⏰ Срок: ${formatDateForDisplay(t.deadline)}</div>` : ''}${t.link ? `<a href="${t.link.split(',')[0]}" target="_blank" style="color:#3b82f6;">🔗 Ссылка</a>` : ''}</div>`).join('');
+            if (!data?.length) {
+                container.innerHTML = '<div class="empty-state">✅ Нет активных задач</div>';
+                return;
+            }
+
+            container.innerHTML = data.map(t => `
+                <div class="task-item">
+                    <div class="task-header">
+                        <strong>${escapeHtml(t.task_templates?.title || 'Задача')}</strong>
+                        <span class="task-status">${t.status === 'pending' ? '⏳ Ожидает' : '🔄 В работе'}</span>
+                    </div>
+                    <div style="font-size: 12px; margin-top: 6px;">Шеф: ${escapeHtml(t.chiefs?.name)} | ${t.chiefs?.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</div>
+                    ${t.deadline ? `<div style="font-size: 11px; margin-top: 4px;">⏰ Срок: ${formatDateForDisplay(t.deadline)}</div>` : ''}
+                    ${t.link ? `<a href="${t.link.split(',')[0]}" target="_blank" style="color: #3b82f6;">🔗 Ссылка</a>` : ''}
+                </div>
+            `).join('');
         }
 
         async function loadActiveTasks2() {
-            const { data } = await sb.from('assignments').select('*, task_templates(*), chiefs(name, primary_branch_id)').neq('status', 'completed').order('created_at', { ascending: false }).limit(40);
+            const { data } = await sb
+                .from('assignments')
+                .select('*, task_templates(*), chiefs(name, primary_branch_id)')
+                .neq('status', 'completed')
+                .order('created_at', { ascending: false })
+                .limit(40);
+
             const container = document.getElementById('activeTasksList2');
-            if (!data?.length) { container.innerHTML = '<div class="empty-state">✅ Нет активных задач</div>'; return; }
-            container.innerHTML = data.map(t => `<div class="task-item"><div class="task-header"><strong>${escapeHtml(t.task_templates?.title || 'Задача')}</strong><span class="task-status">${t.status === 'pending' ? '⏳ Ожидает' : '🔄 В работе'}</span></div><div style="font-size:12px; margin-top:6px;">Шеф: ${escapeHtml(t.chiefs?.name)} | ${t.chiefs?.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</div>${t.deadline ? `<div style="font-size:11px; margin-top:4px;">⏰ Срок: ${formatDateForDisplay(t.deadline)}</div>` : ''}${t.link ? `<a href="${t.link.split(',')[0]}" target="_blank" style="color:#3b82f6;">🔗 Ссылка</a>` : ''}</div>`).join('');
+            if (!data?.length) {
+                container.innerHTML = '<div class="empty-state">✅ Нет активных задач</div>';
+                return;
+            }
+
+            container.innerHTML = data.map(t => `
+                <div class="task-item">
+                    <div class="task-header">
+                        <strong>${escapeHtml(t.task_templates?.title || 'Задача')}</strong>
+                        <span class="task-status">${t.status === 'pending' ? '⏳ Ожидает' : '🔄 В работе'}</span>
+                    </div>
+                    <div style="font-size: 12px; margin-top: 6px;">Шеф: ${escapeHtml(t.chiefs?.name)} | ${t.chiefs?.primary_branch_id ? '📌 Первичка' : '🏛️ Местное'}</div>
+                    ${t.deadline ? `<div style="font-size: 11px; margin-top: 4px;">⏰ Срок: ${formatDateForDisplay(t.deadline)}</div>` : ''}
+                    ${t.link ? `<a href="${t.link.split(',')[0]}" target="_blank" style="color: #3b82f6;">🔗 Ссылка</a>` : ''}
+                </div>
+            `).join('');
         }
 
         window.createTemplate = async function() {
             const title = document.getElementById('newTemplateTitle').value;
             const desc = document.getElementById('newTemplateDesc').value;
             const type = document.getElementById('templateTypeSelect').value;
-            if (!title) { alert('Введите название'); return; }
+            if (!title) {
+                alert('Введите название');
+                return;
+            }
             await sb.from('task_templates').insert([{ title, description: desc, type, is_active: true }]);
             document.getElementById('newTemplateTitle').value = '';
             document.getElementById('newTemplateDesc').value = '';
@@ -750,6 +931,7 @@
                 btn.classList.add('active');
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
                 document.getElementById(btn.dataset.tab + '-panel').classList.add('active');
+
                 if (btn.dataset.tab === 'board') loadBoardTasks();
                 if (btn.dataset.tab === 'submissions') loadSubmissions();
                 if (btn.dataset.tab === 'templates') loadTemplates();
@@ -763,6 +945,7 @@
         loadTemplates();
         loadActiveTasks();
         loadActiveTasks2();
+
         setInterval(() => {
             if (document.querySelector('.tab-btn.active')?.dataset.tab === 'send') loadActiveTasks();
             if (document.querySelector('.tab-btn.active')?.dataset.tab === 'active') loadActiveTasks2();
