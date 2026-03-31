@@ -13,7 +13,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
             background: #f5f7fa;
             color: #1a202c;
             min-height: 100vh;
@@ -143,7 +143,6 @@
             border-bottom: 1px solid #e2e8f0;
         }
 
-        /* Доска объявлений */
         .board-item {
             background: #f8fafc;
             padding: 16px;
@@ -210,15 +209,6 @@
             margin-top: 10px;
         }
 
-        .already-participating {
-            background: #e0e7ff;
-            padding: 8px;
-            border-radius: 40px;
-            text-align: center;
-            font-size: 12px;
-            color: #4f46e5;
-        }
-
         .my-links-list {
             margin-top: 10px;
             padding-top: 8px;
@@ -236,7 +226,6 @@
             text-decoration: none;
         }
 
-        /* Задачи */
         .task-item {
             background: #f8fafc;
             padding: 16px;
@@ -249,22 +238,12 @@
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 6px;
-            color: #1a202c;
         }
 
         .task-desc {
             font-size: 13px;
             color: #64748b;
             margin-bottom: 8px;
-        }
-
-        .task-detail {
-            background: #f1f5f9;
-            padding: 12px;
-            border-radius: 16px;
-            margin: 10px 0;
-            font-size: 13px;
-            border-left: 3px solid #3b82f6;
         }
 
         .coordinator-link {
@@ -274,11 +253,6 @@
             margin: 10px 0;
             word-break: break-all;
             border-left: 3px solid #4f46e5;
-        }
-
-        .coordinator-link a {
-            color: #4f46e5;
-            text-decoration: none;
         }
 
         .deadline {
@@ -317,9 +291,25 @@
             color: #16a34a;
         }
 
-        .status-expired {
-            background: #fee2e2;
-            color: #dc2626;
+        .btn-complete {
+            background: #dcfce7;
+            border: none;
+            padding: 10px;
+            border-radius: 40px;
+            color: #16a34a;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .link-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            margin-top: 10px;
         }
 
         .sent-links {
@@ -428,20 +418,20 @@
 
         <div class="menu-scroll">
             <div class="menu-items">
-                <button class="menu-btn" data-page="board">📢 Доска</button>
-                <button class="menu-btn active" data-page="tasks">📋 Задачи</button>
+                <button class="menu-btn active" data-page="board">📢 Доска</button>
+                <button class="menu-btn" data-page="tasks">📋 Задачи</button>
                 <button class="menu-btn" data-page="rating">🏆 Рейтинг</button>
                 <button class="menu-btn" data-page="history">📜 История</button>
             </div>
         </div>
 
         <div class="content">
-            <div id="board" class="page">
+            <div id="board" class="page active">
                 <h3>📢 Доска объявлений</h3>
                 <div id="boardList" class="empty-state">⏳ Загрузка...</div>
             </div>
 
-            <div id="tasks" class="page active">
+            <div id="tasks" class="page">
                 <h3>📋 Мои задачи</h3>
                 <div id="tasksList" class="empty-state">⏳ Загрузка...</div>
             </div>
@@ -473,7 +463,7 @@
         let districtId = localStorage.getItem('chiefDistrictId');
         
         if (!chiefId) {
-            document.getElementById('tasksList').innerHTML = '<div class="empty-state">⚠️ Ошибка. <a href="index.html">На главную</a></div>';
+            document.getElementById('boardList').innerHTML = '<div class="empty-state">⚠️ Ошибка. <a href="index.html">На главную</a></div>';
             document.getElementById('districtDisplay').innerHTML = 'Ошибка';
         } else {
             document.getElementById('districtDisplay').innerHTML = '📍 ' + (districtName || 'Неизвестно') + (branchType === 'primary' ? ' • Первичка' : '');
@@ -486,25 +476,36 @@
         
         function formatDateForDisplay(dateStr) {
             if (!dateStr) return '';
-            const date = new Date(dateStr);
-            return date.toLocaleString('ru-RU', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            try {
+                const date = new Date(dateStr);
+                if (isNaN(date.getTime())) return dateStr;
+                return date.toLocaleString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                return dateStr;
+            }
         }
         
         function escapeHtml(str) {
-            if (!str) return '';
+            if (str === null || str === undefined) return '';
+            if (typeof str !== 'string') str = String(str);
             return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
         
         // ========== ДОСКА ОБЪЯВЛЕНИЙ ==========
         async function loadBoard() {
             try {
-                const { data: tasks } = await sb.from('board_tasks').select('*').eq('is_active', true).order('deadline');
+                const { data: tasks } = await sb
+                    .from('board_tasks')
+                    .select('*')
+                    .eq('is_active', true)
+                    .order('deadline', { ascending: true });
+                
                 const { data: mySubmissions } = await sb
                     .from('board_submissions')
                     .select('board_task_id, link')
@@ -541,7 +542,7 @@
                         html += `
                             <div class="my-links-list">
                                 <div style="font-size: 11px; margin-bottom: 4px;">✅ Мои отправленные ссылки (${myLinks.length}):</div>
-                                <div>${myLinks.map(l => `<a href="${l}" target="_blank" class="my-link-item">🔗 ${l.length > 35 ? l.substring(0,35)+'...' : l}</a>`).join('')}</div>
+                                <div>${myLinks.map(l => `<a href="${escapeHtml(l)}" target="_blank" class="my-link-item">🔗 ${l.length > 35 ? l.substring(0,35)+'...' : l}</a>`).join('')}</div>
                             </div>
                         `;
                     }
@@ -554,14 +555,15 @@
                             </div>
                         `;
                     } else {
-                        html += `<div class="already-participating" style="background:#fee2e2; color:#dc2626;">⏰ Срок выполнения истёк</div>`;
+                        html += `<div class="already-participating" style="background:#fee2e2; color:#dc2626; padding:8px; border-radius:40px; text-align:center;">⏰ Срок выполнения истёк</div>`;
                     }
                     
                     html += `</div>`;
                 }
                 container.innerHTML = html;
             } catch (err) {
-                console.error(err);
+                console.error('Ошибка загрузки доски:', err);
+                document.getElementById('boardList').innerHTML = '<div class="empty-state">❌ Ошибка загрузки</div>';
             }
         }
         
@@ -575,19 +577,19 @@
             }
             
             // Проверка на повтор
-            const { data: existing } = await sb
-                .from('board_submissions')
-                .select('id')
-                .eq('board_task_id', taskId)
-                .eq('chief_id', chiefId)
-                .eq('link', link);
-            
-            if (existing && existing.length > 0) {
-                alert('❌ Эта ссылка уже была отправлена!');
-                return;
-            }
-            
             try {
+                const { data: existing } = await sb
+                    .from('board_submissions')
+                    .select('id')
+                    .eq('board_task_id', taskId)
+                    .eq('chief_id', chiefId)
+                    .eq('link', link);
+                
+                if (existing && existing.length > 0) {
+                    alert('❌ Эта ссылка уже была отправлена!');
+                    return;
+                }
+                
                 // Сохраняем ссылку в board_submissions
                 await sb.from('board_submissions').insert([{
                     board_task_id: taskId,
@@ -597,18 +599,32 @@
                 }]);
                 
                 // Начисляем балл
-                const { data: cur } = await sb.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
+                const { data: cur } = await sb
+                    .from('chief_scores')
+                    .select('total_score')
+                    .eq('chief_id', chiefId)
+                    .single();
+                
+                const newScore = (cur?.total_score || 0) + 1;
                 await sb.from('chief_scores').upsert({ 
                     chief_id: chiefId, 
-                    total_score: (cur?.total_score || 0) + 1, 
+                    total_score: newScore, 
                     updated_at: new Date() 
                 });
                 
                 // Обновляем баллы округа
-                const { data: chiefs } = await sb.from('chiefs').select('id').eq('district_id', districtId);
+                const { data: chiefs } = await sb
+                    .from('chiefs')
+                    .select('id')
+                    .eq('district_id', districtId);
+                
                 let total = 0;
                 for (let c of chiefs || []) {
-                    const { data: s } = await sb.from('chief_scores').select('total_score').eq('chief_id', c.id).single();
+                    const { data: s } = await sb
+                        .from('chief_scores')
+                        .select('total_score')
+                        .eq('chief_id', c.id)
+                        .single();
                     total += s?.total_score || 0;
                 }
                 await sb.from('district_scores').upsert({ 
@@ -620,7 +636,7 @@
                 // Добавляем в историю
                 await sb.from('operations_history').insert([{ 
                     chief_id: chiefId, 
-                    action: `Отправлена ссылка на задание "${escapeHtml(taskId)}": ${link}` 
+                    action: `Отправлена ссылка на задание "${escapeHtml(String(taskId))}": ${link}` 
                 }]);
                 
                 linkInput.value = '';
@@ -630,7 +646,8 @@
                 loadRating();
                 showToast('✅ +1 балл! Ссылка добавлена');
             } catch (err) {
-                alert('Ошибка: ' + err.message);
+                console.error('Ошибка отправки:', err);
+                alert('Ошибка: ' + (err.message || 'Неизвестная ошибка'));
             }
         };
         
@@ -678,18 +695,8 @@
                             <div class="coordinator-link">
                                 <strong>🔗 Ссылки для распуша:</strong>
                                 <div style="margin-top: 8px;">
-                                    ${links.map(l => `<div style="margin-bottom: 6px;"><a href="${l}" target="_blank" style="color: #4f46e5;">${l}</a></div>`).join('')}
+                                    ${links.map(l => `<div style="margin-bottom: 6px;"><a href="${escapeHtml(l)}" target="_blank">${escapeHtml(l)}</a></div>`).join('')}
                                 </div>
-                            </div>
-                        `;
-                    }
-                    
-                    let detailHtml = '';
-                    if (task.coordinator_comment) {
-                        detailHtml = `
-                            <div class="task-detail">
-                                <strong>📋 Подробности задания:</strong><br>
-                                ${escapeHtml(task.coordinator_comment).replace(/\n/g, '<br>')}
                             </div>
                         `;
                     }
@@ -704,7 +711,7 @@
                         sentHtml = `
                             <div class="sent-links">
                                 <div style="font-size: 11px; margin-bottom: 6px;">✅ Отправленные ссылки (${sent.length}):</div>
-                                <div>${sent.map(l => `<a href="${l}" target="_blank" class="sent-link">🔗 ${l.length > 35 ? l.substring(0,35)+'...' : l}</a>`).join('')}</div>
+                                <div>${sent.map(l => `<a href="${escapeHtml(l)}" target="_blank" class="sent-link">🔗 ${l.length > 35 ? l.substring(0,35)+'...' : l}</a>`).join('')}</div>
                             </div>
                         `;
                     }
@@ -727,7 +734,6 @@
                             <div class="task-title">${escapeHtml(task.title || task.task_templates?.title || 'Задача')}</div>
                             <div class="task-desc">${escapeHtml(task.description || task.task_templates?.description || '')}</div>
                             ${coordinatorLinksHtml}
-                            ${detailHtml}
                             ${deadlineHtml}
                             ${sentHtml}
                             <div><span class="task-status ${statusClass}">${statusText}</span></div>
@@ -735,8 +741,8 @@
                     
                     if (task.status === 'pending' && !expired) {
                         html += `
-                            <input type="text" id="link_${task.id}" class="link-input" style="width:100%; padding:10px; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:20px; margin-top:10px;" placeholder="Вставьте ссылку (t.me, vk.com, vk.ru)">
-                            <button class="btn-complete" onclick="sendLink(${task.id})" style="width:100%; padding:8px; background:#dcfce7; border:none; border-radius:40px; color:#16a34a; font-weight:600; margin-top:10px; cursor:pointer;">✅ Выполнить +1 балл</button>
+                            <input type="text" id="link_${task.id}" class="link-input" placeholder="Вставьте ссылку (t.me, vk.com, vk.ru)">
+                            <button class="btn-complete" onclick="sendLink(${task.id})">✅ Выполнить +1 балл</button>
                         `;
                     }
                     html += `</div>`;
@@ -825,7 +831,13 @@
         
         async function loadHistory() {
             try {
-                const { data } = await sb.from('operations_history').select('*').eq('chief_id', chiefId).order('created_at', { ascending: false }).limit(50);
+                const { data } = await sb
+                    .from('operations_history')
+                    .select('*')
+                    .eq('chief_id', chiefId)
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+                
                 const container = document.getElementById('historyList');
                 if (!data || data.length === 0) {
                     container.innerHTML = '<div class="empty-state">📭 История пуста</div>';
@@ -833,8 +845,9 @@
                 }
                 let html = '';
                 for (let h of data) {
-                    let action = h.action.length > 55 ? h.action.substring(0,55)+'...' : h.action;
-                    html += `<div class="history-item"><span>${action}</span><span style="color:#64748b;">${new Date(h.created_at).toLocaleString()}</span></div>`;
+                    let action = h.action;
+                    if (action && action.length > 55) action = action.substring(0,55)+'...';
+                    html += `<div class="history-item"><span>${escapeHtml(action || 'Действие')}</span><span style="color:#64748b;">${new Date(h.created_at).toLocaleString()}</span></div>`;
                 }
                 container.innerHTML = html;
             } catch (err) {
@@ -844,7 +857,11 @@
         
         async function loadRating() {
             try {
-                const { data } = await sb.from('district_scores').select('*, districts(name)').order('total_score', { ascending: false });
+                const { data } = await sb
+                    .from('district_scores')
+                    .select('*, districts(name)')
+                    .order('total_score', { ascending: false });
+                
                 const container = document.getElementById('ratingList');
                 if (!data || data.length === 0) {
                     container.innerHTML = '发展<td colspan="2" class="empty-state">Нет данных<\/td><\/tr>';
@@ -852,11 +869,13 @@
                 }
                 let html = '';
                 for (let d of data) {
-                    html += `发展<td style="font-weight:500;">${d.districts?.name || 'Неизвестно'}<\/td><td style="color:#3b82f6;">${d.total_score} баллов<\/td><\/tr>`;
+                    const districtName = d.districts?.name || 'Неизвестно';
+                    html += `发展<td style="font-weight:500;">${escapeHtml(districtName)}<\/td><td style="color:#3b82f6;">${d.total_score} баллов<\/td><\/tr>`;
                 }
                 container.innerHTML = html;
             } catch (err) {
-                console.error(err);
+                console.error('Ошибка загрузки рейтинга:', err);
+                document.getElementById('ratingList').innerHTML = '发展<td colspan="2" class="empty-state">⚠️ Ошибка загрузки<\/td><\/tr>';
             }
         }
         
@@ -890,8 +909,8 @@
             loadTasks();
             loadHistory();
             loadRating();
-            setInterval(loadTasks, 30000);
             setInterval(loadBoard, 30000);
+            setInterval(loadTasks, 30000);
         }
     </script>
 </body>
