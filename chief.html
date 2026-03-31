@@ -172,7 +172,6 @@
             border-bottom: 1px solid #e2e8f0;
         }
 
-        /* Календарь */
         .calendar-header {
             display: flex;
             justify-content: space-between;
@@ -253,7 +252,6 @@
             background: #3b82f640;
         }
 
-        /* Модальное окно */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -322,7 +320,6 @@
             margin-top: 12px;
         }
 
-        /* Задачи */
         .task-item {
             background: #f8fafc;
             padding: 16px;
@@ -546,10 +543,9 @@
                 <h3>🏆 Рейтинг округов</h3>
                 <div style="overflow-x: auto;">
                     <table class="ranking-table">
-                        <thead><tr><th>Округ</th><th>Всего баллов</th></tr></thead>
+                        <thead>   </thead>
                         <tbody id="ratingList"></tbody>
-                    </table>
-                </div>
+                     </div>
             </div>
 
             <div id="history" class="page">
@@ -581,6 +577,7 @@
         let branchType = localStorage.getItem('chiefBranchType');
         let districtId = localStorage.getItem('chiefDistrictId');
         
+        // Устанавливаем текущую дату на сегодня
         let currentDate = new Date();
         let allEvents = [];
         let mySubmissionsMap = {};
@@ -682,7 +679,6 @@
             }
             
             for (let day = 1; day <= daysInMonth; day++) {
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const eventsOnDay = allEvents.filter(e => {
                     const eventDate = new Date(e.deadline);
                     return eventDate.getDate() === day && eventDate.getMonth() === month && eventDate.getFullYear() === year;
@@ -691,12 +687,13 @@
                 let eventsHtml = '';
                 for (let event of eventsOnDay) {
                     const myLinks = mySubmissionsMap[event.id] || [];
-                    const status = myLinks.length > 0 ? '✅' : '';
-                    eventsHtml += `<div class="calendar-event" onclick="event.stopPropagation(); openEventModal(${event.id})">${escapeHtml(event.title)} ${status}</div>`;
+                    const count = myLinks.length;
+                    const status = count > 0 ? ` (${count})` : '';
+                    eventsHtml += `<div class="calendar-event" onclick="event.stopPropagation(); openEventModal(${event.id})">${escapeHtml(event.title)}${status}</div>`;
                 }
                 
                 gridHtml += `
-                    <div class="calendar-day" onclick="openEventsOnDate('${dateStr}')">
+                    <div class="calendar-day" onclick="openEventsOnDate('${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}')">
                         <div class="calendar-day-number">${day}</div>
                         ${eventsHtml}
                     </div>
@@ -719,24 +716,27 @@
             if (!event) return;
             
             const myLinks = mySubmissionsMap[event.id] || [];
-            const isParticipating = myLinks.length > 0;
+            const linksCount = myLinks.length;
             
             document.getElementById('modalTitle').innerText = event.title;
             document.getElementById('modalDesc').innerHTML = `<strong>📝 Описание:</strong><br>${escapeHtml(event.description || 'Нет')}`;
             document.getElementById('modalTech').innerHTML = `<strong>📋 ТЗ:</strong><br>${escapeHtml(event.technical_task || 'Нет')}`;
             document.getElementById('modalDeadline').innerHTML = `<strong>⏰ Срок:</strong> ${formatDateForDisplay(event.deadline)}`;
-            document.getElementById('modalStatus').innerHTML = `<strong>📌 Статус:</strong> ${isParticipating ? `✅ Вы уже отправили ${myLinks.length} ссылку(и)` : '❌ Вы ещё не участвуете'}`;
+            
+            let statusHtml = `<strong>📌 Статус:</strong> Вы уже отправили ${linksCount} ссылку(и). Можно отправлять ещё до окончания срока!`;
+            document.getElementById('modalStatus').innerHTML = statusHtml;
             
             let participateHtml = '';
-            if (!isParticipating && new Date(event.deadline) > new Date()) {
+            if (new Date(event.deadline) > new Date()) {
                 participateHtml = `
                     <div style="margin-top: 16px;">
+                        <div style="background: #e0e7ff; padding: 10px; border-radius: 16px; margin-bottom: 12px; font-size: 13px;">
+                            📌 <strong>Важно:</strong> Вы можете отправить несколько ссылок до окончания срока. Каждая ссылка = +1 балл!
+                        </div>
                         <input type="text" id="modalLinkInput" class="participate-input" placeholder="Вставьте ссылку на выполненную работу (Google Drive, Яндекс Диск, ВК)">
                         <button class="participate-modal-btn" onclick="submitModalLink()">📤 Отправить ссылку +1 балл</button>
                     </div>
                 `;
-            } else if (isParticipating) {
-                participateHtml = `<div style="margin-top: 16px; padding: 12px; background: #dcfce7; border-radius: 20px; text-align: center; color: #16a34a;">✅ Вы уже участвуете в этом задании</div>`;
             } else {
                 participateHtml = `<div style="margin-top: 16px; padding: 12px; background: #fee2e2; border-radius: 20px; text-align: center; color: #dc2626;">⏰ Срок выполнения истёк</div>`;
             }
@@ -824,12 +824,12 @@
             let modalContent = '<div style="max-height: 400px; overflow-y: auto;">';
             for (let event of eventsOnDate) {
                 const myLinks = mySubmissionsMap[event.id] || [];
-                const statusText = myLinks.length > 0 ? '✅ Участвую' : '❌ Не участвую';
+                const count = myLinks.length;
                 modalContent += `
                     <div style="border: 1px solid #e2e8f0; border-radius: 16px; padding: 12px; margin-bottom: 12px;">
                         <strong>${escapeHtml(event.title)}</strong><br>
                         <span style="font-size: 12px; color: #64748b;">${formatDateForDisplay(event.deadline)}</span><br>
-                        <span style="font-size: 11px;">${statusText}</span>
+                        <span style="font-size: 11px;">📤 Отправлено ссылок: ${count}</span>
                         <button onclick="closeModal(); setTimeout(() => openEventModal(${event.id}), 100)" style="margin-top: 8px; padding: 6px 12px; background: #3b82f6; color: white; border: none; border-radius: 20px; cursor: pointer;">Подробнее</button>
                     </div>
                 `;
