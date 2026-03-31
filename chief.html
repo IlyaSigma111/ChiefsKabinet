@@ -440,9 +440,10 @@
                 <h3>🏆 Рейтинг округов</h3>
                 <div style="overflow-x: auto;">
                     <table class="ranking-table">
-                        <thead>   </thead>
+                        <thead><tr><th>Округ</th><th>Всего баллов</th></tr></thead>
                         <tbody id="ratingList"></tbody>
-                     </div>
+                    </table>
+                </div>
             </div>
 
             <div id="history" class="page">
@@ -576,7 +577,6 @@
                 return;
             }
             
-            // Проверка на повтор
             try {
                 const { data: existing } = await sb
                     .from('board_submissions')
@@ -590,7 +590,6 @@
                     return;
                 }
                 
-                // Сохраняем ссылку в board_submissions
                 await sb.from('board_submissions').insert([{
                     board_task_id: taskId,
                     chief_id: chiefId,
@@ -598,7 +597,6 @@
                     district_id: districtId
                 }]);
                 
-                // Начисляем балл
                 const { data: cur } = await sb
                     .from('chief_scores')
                     .select('total_score')
@@ -612,7 +610,6 @@
                     updated_at: new Date() 
                 });
                 
-                // Обновляем баллы округа
                 const { data: chiefs } = await sb
                     .from('chiefs')
                     .select('id')
@@ -633,10 +630,9 @@
                     updated_at: new Date() 
                 });
                 
-                // Добавляем в историю
                 await sb.from('operations_history').insert([{ 
                     chief_id: chiefId, 
-                    action: `Отправлена ссылка на задание "${escapeHtml(String(taskId))}": ${link}` 
+                    action: `Отправлена ссылка на задание: ${link}` 
                 }]);
                 
                 linkInput.value = '';
@@ -651,7 +647,7 @@
             }
         };
         
-        // ========== ЗАДАЧИ (распуши от координатора) ==========
+        // ========== ЗАДАЧИ ==========
         async function loadTasks() {
             try {
                 const { data: tasks, error } = await sb
@@ -857,25 +853,41 @@
         
         async function loadRating() {
             try {
-                const { data } = await sb
+                const { data, error } = await sb
                     .from('district_scores')
                     .select('*, districts(name)')
                     .order('total_score', { ascending: false });
                 
                 const container = document.getElementById('ratingList');
+                
+                if (error) throw error;
+                
                 if (!data || data.length === 0) {
-                    container.innerHTML = '发展<td colspan="2" class="empty-state">Нет данных<\/td><\/tr>';
+                    container.innerHTML = '<tr><td colspan="2" class="empty-state">Нет данных для отображения</td></tr>';
                     return;
                 }
+                
                 let html = '';
+                let hasValidData = false;
+                
                 for (let d of data) {
-                    const districtName = d.districts?.name || 'Неизвестно';
-                    html += `发展<td style="font-weight:500;">${escapeHtml(districtName)}<\/td><td style="color:#3b82f6;">${d.total_score} баллов<\/td><\/tr>`;
+                    const districtName = d.districts?.name || null;
+                    const score = d.total_score || 0;
+                    
+                    if (!districtName) continue;
+                    
+                    hasValidData = true;
+                    html += `<tr><td style="font-weight:500;">${escapeHtml(districtName)}</td><td style="color:#3b82f6;">${score} баллов</td></tr>`;
                 }
-                container.innerHTML = html;
+                
+                if (!hasValidData) {
+                    container.innerHTML = '<tr><td colspan="2" class="empty-state">Нет данных для отображения</td></tr>';
+                } else {
+                    container.innerHTML = html;
+                }
             } catch (err) {
                 console.error('Ошибка загрузки рейтинга:', err);
-                document.getElementById('ratingList').innerHTML = '发展<td colspan="2" class="empty-state">⚠️ Ошибка загрузки<\/td><\/tr>';
+                document.getElementById('ratingList').innerHTML = '<tr><td colspan="2" class="empty-state">⚠️ Ошибка загрузки рейтинга</td></tr>';
             }
         }
         
