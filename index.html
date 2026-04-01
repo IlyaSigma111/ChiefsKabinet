@@ -39,29 +39,9 @@
             opacity: 0.4;
         }
 
-        .sphere-1 {
-            width: 600px;
-            height: 600px;
-            top: -200px;
-            right: -200px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        .sphere-2 {
-            width: 500px;
-            height: 500px;
-            bottom: -200px;
-            left: -100px;
-            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-        }
-
-        .sphere-3 {
-            width: 400px;
-            height: 400px;
-            top: 50%;
-            left: 30%;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-        }
+        .sphere-1 { width: 600px; height: 600px; top: -200px; right: -200px; background: linear-gradient(135deg, #667eea, #764ba2); }
+        .sphere-2 { width: 500px; height: 500px; bottom: -200px; left: -100px; background: linear-gradient(135deg, #ff6b6b, #ff8e53); }
+        .sphere-3 { width: 400px; height: 400px; top: 50%; left: 30%; background: linear-gradient(135deg, #4facfe, #00f2fe); }
 
         .glass-card {
             background: rgba(20, 25, 35, 0.6);
@@ -273,6 +253,7 @@
         const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
         const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        let districtsList = [];
         let selectedBranchType = 'main';
 
         const districts = [
@@ -285,8 +266,28 @@
             'Голышмановский округ'
         ];
 
-        const select = document.getElementById('districtSelect');
-        select.innerHTML = '<option value="">Выберите округ</option>' + districts.map(d => `<option value="${d}">${d}</option>`).join('');
+        // Загружаем ID округов из базы
+        async function loadDistricts() {
+            const { data, error } = await sb.from('districts').select('id, name');
+            if (error) {
+                console.error('Ошибка загрузки округов:', error);
+                // Fallback - используем локальные данные без ID
+                const select = document.getElementById('districtSelect');
+                select.innerHTML = '<option value="">Выберите округ</option>' + districts.map(d => `<option value="${d}">${d}</option>`).join('');
+                districtsList = districts.map((name, index) => ({ id: index + 1, name }));
+                return;
+            }
+            if (data && data.length) {
+                districtsList = data;
+                const select = document.getElementById('districtSelect');
+                select.innerHTML = '<option value="">Выберите округ</option>' + data.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+            } else {
+                // Fallback
+                const select = document.getElementById('districtSelect');
+                select.innerHTML = '<option value="">Выберите округ</option>' + districts.map(d => `<option value="${d}">${d}</option>`).join('');
+                districtsList = districts.map((name, index) => ({ id: index + 1, name }));
+            }
+        }
 
         document.querySelectorAll('.radio-option').forEach(opt => {
             opt.addEventListener('click', () => {
@@ -304,8 +305,19 @@
         });
 
         document.getElementById('enterBtn').addEventListener('click', async () => {
-            const district = document.getElementById('districtSelect').value;
-            if (!district) { alert('Выберите округ'); return; }
+            const selectedValue = document.getElementById('districtSelect').value;
+            if (!selectedValue) { alert('Выберите округ'); return; }
+
+            // Получаем ID и название округа
+            let districtId, districtName;
+            const selectedDistrict = districtsList.find(d => d.id == selectedValue || d.name == selectedValue);
+            if (selectedDistrict) {
+                districtId = selectedDistrict.id;
+                districtName = selectedDistrict.name;
+            } else {
+                districtId = selectedValue;
+                districtName = selectedValue;
+            }
 
             let chiefId = '';
             let activistName = '';
@@ -318,19 +330,36 @@
                 }
                 chiefId = `activist_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
             } else {
-                chiefId = selectedBranchType === 'main' ? `chief_${district}_main` : `chief_${district}_primary`;
+                chiefId = selectedBranchType === 'main' ? `chief_${districtId}_main` : `chief_${districtId}_primary`;
             }
 
             localStorage.setItem('chiefId', chiefId);
-            localStorage.setItem('chiefDistrictName', district);
+            localStorage.setItem('chiefDistrictId', districtId);
+            localStorage.setItem('chiefDistrictName', districtName);
             localStorage.setItem('chiefBranchType', selectedBranchType);
-            localStorage.setItem('chiefDistrictId', district);
             if (activistName) {
                 localStorage.setItem('activistName', activistName);
             }
 
+            // Создаём шефа в базе
+            try {
+                const { error } = await sb.from('chiefs').insert([{
+                    id: chiefId,
+                    name: activistName || `Шеф ${districtName}${selectedBranchType === 'primary' ? ' (Первичка)' : ''}`,
+                    district_id: parseInt(districtId),
+                    primary_branch_id: selectedBranchType === 'primary' ? 1 : null
+                }]);
+                if (error && error.code !== '23505') {
+                    console.error('Ошибка создания шефа:', error);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+
             window.location.href = 'chief.html';
         });
+
+        loadDistricts();
     </script>
 </body>
 </html>
