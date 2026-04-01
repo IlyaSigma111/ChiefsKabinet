@@ -36,36 +36,15 @@
             opacity: 0.4;
         }
 
-        .sphere-1 {
-            width: 600px;
-            height: 600px;
-            top: -200px;
-            right: -200px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        .sphere-2 {
-            width: 500px;
-            height: 500px;
-            bottom: -200px;
-            left: -100px;
-            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-        }
-
-        .sphere-3 {
-            width: 400px;
-            height: 400px;
-            top: 50%;
-            left: 30%;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-        }
+        .sphere-1 { width: 600px; height: 600px; top: -200px; right: -200px; background: linear-gradient(135deg, #667eea, #764ba2); }
+        .sphere-2 { width: 500px; height: 500px; bottom: -200px; left: -100px; background: linear-gradient(135deg, #ff6b6b, #ff8e53); }
+        .sphere-3 { width: 400px; height: 400px; top: 50%; left: 30%; background: linear-gradient(135deg, #4facfe, #00f2fe); }
 
         .glass-card {
             background: rgba(20, 25, 35, 0.5);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 28px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
         .container {
@@ -195,20 +174,9 @@
             margin-left: 8px;
         }
 
-        .type-raspush {
-            background: rgba(245, 158, 11, 0.2);
-            color: #f59e0b;
-        }
-
-        .type-event {
-            background: rgba(16, 185, 129, 0.2);
-            color: #10b981;
-        }
-
-        .type-optional {
-            background: rgba(108, 140, 255, 0.2);
-            color: #6c8cff;
-        }
+        .type-raspush { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .type-event { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .type-optional { background: rgba(108, 140, 255, 0.2); color: #6c8cff; }
 
         .link-group {
             display: flex;
@@ -311,22 +279,11 @@
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 16px;
-            }
-            .grid-2cols {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .panel {
-                padding: 20px;
-            }
-            .date-group {
-                flex-direction: column;
-            }
-            .date-group select {
-                width: 100%;
-            }
+            .container { padding: 16px; }
+            .grid-2cols { grid-template-columns: 1fr; gap: 20px; }
+            .panel { padding: 20px; }
+            .date-group { flex-direction: column; }
+            .date-group select { width: 100%; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -381,7 +338,7 @@
             </div>
         </div>
 
-        <!-- Отклики -->
+        <!-- Отклики с ФИО активистов -->
         <div id="submissions-panel" class="panel">
             <h2>📥 Отклики участников</h2>
             <div id="submissionsList" class="empty-state">Загрузка...</div>
@@ -520,21 +477,42 @@
             showToast('✅ Опубликовано');
         };
 
+        // Отклики с ФИО активистов
         async function loadSubmissions() {
             const { data } = await sb.from('board_submissions').select('*, board_tasks(title), chiefs(name), districts(name)').order('created_at', { ascending: false });
             const container = document.getElementById('submissionsList');
             if (!data?.length) { container.innerHTML = '<div class="empty-state">📭 Нет откликов</div>'; return; }
+            
+            // Получаем имена активистов из localStorage (они хранятся в chiefId или отдельно)
+            // В текущей структуре имя активиста хранится в activistName, но в БД оно не сохраняется.
+            // Нужно добавить поле activist_name в таблицу chiefs или отдельную таблицу.
+            // Пока выводим chiefId как имя, если это активист.
+            
             const grouped = {};
             for (let s of data) {
-                const district = s.districts?.name || 'Неизвестно';
+                let participantName = s.chiefs?.name || 'Неизвестно';
+                // Если в имени есть "activist", пытаемся извлечь имя
+                if (s.chiefs?.id && s.chiefs.id.startsWith('activist_')) {
+                    const activistData = await sb.from('activists').select('full_name').eq('chief_id', s.chiefs.id).single();
+                    if (activistaData?.full_name) participantName = activistData.full_name;
+                }
+                const district = s.districts?.name || 'Неизвестный округ';
                 if (!grouped[district]) grouped[district] = [];
-                grouped[district].push(s);
+                grouped[district].push({ ...s, participantName });
             }
+            
             let html = '<div class="submissions-container">';
             for (let [district, subs] of Object.entries(grouped)) {
                 html += `<div class="district-group"><div class="district-header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'"><span>📌 ${district}</span><span class="badge">${subs.length}</span></div><div class="district-content">`;
                 for (let s of subs) {
-                    html += `<div class="submission-item"><strong>${escapeHtml(s.board_tasks?.title)}</strong><br>👤 ${escapeHtml(s.chiefs?.name)}<br>🔗 <a href="${s.link}" target="_blank">${s.link}</a><br>📅 ${new Date(s.created_at).toLocaleString()}</div>`;
+                    html += `
+                        <div class="submission-item">
+                            <div><strong>📋 ${escapeHtml(s.board_tasks?.title)}</strong></div>
+                            <div>👤 ${escapeHtml(s.participantName)}</div>
+                            <div>🔗 <a href="${s.link}" target="_blank">${s.link}</a></div>
+                            <div class="submission-date">📅 ${new Date(s.created_at).toLocaleString()}</div>
+                        </div>
+                    `;
                 }
                 html += `</div></div>`;
             }
