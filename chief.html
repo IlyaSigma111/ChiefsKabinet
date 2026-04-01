@@ -9,11 +9,10 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
             background: #0a0c10;
             color: #fff;
             min-height: 100vh;
@@ -41,14 +40,14 @@
         .sphere-3 { width: 400px; height: 400px; top: 50%; left: 30%; background: linear-gradient(135deg, #4facfe, #00f2fe); }
 
         .glass-card {
-            background: rgba(20, 25, 35, 0.5);
+            background: rgba(20, 25, 35, 0.6);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 28px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -60,11 +59,11 @@
             flex-wrap: wrap;
             gap: 12px;
             margin-bottom: 20px;
-            padding: 20px 24px;
+            padding: 16px 20px;
         }
 
         .logo h2 {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             background: linear-gradient(135deg, #fff, #b0c4ff);
             -webkit-background-clip: text;
@@ -73,16 +72,15 @@
 
         .district-badge {
             background: rgba(108, 140, 255, 0.2);
-            padding: 8px 20px;
+            padding: 8px 16px;
             border-radius: 40px;
-            font-size: 14px;
-            border: 1px solid rgba(108, 140, 255, 0.3);
+            font-size: 13px;
         }
 
         .reset-btn {
             background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 8px 20px;
+            border: none;
+            padding: 8px 16px;
             border-radius: 40px;
             color: #f87171;
             cursor: pointer;
@@ -91,64 +89,31 @@
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .stat-card {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 24px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 16px;
+            border-radius: 20px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .stat-number {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
-            background: linear-gradient(135deg, #fff, #b0c4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .progress-container {
-            margin-bottom: 20px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 20px;
-            padding: 12px;
-        }
-
-        .progress-bar {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            height: 8px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            background: #3b82f6;
-            height: 100%;
-            border-radius: 20px;
-            transition: width 0.3s;
-        }
-
-        .progress-text {
-            text-align: center;
-            font-size: 11px;
-            margin-top: 8px;
-            opacity: 0.8;
+            color: #6c8cff;
         }
 
         .menu-scroll {
             overflow-x: auto;
             margin-bottom: 20px;
-            -webkit-overflow-scrolling: touch;
         }
 
         .menu-items {
             display: flex;
             gap: 10px;
-            min-width: min-content;
         }
 
         .menu-btn {
@@ -156,7 +121,7 @@
             background: rgba(0, 0, 0, 0.4);
             border: none;
             border-radius: 40px;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 14px;
             cursor: pointer;
             white-space: nowrap;
@@ -164,16 +129,15 @@
 
         .menu-btn.active {
             background: rgba(108, 140, 255, 0.3);
-            border: 1px solid rgba(108, 140, 255, 0.4);
             color: white;
         }
 
         .content {
             background: rgba(20, 25, 35, 0.4);
             backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 24px;
-            min-height: 500px;
+            border-radius: 24px;
+            padding: 20px;
+            min-height: 400px;
         }
 
         .page {
@@ -185,235 +149,130 @@
         }
 
         .page h3 {
-            font-size: 20px;
-            margin-bottom: 20px;
-            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .calendar-nav {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .calendar-nav button {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-        }
-
-        .calendar-day-header {
-            text-align: center;
-            font-weight: 600;
-            padding: 8px;
-            font-size: 12px;
-            opacity: 0.7;
-        }
-
-        .calendar-day {
+        /* Карточка задания */
+        .task-card {
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 8px 4px;
-            min-height: 90px;
-            cursor: pointer;
-            transition: all 0.2s;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
         }
 
-        .calendar-day:hover {
-            background: rgba(108, 140, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .calendar-day.other-month {
-            opacity: 0.4;
-        }
-
-        .calendar-day-number {
+        .task-title {
+            font-size: 16px;
             font-weight: 600;
-            font-size: 13px;
             margin-bottom: 6px;
-            text-align: center;
         }
 
-        .calendar-event {
-            background: rgba(59, 130, 246, 0.25);
-            border-left: 2px solid #3b82f6;
-            padding: 4px 6px;
-            font-size: 10px;
-            margin-top: 2px;
-            border-radius: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: #fff;
-        }
-
-        .tasks-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-        }
-
-        .task-card {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 24px;
-            padding: 18px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .task-card:hover {
-            transform: translateY(-2px);
-            background: rgba(108, 140, 255, 0.15);
-            border-color: rgba(108, 140, 255, 0.3);
-        }
-
-        .task-card-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #fff;
-        }
-
-        .task-card-date {
-            font-size: 12px;
+        .task-date {
+            font-size: 11px;
             color: #f59e0b;
             margin-bottom: 8px;
         }
 
-        .task-card-status {
+        .task-status {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-size: 11px;
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .task-status.completed {
             background: rgba(16, 185, 129, 0.2);
             color: #10b981;
         }
 
-        .task-card-status.expired {
+        .task-status.expired {
             background: rgba(239, 68, 68, 0.2);
             color: #f87171;
         }
 
         .task-detail {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             display: none;
         }
 
-        .task-card.expanded .task-detail {
+        .task-card.open .task-detail {
             display: block;
         }
 
         .task-detail p {
-            font-size: 13px;
-            line-height: 1.5;
-            color: #e2e8f0;
-            margin-bottom: 12px;
+            font-size: 12px;
+            margin-bottom: 8px;
+            color: #ccc;
+        }
+
+        .task-link {
+            color: #6c8cff;
+            text-decoration: none;
+            word-break: break-all;
         }
 
         .link-input {
             width: 100%;
-            padding: 10px 12px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             color: white;
             margin-top: 8px;
         }
 
-        .btn-complete {
-            background: rgba(16, 185, 129, 0.25);
+        .btn-submit {
+            background: rgba(16, 185, 129, 0.2);
             border: none;
-            padding: 10px;
+            padding: 8px;
             border-radius: 30px;
             color: #10b981;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
-            margin-top: 10px;
-        }
-
-        .btn-complete:hover {
-            background: rgba(16, 185, 129, 0.4);
+            margin-top: 8px;
         }
 
         .sent-links {
-            margin-top: 12px;
+            margin-top: 10px;
             padding-top: 8px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sent-link {
             display: inline-block;
             background: rgba(108, 140, 255, 0.2);
-            padding: 4px 8px;
-            border-radius: 16px;
-            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 14px;
+            font-size: 10px;
             margin: 2px;
             color: #6c8cff;
             text-decoration: none;
         }
 
         .raspush-item {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 24px;
-            padding: 18px;
-            margin-bottom: 16px;
-        }
-
-        .raspush-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .raspush-link {
-            background: rgba(108, 140, 255, 0.2);
-            padding: 10px;
-            border-radius: 16px;
-            margin: 10px 0;
-            word-break: break-all;
-        }
-
-        .raspush-link a {
-            color: #6c8cff;
-            text-decoration: none;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
         }
 
         .history-item {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 12px;
-            border-radius: 18px;
-            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 16px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
-            flex-wrap: wrap;
-            gap: 8px;
+            font-size: 11px;
         }
 
         .ranking-table {
@@ -421,75 +280,17 @@
             border-collapse: collapse;
         }
 
-        .ranking-table th,
-        .ranking-table td {
-            padding: 12px 8px;
+        .ranking-table th, .ranking-table td {
+            padding: 10px 6px;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             font-size: 13px;
         }
 
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            visibility: hidden;
-            opacity: 0;
-            transition: all 0.2s;
-            padding: 20px;
-        }
-
-        .modal-overlay.show {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .modal {
-            background: rgba(20, 25, 35, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 32px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 24px;
-        }
-
-        .modal h3 {
-            font-size: 20px;
-            margin-bottom: 12px;
-        }
-
-        .modal-close {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            padding: 10px;
-            border-radius: 30px;
-            color: white;
-            cursor: pointer;
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        .participate-btn {
-            background: rgba(16, 185, 129, 0.25);
-            border: none;
-            padding: 12px;
-            border-radius: 40px;
-            color: #10b981;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 16px;
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.6;
         }
 
         .toast {
@@ -497,29 +298,18 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.9);
-            padding: 10px 20px;
-            border-radius: 40px;
+            background: #1a1e2a;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 12px;
             z-index: 1000;
-            border-left: 4px solid #6c8cff;
-            font-size: 13px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            opacity: 0.7;
         }
 
         @media (max-width: 768px) {
             .container { padding: 16px; }
-            .logo h2 { font-size: 20px; }
-            .stat-number { font-size: 26px; }
-            .calendar-grid { gap: 4px; }
-            .calendar-day { min-height: 70px; padding: 4px 2px; }
-            .tasks-grid { grid-template-columns: 1fr; }
-            .menu-btn { padding: 8px 16px; font-size: 13px; }
-            .content { padding: 16px; }
+            .logo h2 { font-size: 18px; }
+            .stat-number { font-size: 24px; }
+            .task-card { padding: 14px; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -534,27 +324,21 @@
     <div class="container">
         <div class="glass-card header">
             <div class="logo"><h2>📰 Кабинет шеф-редактора</h2></div>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <div style="display: flex; gap: 8px;">
                 <span class="district-badge" id="districtDisplay">Загрузка...</span>
                 <button class="reset-btn" onclick="resetAndExit()">Сменить</button>
             </div>
         </div>
 
         <div class="stats-grid">
-            <div class="stat-card"><div class="stat-number" id="totalTasks">0</div><div>Всего заданий</div></div>
+            <div class="stat-card"><div class="stat-number" id="totalTasks">0</div><div>Заданий</div></div>
             <div class="stat-card"><div class="stat-number" id="completedTasks">0</div><div>Выполнено</div></div>
             <div class="stat-card"><div class="stat-number" id="totalScore">0</div><div>Баллов</div></div>
         </div>
 
-        <div class="progress-container">
-            <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
-            <div class="progress-text" id="progressText">Загрузка...</div>
-        </div>
-
         <div class="menu-scroll">
             <div class="menu-items">
-                <button class="menu-btn active" data-page="calendar">📅 Календарь</button>
-                <button class="menu-btn" data-page="tasks">📋 Задания с доски</button>
+                <button class="menu-btn active" data-page="tasks">📋 Задания</button>
                 <button class="menu-btn" data-page="raspush">📢 Распуши</button>
                 <button class="menu-btn" data-page="rating">🏆 Рейтинг</button>
                 <button class="menu-btn" data-page="history">📜 История</button>
@@ -562,25 +346,13 @@
         </div>
 
         <div class="content">
-            <div id="calendar" class="page active">
-                <div class="calendar-header">
-                    <h3>📅 Календарь событий</h3>
-                    <div class="calendar-nav">
-                        <button id="prevMonthBtn">←</button>
-                        <span id="currentMonthYear"></span>
-                        <button id="nextMonthBtn">→</button>
-                    </div>
-                </div>
-                <div class="calendar-grid" id="calendarGrid"></div>
-            </div>
-
-            <div id="tasks" class="page">
+            <div id="tasks" class="page active">
                 <h3>📋 Задания с доски</h3>
                 <div id="tasksList" class="empty-state">Загрузка...</div>
             </div>
 
             <div id="raspush" class="page">
-                <h3>📢 Распуши (задания от координатора)</h3>
+                <h3>📢 Распуши</h3>
                 <div id="raspushList" class="empty-state">Загрузка...</div>
             </div>
 
@@ -600,33 +372,16 @@
         </div>
     </div>
 
-    <div id="eventModal" class="modal-overlay">
-        <div class="modal">
-            <h3 id="modalTitle"></h3>
-            <div id="modalDesc"></div>
-            <div id="modalTech" style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 16px; margin: 12px 0;"></div>
-            <div id="modalDeadline"></div>
-            <div id="modalStatus"></div>
-            <div id="modalParticipate"></div>
-            <button class="modal-close" onclick="closeModal()">Закрыть</button>
-        </div>
-    </div>
-
     <script>
         const SUPABASE_URL = 'https://csvynjkhhlexbnwpziup.supabase.co';
         const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
         const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let chiefId = localStorage.getItem('chiefId');
-        let districtId = localStorage.getItem('chiefDistrictId');
         let districtName = localStorage.getItem('chiefDistrictName');
+        let districtId = localStorage.getItem('chiefDistrictId');
         let branchType = localStorage.getItem('chiefBranchType');
         let activistName = localStorage.getItem('activistName');
-
-        let currentDate = new Date();
-        let allEvents = [];
-        let mySubmissionsMap = {};
-        let currentModalEventId = null;
 
         if (!chiefId) {
             window.location.href = 'index.html';
@@ -635,16 +390,12 @@
         const displayName = activistName || districtName || 'Неизвестно';
         document.getElementById('districtDisplay').innerHTML = '📍 ' + displayName + (branchType === 'primary' ? ' • Первичка' : branchType === 'activist' ? ' • Активист' : '');
 
+        let mySubmissionsMap = {};
+
         function formatDate(dateStr) {
             if (!dateStr) return '';
-            const date = new Date(dateStr);
-            return date.toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-        }
-
-        function formatDateShort(dateStr) {
-            if (!dateStr) return '';
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('ru-RU');
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('ru-RU');
         }
 
         function escapeHtml(str) {
@@ -652,208 +403,60 @@
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
-        async function loadEvents() {
-            const { data: tasks } = await sb.from('board_tasks').select('*').eq('is_active', true);
-            const { data: mySubmissions } = await sb.from('board_submissions').select('board_task_id, link').eq('chief_id', chiefId);
-
+        async function loadMySubmissions() {
+            const { data } = await sb.from('board_submissions').select('board_task_id, link').eq('chief_id', chiefId);
             mySubmissionsMap = {};
-            if (mySubmissions) {
-                for (let s of mySubmissions) {
+            if (data) {
+                for (let s of data) {
                     if (!mySubmissionsMap[s.board_task_id]) mySubmissionsMap[s.board_task_id] = [];
                     mySubmissionsMap[s.board_task_id].push(s.link);
                 }
             }
-            allEvents = tasks || [];
-            renderCalendar();
-            updateProgress();
-        }
-
-        function renderCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-            const startOffset = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
-            const daysInMonth = lastDay.getDate();
-            const prevMonthLastDay = new Date(year, month, 0).getDate();
-
-            const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-            document.getElementById('currentMonthYear').innerText = `${monthNames[month]} ${year}`;
-
-            let grid = '';
-            const weekdays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-            for (let d of weekdays) grid += `<div class="calendar-day-header">${d}</div>`;
-
-            for (let i = 0; i < startOffset; i++) {
-                grid += `<div class="calendar-day other-month"><div class="calendar-day-number">${prevMonthLastDay - startOffset + i + 1}</div></div>`;
-            }
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const events = allEvents.filter(e => {
-                    const d = new Date(e.deadline);
-                    return d.getDate() === day && d.getMonth() === month && d.getFullYear() === year;
-                });
-                let eventsHtml = '';
-                for (let e of events) {
-                    const count = mySubmissionsMap[e.id]?.length || 0;
-                    eventsHtml += `<div class="calendar-event" onclick="event.stopPropagation(); openEventModal(${e.id})">${escapeHtml(e.title)}${count ? ` (${count})` : ''}</div>`;
-                }
-                grid += `<div class="calendar-day" onclick="openEventsOnDate('${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}')">
-                    <div class="calendar-day-number">${day}</div>
-                    ${eventsHtml}
-                </div>`;
-            }
-
-            const totalCells = 42;
-            const filled = startOffset + daysInMonth;
-            for (let i = 1; i <= totalCells - filled; i++) {
-                grid += `<div class="calendar-day other-month"><div class="calendar-day-number">${i}</div></div>`;
-            }
-
-            document.getElementById('calendarGrid').innerHTML = grid;
-        }
-
-        window.openEventModal = async (id) => {
-            currentModalEventId = id;
-            const event = allEvents.find(e => e.id === id);
-            if (!event) return;
-
-            const myLinks = mySubmissionsMap[id] || [];
-            document.getElementById('modalTitle').innerText = event.title;
-            document.getElementById('modalDesc').innerHTML = `<strong>📝 Описание:</strong><br>${escapeHtml(event.description || 'Нет')}`;
-            document.getElementById('modalTech').innerHTML = `<strong>📋 ТЗ:</strong><br>${escapeHtml(event.technical_task || 'Нет')}`;
-            document.getElementById('modalDeadline').innerHTML = `<strong>⏰ Срок:</strong> ${formatDate(event.deadline)}`;
-            document.getElementById('modalStatus').innerHTML = `<strong>📌 Статус:</strong> Отправлено ${myLinks.length} ссылок. Можно отправлять ещё!`;
-
-            let participateHtml = '';
-            if (new Date(event.deadline) > new Date()) {
-                participateHtml = `
-                    <div style="margin-top: 16px;">
-                        <div style="background: rgba(108,140,255,0.15); padding: 10px; border-radius: 14px; margin-bottom: 10px; font-size: 12px;">📌 Каждая ссылка = +1 балл. Можно отправить несколько!</div>
-                        <input type="text" id="modalLinkInput" class="participate-input" placeholder="Вставьте ссылку (Google Drive, Яндекс Диск, ВК)" style="width:100%; padding:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.15); border-radius:20px;">
-                        <button class="participate-btn" onclick="submitModalLink()">📤 Отправить ссылку +1 балл</button>
-                    </div>
-                `;
-            } else {
-                participateHtml = `<div style="margin-top: 16px; padding: 12px; background: rgba(239,68,68,0.2); border-radius: 20px; text-align: center;">⏰ Срок истёк</div>`;
-            }
-            document.getElementById('modalParticipate').innerHTML = participateHtml;
-            document.getElementById('eventModal').classList.add('show');
-        };
-
-        window.submitModalLink = async () => {
-            const link = document.getElementById('modalLinkInput')?.value.trim();
-            if (!link) { alert('Вставьте ссылку'); return; }
-
-            const { data: existing } = await sb.from('board_submissions').select('id').eq('board_task_id', currentModalEventId).eq('chief_id', chiefId).eq('link', link);
-            if (existing?.length) { alert('❌ Эта ссылка уже была отправлена!'); return; }
-
-            await sb.from('board_submissions').insert([{ board_task_id: currentModalEventId, chief_id: chiefId, link, district_id: districtId }]);
-
-            const { data: cur } = await sb.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
-            await sb.from('chief_scores').upsert({ chief_id: chiefId, total_score: (cur?.total_score || 0) + 1, updated_at: new Date() });
-
-            const { data: chiefs } = await sb.from('chiefs').select('id').eq('district_id', districtId);
-            let total = 0;
-            for (let c of chiefs || []) {
-                const { data: s } = await sb.from('chief_scores').select('total_score').eq('chief_id', c.id).single();
-                total += s?.total_score || 0;
-            }
-            await sb.from('district_scores').upsert({ district_id: districtId, total_score: total, updated_at: new Date() });
-
-            closeModal();
-            loadEvents();
-            loadBoardTasks();
-            loadRaspush();
-            loadHistory();
-            loadRating();
-            showToast('✅ +1 балл!');
-        };
-
-        window.openEventsOnDate = (dateStr) => {
-            const events = allEvents.filter(e => new Date(e.deadline).toDateString() === new Date(dateStr).toDateString());
-            if (!events.length) { alert('На эту дату нет мероприятий'); return; }
-
-            let modalContent = '<div style="max-height: 400px; overflow-y: auto;">';
-            for (let e of events) {
-                const count = mySubmissionsMap[e.id]?.length || 0;
-                modalContent += `
-                    <div style="border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 12px; margin-bottom: 12px;">
-                        <strong>${escapeHtml(e.title)}</strong><br>
-                        <span style="font-size: 11px;">📅 ${formatDateShort(e.deadline)}</span><br>
-                        <span>📤 Отправлено: ${count}</span>
-                        <button onclick="closeModal(); setTimeout(() => openEventModal(${e.id}), 100)" style="margin-top: 8px; padding: 6px 12px; background: #3b82f6; border: none; border-radius: 20px; color: white; cursor: pointer;">Подробнее</button>
-                    </div>
-                `;
-            }
-            modalContent += '</div>';
-
-            document.getElementById('modalTitle').innerText = `События на ${formatDateShort(dateStr)}`;
-            document.getElementById('modalDesc').innerHTML = modalContent;
-            document.getElementById('modalTech').innerHTML = '';
-            document.getElementById('modalDeadline').innerHTML = '';
-            document.getElementById('modalStatus').innerHTML = '';
-            document.getElementById('modalParticipate').innerHTML = '';
-            document.getElementById('eventModal').classList.add('show');
-        };
-
-        function closeModal() {
-            document.getElementById('eventModal').classList.remove('show');
-        }
-
-        async function updateProgress() {
-            const { data: chiefs } = await sb.from('chiefs').select('id').eq('district_id', districtId);
-            const { data: myScore } = await sb.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
-
-            let total = 0;
-            for (let c of chiefs || []) {
-                const { data: s } = await sb.from('chief_scores').select('total_score').eq('chief_id', c.id).single();
-                total += s?.total_score || 0;
-            }
-            const avg = chiefs?.length ? total / chiefs.length : 0;
-            const percent = avg > 0 ? Math.min(100, Math.round((myScore?.total_score || 0) / avg * 100)) : 0;
-
-            document.getElementById('progressFill').style.width = `${percent}%`;
-            document.getElementById('progressText').innerHTML = `${percent}% от среднего по округу (средний: ${Math.round(avg)} баллов)`;
         }
 
         async function loadBoardTasks() {
+            await loadMySubmissions();
             const { data: tasks } = await sb.from('board_tasks').select('*').eq('is_active', true).order('deadline');
             const container = document.getElementById('tasksList');
-            if (!tasks?.length) { container.innerHTML = '<div class="empty-state">📭 Нет заданий</div>'; return; }
+            if (!tasks?.length) {
+                container.innerHTML = '<div class="empty-state">📭 Нет заданий</div>';
+                return;
+            }
 
-            let html = '<div class="tasks-grid">';
+            let html = '';
             for (let task of tasks) {
                 const myLinks = mySubmissionsMap[task.id] || [];
                 const expired = new Date(task.deadline) < new Date();
+                const statusClass = expired ? 'expired' : (myLinks.length ? 'completed' : '');
+                const statusText = expired ? '⏰ Просрочено' : (myLinks.length ? '✅ Участвую' : '⏳ Активно');
+                
                 html += `
-                    <div class="task-card" onclick="toggleTaskCard(this)">
-                        <div class="task-card-title">${escapeHtml(task.title)}</div>
-                        <div class="task-card-date">📅 ${formatDateShort(task.deadline)}</div>
-                        <div><span class="task-card-status ${expired ? 'expired' : ''}">${expired ? '⏰ Просрочено' : '⏳ Активно'}</span></div>
+                    <div class="task-card" onclick="toggleCard(this)">
+                        <div class="task-title">${escapeHtml(task.title)}</div>
+                        <div class="task-date">📅 До: ${formatDate(task.deadline)}</div>
+                        <div><span class="task-status ${statusClass}">${statusText}</span></div>
                         <div class="task-detail">
                             <p><strong>📝 Описание:</strong><br>${escapeHtml(task.description || 'Нет')}</p>
                             <p><strong>📋 ТЗ:</strong><br>${escapeHtml(task.technical_task || 'Нет')}</p>
                             ${myLinks.length ? `<div><strong>✅ Отправлено (${myLinks.length}):</strong><br>${myLinks.map(l => `<a href="${l}" target="_blank" class="sent-link">🔗 ${l.length > 30 ? l.substring(0,30)+'...' : l}</a>`).join('')}</div>` : ''}
                             ${!expired ? `
-                                <input type="text" id="task_link_${task.id}" class="link-input" placeholder="Вставьте ссылку на выполненную работу">
-                                <button class="btn-complete" onclick="event.stopPropagation(); submitTaskLink(${task.id})">📤 Отправить ссылку +1 балл</button>
+                                <input type="text" id="link_${task.id}" class="link-input" placeholder="Вставьте ссылку на работу">
+                                <button class="btn-submit" onclick="event.stopPropagation(); submitTaskLink(${task.id})">📤 Отправить +1 балл</button>
                             ` : ''}
                         </div>
                     </div>
                 `;
             }
-            html += '</div>';
             container.innerHTML = html;
+            updateStats();
         }
 
-        window.toggleTaskCard = (el) => {
-            el.classList.toggle('expanded');
+        window.toggleCard = (el) => {
+            el.classList.toggle('open');
         };
 
         window.submitTaskLink = async (taskId) => {
-            const link = document.getElementById(`task_link_${taskId}`)?.value.trim();
+            const link = document.getElementById(`link_${taskId}`)?.value.trim();
             if (!link) { alert('Вставьте ссылку'); return; }
 
             const { data: existing } = await sb.from('board_submissions').select('id').eq('board_task_id', taskId).eq('chief_id', chiefId).eq('link', link);
@@ -873,7 +476,6 @@
             await sb.from('district_scores').upsert({ district_id: districtId, total_score: total, updated_at: new Date() });
 
             loadBoardTasks();
-            loadEvents();
             loadRaspush();
             loadHistory();
             loadRating();
@@ -883,7 +485,10 @@
         async function loadRaspush() {
             const { data: tasks } = await sb.from('assignments').select('*, task_templates(*)').eq('chief_id', chiefId).order('created_at', { ascending: false });
             const container = document.getElementById('raspushList');
-            if (!tasks?.length) { container.innerHTML = '<div class="empty-state">📭 Нет распушей</div>'; return; }
+            if (!tasks?.length) {
+                container.innerHTML = '<div class="empty-state">📭 Нет распушей</div>';
+                return;
+            }
 
             const { data: history } = await sb.from('operations_history').select('assignment_id, description').eq('chief_id', chiefId).ilike('action', '%ссылка%');
             const sentMap = {};
@@ -899,42 +504,47 @@
             for (let task of tasks) {
                 const sent = sentMap[task.id] || [];
                 const expired = task.deadline && new Date(task.deadline) < new Date();
+                const statusText = task.status === 'completed' ? '✅ Выполнено' : (expired ? '⏰ Просрочено' : '⏳ Ожидает');
+                const statusClass = task.status === 'completed' ? 'completed' : (expired ? 'expired' : '');
+                
                 let sentHtml = '';
-                if (sent.length > 0) {
+                if (sent.length) {
                     sentHtml = `
                         <div class="sent-links">
-                            <div style="font-size: 11px; margin-bottom: 6px;">✅ Отправлено (${sent.length}):</div>
-                            <div>${sent.map(l => `<a href="${l}" target="_blank" class="sent-link">🔗 ${l.length > 35 ? l.substring(0,35)+'...' : l}</a>`).join('')}</div>
+                            <div style="font-size:11px; margin-bottom:4px;">✅ Отправлено (${sent.length}):</div>
+                            ${sent.map(l => `<a href="${l}" target="_blank" class="sent-link">🔗 ${l.length > 30 ? l.substring(0,30)+'...' : l}</a>`).join('')}
                         </div>
                     `;
                 }
 
                 html += `
                     <div class="raspush-item">
-                        <div class="raspush-title">${escapeHtml(task.title || task.task_templates?.title || 'Задача')}</div>
-                        <div style="font-size: 13px; opacity: 0.8;">${escapeHtml(task.description || task.task_templates?.description || '')}</div>
-                        ${task.link ? `<div class="raspush-link"><strong>🔗 Ссылка для распуша:</strong><br><a href="${escapeHtml(task.link)}" target="_blank">${escapeHtml(task.link)}</a></div>` : ''}
-                        ${task.deadline ? `<div style="font-size: 11px; margin: 8px 0; padding: 4px 10px; border-radius: 20px; display: inline-block; background: rgba(245,158,11,0.2); color: #f59e0b;">⏰ Срок: ${formatDate(task.deadline)}${expired ? ' (просрочено!)' : ''}</div>` : ''}
+                        <div class="task-title">${escapeHtml(task.title || task.task_templates?.title || 'Задача')}</div>
+                        <div style="font-size:12px; opacity:0.7;">${escapeHtml(task.description || task.task_templates?.description || '')}</div>
+                        ${task.link ? `<div style="margin:8px 0; background:rgba(108,140,255,0.15); padding:8px; border-radius:14px;"><strong>🔗 Ссылка:</strong><br><a href="${escapeHtml(task.link)}" target="_blank" style="color:#6c8cff;">${escapeHtml(task.link)}</a></div>` : ''}
+                        ${task.deadline ? `<div style="font-size:11px; margin:6px 0; color:#f59e0b;">⏰ Срок: ${new Date(task.deadline).toLocaleDateString()}</div>` : ''}
                         ${sentHtml}
-                        <div><span style="display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; background: ${task.status === 'completed' ? 'rgba(16,185,129,0.2)' : 'rgba(245,158,11,0.2)'}; color: ${task.status === 'completed' ? '#10b981' : '#f59e0b'};">${task.status === 'completed' ? '✅ Выполнено' : '⏳ Ожидает'}</span></div>
+                        <div><span class="task-status ${statusClass}">${statusText}</span></div>
                         ${task.status === 'pending' && !expired ? `
                             <input type="text" id="raspush_link_${task.id}" class="link-input" placeholder="Вставьте ссылку (t.me, vk.com, vk.ru)">
-                            <button class="btn-complete" onclick="submitRaspushLink(${task.id})">✅ Выполнить +1 балл</button>
+                            <button class="btn-submit" onclick="submitRaspushLink(${task.id})">✅ Выполнить +1 балл</button>
                         ` : ''}
                     </div>
                 `;
             }
             container.innerHTML = html;
+            updateStats();
         }
 
         window.submitRaspushLink = async (taskId) => {
             const link = document.getElementById(`raspush_link_${taskId}`)?.value.trim();
             if (!link) { alert('Вставьте ссылку'); return; }
 
-            const allowedDomains = ['t.me', 'vk.com', 'vk.ru'];
-            let isValid = false;
-            for (let d of allowedDomains) if (link.includes(d)) { isValid = true; break; }
-            if (!isValid) { alert('Ссылка должна быть на t.me, vk.com или vk.ru'); return; }
+            const allowed = ['t.me', 'vk.com', 'vk.ru'];
+            if (!allowed.some(d => link.includes(d))) {
+                alert('Ссылка должна быть на t.me, vk.com или vk.ru');
+                return;
+            }
 
             const { data: dup } = await sb.from('operations_history').select('id').eq('chief_id', chiefId).eq('assignment_id', taskId).ilike('description', `%${link}%`);
             if (dup?.length) { alert('❌ Эта ссылка уже была отправлена!'); return; }
@@ -959,6 +569,14 @@
             showToast('✅ +1 балл!');
         };
 
+        async function updateStats() {
+            const { data: tasks } = await sb.from('assignments').select('status').eq('chief_id', chiefId);
+            const { data: score } = await sb.from('chief_scores').select('total_score').eq('chief_id', chiefId).single();
+            document.getElementById('totalTasks').innerText = tasks?.length || 0;
+            document.getElementById('completedTasks').innerText = tasks?.filter(t => t.status === 'completed').length || 0;
+            document.getElementById('totalScore').innerText = score?.total_score || 0;
+        }
+
         async function loadHistory() {
             const { data } = await sb.from('operations_history').select('*').eq('chief_id', chiefId).order('created_at', { ascending: false }).limit(50);
             const container = document.getElementById('historyList');
@@ -966,8 +584,8 @@
             let html = '';
             for (let h of data) {
                 let action = h.action;
-                if (action?.length > 55) action = action.substring(0, 55) + '...';
-                html += `<div class="history-item"><span>${escapeHtml(action || 'Действие')}</span><span style="opacity:0.6;">${new Date(h.created_at).toLocaleString()}</span></div>`;
+                if (action?.length > 50) action = action.substring(0, 50) + '...';
+                html += `<div class="history-item"><span>${escapeHtml(action || 'Действие')}</span><span>${new Date(h.created_at).toLocaleString()}</span></div>`;
             }
             container.innerHTML = html;
         }
@@ -989,21 +607,12 @@
             toast.className = 'toast';
             toast.innerText = msg;
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2500);
+            setTimeout(() => toast.remove(), 2000);
         }
 
         window.resetAndExit = () => {
             localStorage.clear();
             window.location.href = 'index.html';
-        };
-
-        document.getElementById('prevMonthBtn').onclick = () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar();
-        };
-        document.getElementById('nextMonthBtn').onclick = () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalendar();
         };
 
         document.querySelectorAll('.menu-btn').forEach(btn => {
@@ -1016,18 +625,17 @@
                 if (btn.dataset.page === 'history') loadHistory();
                 if (btn.dataset.page === 'tasks') loadBoardTasks();
                 if (btn.dataset.page === 'raspush') loadRaspush();
-                if (btn.dataset.page === 'calendar') loadEvents();
             };
         });
 
-        loadEvents();
         loadBoardTasks();
         loadRaspush();
         loadHistory();
         loadRating();
-        setInterval(loadEvents, 30000);
-        setInterval(loadBoardTasks, 30000);
-        setInterval(loadRaspush, 30000);
+        setInterval(() => {
+            loadBoardTasks();
+            loadRaspush();
+        }, 30000);
     </script>
 </body>
 </html>
