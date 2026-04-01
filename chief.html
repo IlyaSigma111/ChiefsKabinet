@@ -376,7 +376,10 @@
                 <div style="overflow-x: auto;">
                     <table class="ranking-table">
                         <thead>
-                            <tr><th>Округ</th><th>Баллы</th></tr>
+                            <tr>
+                                <th>Округ</th>
+                                <th>Баллы</th>
+                            </tr>
                         </thead>
                         <tbody id="ratingList"></tbody>
                     </table>
@@ -611,6 +614,9 @@
             }
             await sb.from('district_scores').upsert({ district_id: districtId, total_score: total, updated_at: new Date() });
 
+            // Обновляем статус задания на completed
+            await sb.from('assignments').update({ status: 'completed', updated_at: new Date() }).eq('id', taskId);
+
             document.getElementById(`raspush_link_${taskId}`).value = '';
             loadRaspush();
             loadHistory();
@@ -631,22 +637,25 @@
             container.innerHTML = html;
         }
 
-        // ========== РЕЙТИНГ - ИСПРАВЛЕН (БЕЗ КИТАЙСКИХ) ==========
+        // ИСПРАВЛЕННАЯ ФУНКЦИЯ РЕЙТИНГА - сортировка по баллам
         async function loadRating() {
-            const { data: districts } = await sb.from('districts').select('id, name');
-            const { data: scores } = await sb.from('district_scores').select('district_id, total_score');
+            const { data: districtScores } = await sb.from('district_scores').select('*, districts(name)').order('total_score', { ascending: false });
             
-            const scoreMap = {};
-            if (scores) {
-                for (let s of scores) {
-                    scoreMap[s.district_id] = s.total_score || 0;
-                }
+            if (!districtScores?.length) {
+                document.getElementById('ratingList').innerHTML = '<tr><td colspan="2" class="empty-state">Нет данных</td></tr>';
+                return;
             }
             
             let html = '';
-            for (let d of districts) {
-                const score = scoreMap[d.id] || 0;
-                html += `<tr><td style="font-weight:500;">${escapeHtml(d.name)}</td><td style="color:#6c8cff;">${score} баллов</td></tr>`;
+            for (let ds of districtScores) {
+                const districtName = ds.districts?.name || 'Неизвестный округ';
+                const score = ds.total_score || 0;
+                html += `
+                    <tr>
+                        <td style="font-weight:500;">${escapeHtml(districtName)}</td>
+                        <td style="color:#6c8cff; font-weight:600;">${score} баллов</td>
+                    </tr>
+                `;
             }
             
             document.getElementById('ratingList').innerHTML = html;
@@ -685,6 +694,7 @@
         setInterval(() => {
             loadBoardTasks();
             loadRaspush();
+            loadRating();
         }, 30000);
     </script>
 </body>
