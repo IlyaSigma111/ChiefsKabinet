@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Аналитика | Редакционная платформа</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+            background: #0a0c10;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .glow-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .glow-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+        }
+
+        .sphere-1 { width: 600px; height: 600px; top: -200px; right: -200px; background: linear-gradient(135deg, #667eea, #764ba2); }
+        .sphere-2 { width: 500px; height: 500px; bottom: -200px; left: -100px; background: linear-gradient(135deg, #ff6b6b, #ff8e53); }
+        .sphere-3 { width: 400px; height: 400px; top: 50%; left: 30%; background: linear-gradient(135deg, #4facfe, #00f2fe); }
+
+        .glass-card {
+            background: rgba(20, 25, 35, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 24px;
+            padding: 20px 28px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #b0c4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 800;
+            color: #6c8cff;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+
+        .online-badge {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #10b981;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .grid-2cols {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .panel {
+            padding: 24px;
+        }
+
+        .panel h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .ranking-table th, .ranking-table td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 13px;
+        }
+
+        .ranking-table th {
+            font-weight: 600;
+            opacity: 0.7;
+        }
+
+        .activity-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+        }
+
+        .activity-time {
+            font-size: 10px;
+            opacity: 0.5;
+            margin-bottom: 4px;
+        }
+
+        .activity-text {
+            font-size: 13px;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            height: 8px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress-fill {
+            background: #6c8cff;
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.3s;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.6;
+        }
+
+        .update-time {
+            font-size: 11px;
+            opacity: 0.5;
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 16px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .grid-2cols { grid-template-columns: 1fr; gap: 16px; }
+            .stat-number { font-size: 28px; }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="glow-bg">
+        <div class="glow-sphere sphere-1"></div>
+        <div class="glow-sphere sphere-2"></div>
+        <div class="glow-sphere sphere-3"></div>
+    </div>
+
+    <div class="container">
+        <div class="glass-card header">
+            <h1>📊 Аналитика в реальном времени</h1>
+            <div id="lastUpdateBadge" style="font-size: 12px; opacity: 0.6;">⏳ Загрузка...</div>
+        </div>
+
+        <!-- Общая статистика -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalChiefs">0</div>
+                <div class="stat-label">Всего шефов</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeChiefs">0</div>
+                <div class="stat-label"><span class="online-badge"></span>Активны сегодня</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalTasks">0</div>
+                <div class="stat-label">Выполнено заданий</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalLinks">0</div>
+                <div class="stat-label">Отправлено ссылок</div>
+            </div>
+        </div>
+
+        <div class="grid-2cols">
+            <!-- Рейтинг округов -->
+            <div class="glass-card panel">
+                <h2>🏆 Рейтинг округов (топ-10)</h2>
+                <div id="districtRatingList" class="ranking-table-wrapper">
+                    <table class="ranking-table">
+                        <thead>   </thead>
+                        <tbody id="districtRating"></tbody>
+                     </div>
+            </div>
+
+            <!-- Активность по типам -->
+            <div class="glass-card panel">
+                <h2>📊 Активность по типам</h2>
+                <div id="typeStats"></div>
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>Активисты</span>
+                        <span id="activistsPercent">0%</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" id="activistsBar" style="width: 0%"></div></div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 12px; margin-bottom: 8px;">
+                        <span>Первички</span>
+                        <span id="primaryPercent">0%</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" id="primaryBar" style="width: 0%"></div></div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 12px; margin-bottom: 8px;">
+                        <span>Местные</span>
+                        <span id="mainPercent">0%</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" id="mainBar" style="width: 0%"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-2cols">
+            <!-- Последние активности -->
+            <div class="glass-card panel">
+                <h2>🔄 Последние активности</h2>
+                <div id="recentActivity"></div>
+            </div>
+
+            <!-- Статистика по заданиям -->
+            <div class="glass-card panel">
+                <h2>📋 Статистика заданий</h2>
+                <div id="tasksStats"></div>
+            </div>
+        </div>
+
+        <div class="glass-card" style="padding: 20px;">
+            <h2 style="margin-bottom: 16px;">📈 Прогресс округов</h2>
+            <div id="districtProgress"></div>
+        </div>
+
+        <div class="update-time" id="updateTime">Обновлено: --:--:--</div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://csvynjkhhlexbnwpziup.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable__WbXqBZhgBBU-dDFEvXVeA_PQYwa_y7';
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let lastUpdate = new Date();
+
+        function formatTime(date) {
+            return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // ========== ОБЩАЯ СТАТИСТИКА ==========
+        async function loadStats() {
+            // Всего шефов
+            const { count: totalChiefs } = await sb.from('chiefs').select('*', { count: 'exact', head: true });
+            document.getElementById('totalChiefs').innerText = totalChiefs || 0;
+
+            // Активны сегодня (шефы, которые отправляли ссылки за последние 24 часа)
+            const dayAgo = new Date();
+            dayAgo.setDate(dayAgo.getDate() - 1);
+            const { data: activeSubmissions } = await sb
+                .from('board_submissions')
+                .select('chief_id')
+                .gte('created_at', dayAgo.toISOString());
+            
+            const uniqueActive = new Set(activeSubmissions?.map(s => s.chief_id) || []);
+            document.getElementById('activeChiefs').innerText = uniqueActive.size;
+
+            // Всего выполненных заданий (отправленных ссылок с доски + выполненных распушей)
+            const { count: boardSubmissions } = await sb.from('board_submissions').select('*', { count: 'exact', head: true });
+            const { data: completedRaspush } = await sb.from('assignments').select('id').eq('status', 'completed');
+            const totalCompleted = (boardSubmissions || 0) + (completedRaspush?.length || 0);
+            document.getElementById('totalTasks').innerText = totalCompleted;
+
+            // Всего отправленных ссылок
+            const { count: totalLinks } = await sb.from('board_submissions').select('*', { count: 'exact', head: true });
+            document.getElementById('totalLinks').innerText = totalLinks || 0;
+
+            document.getElementById('lastUpdateBadge').innerHTML = `🔄 Обновлено: ${formatTime(new Date())}`;
+        }
+
+        // ========== РЕЙТИНГ ОКРУГОВ ==========
+        async function loadDistrictRating() {
+            const { data: districts } = await sb.from('districts').select('id, name');
+            const { data: scores } = await sb.from('district_scores').select('district_id, total_score');
+            
+            const scoreMap = {};
+            if (scores) {
+                for (let s of scores) {
+                    scoreMap[s.district_id] = s.total_score || 0;
+                }
+            }
+            
+            const rating = districts.map(d => ({
+                name: d.name,
+                score: scoreMap[d.id] || 0
+            })).sort((a, b) => b.score - a.score).slice(0, 10);
+            
+            let html = '<table class="ranking-table"><thead> <tr><th>Округ</th><th>Баллы</th> </tr></thead><tbody>';
+            for (let r of rating) {
+                html += `<tr><td>${escapeHtml(r.name)}</td><td style="color:#6c8cff;">${r.score} баллов</td></tr>`;
+            }
+            html += '</tbody></table>';
+            document.getElementById('districtRating').innerHTML = html;
+        }
+
+        // ========== АКТИВНОСТЬ ПО ТИПАМ ==========
+        async function loadTypeStats() {
+            const { data: chiefs } = await sb.from('chiefs').select('branch_type');
+            const counts = { activist: 0, primary: 0, main: 0 };
+            if (chiefs) {
+                for (let c of chiefs) {
+                    if (c.branch_type === 'activist') counts.activist++;
+                    else if (c.branch_type === 'primary') counts.primary++;
+                    else counts.main++;
+                }
+            }
+            const total = counts.activist + counts.primary + counts.main;
+            
+            if (total > 0) {
+                document.getElementById('activistsPercent').innerText = Math.round(counts.activist / total * 100) + '%';
+                document.getElementById('primaryPercent').innerText = Math.round(counts.primary / total * 100) + '%';
+                document.getElementById('mainPercent').innerText = Math.round(counts.main / total * 100) + '%';
+                document.getElementById('activistsBar').style.width = (counts.activist / total * 100) + '%';
+                document.getElementById('primaryBar').style.width = (counts.primary / total * 100) + '%';
+                document.getElementById('mainBar').style.width = (counts.main / total * 100) + '%';
+            }
+        }
+
+        // ========== ПОСЛЕДНИЕ АКТИВНОСТИ ==========
+        async function loadRecentActivity() {
+            const { data: submissions } = await sb
+                .from('board_submissions')
+                .select('*, board_tasks(title), chiefs(name, branch_type)')
+                .order('created_at', { ascending: false })
+                .limit(10);
+            
+            const container = document.getElementById('recentActivity');
+            if (!submissions?.length) {
+                container.innerHTML = '<div class="empty-state">Нет активностей</div>';
+                return;
+            }
+            
+            let html = '';
+            for (let s of submissions) {
+                const typeIcon = s.chiefs?.branch_type === 'activist' ? '⭐' : (s.chiefs?.branch_type === 'primary' ? '📌' : '🏛️');
+                html += `
+                    <div class="activity-item">
+                        <div class="activity-time">${new Date(s.created_at).toLocaleString()}</div>
+                        <div class="activity-text">
+                            ${typeIcon} <strong>${escapeHtml(s.chiefs?.name || 'Шеф')}</strong> отправил(а) ссылку на задание 
+                            <strong>«${escapeHtml(s.board_tasks?.title || 'Задание')}»</strong>
+                        </div>
+                        <div style="font-size: 11px; margin-top: 4px; word-break: break-all;">
+                            🔗 <a href="${s.link}" target="_blank" style="color: #6c8cff;">${s.link.length > 50 ? s.link.substring(0, 50) + '...' : s.link}</a>
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        // ========== СТАТИСТИКА ЗАДАНИЙ ==========
+        async function loadTasksStats() {
+            const { data: activeTasks } = await sb.from('board_tasks').select('id', { count: 'exact' }).eq('is_active', true);
+            const { data: totalSubmissions } = await sb.from('board_submissions').select('id', { count: 'exact' });
+            
+            const { data: assignments } = await sb.from('assignments').select('status');
+            const pendingRaspush = assignments?.filter(a => a.status === 'pending').length || 0;
+            const completedRaspush = assignments?.filter(a => a.status === 'completed').length || 0;
+            
+            const html = `
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span>📢 Активных заданий на доске</span>
+                        <span style="color: #6c8cff;">${activeTasks?.length || 0}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span>📥 Всего откликов</span>
+                        <span style="color: #6c8cff;">${totalSubmissions?.length || 0}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span>📢 Распуши в работе</span>
+                        <span style="color: #f59e0b;">${pendingRaspush}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>✅ Выполненные распуши</span>
+                        <span style="color: #10b981;">${completedRaspush}</span>
+                    </div>
+                </div>
+            `;
+            document.getElementById('tasksStats').innerHTML = html;
+        }
+
+        // ========== ПРОГРЕСС ОКРУГОВ ==========
+        async function loadDistrictProgress() {
+            const { data: districts } = await sb.from('districts').select('id, name');
+            const { data: scores } = await sb.from('district_scores').select('district_id, total_score');
+            
+            const scoreMap = {};
+            if (scores) {
+                for (let s of scores) {
+                    scoreMap[s.district_id] = s.total_score || 0;
+                }
+            }
+            
+            const maxScore = Math.max(...districts.map(d => scoreMap[d.id] || 0), 1);
+            
+            let html = '';
+            for (let d of districts.slice(0, 10)) {
+                const score = scoreMap[d.id] || 0;
+                const percent = (score / maxScore * 100);
+                html += `
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>${escapeHtml(d.name)}</span>
+                            <span style="color: #6c8cff;">${score} баллов</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: ${percent}%; background: ${score === maxScore ? '#10b981' : '#6c8cff'};"></div></div>
+                    </div>
+                `;
+            }
+            document.getElementById('districtProgress').innerHTML = html;
+        }
+
+        function updateAll() {
+            loadStats();
+            loadDistrictRating();
+            loadTypeStats();
+            loadRecentActivity();
+            loadTasksStats();
+            loadDistrictProgress();
+            document.getElementById('updateTime').innerHTML = `Обновлено: ${formatTime(new Date())}`;
+        }
+
+        updateAll();
+        setInterval(updateAll, 30000);
+    </script>
+</body>
+</html>
