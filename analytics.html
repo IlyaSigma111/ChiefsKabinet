@@ -72,7 +72,7 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 20px;
             margin-bottom: 24px;
         }
@@ -111,6 +111,18 @@
             0% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(1.2); }
             100% { opacity: 1; transform: scale(1); }
+        }
+
+        .online-count {
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.15);
+            padding: 6px 12px;
+            border-radius: 40px;
+            margin-top: 8px;
         }
 
         .grid-2cols {
@@ -193,6 +205,15 @@
             margin-top: 20px;
         }
 
+        .online-detail {
+            font-size: 11px;
+            margin-top: 8px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
         @media (max-width: 768px) {
             .container { padding: 16px; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -215,15 +236,22 @@
             <div id="lastUpdateBadge" style="font-size: 12px; opacity: 0.6;">⏳ Загрузка...</div>
         </div>
 
-        <!-- Общая статистика -->
+        <!-- Общая статистика с онлайн-счётчиком -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-number" id="totalChiefs">0</div>
                 <div class="stat-label">Всего шефов</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="activeChiefs">0</div>
-                <div class="stat-label"><span class="online-badge"></span>Активны сегодня</div>
+                <div class="stat-number" id="onlineNow">0</div>
+                <div class="stat-label">
+                    <span class="online-badge"></span>Сейчас онлайн
+                </div>
+                <div class="online-detail" id="onlineDetail"></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeToday">0</div>
+                <div class="stat-label">Активны сегодня</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="totalTasks">0</div>
@@ -298,6 +326,7 @@
         const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let lastUpdate = new Date();
+        let onlineUsers = new Map(); // Храним ID и время последней активности
 
         function formatTime(date) {
             return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -306,6 +335,69 @@
         function escapeHtml(str) {
             if (!str) return '';
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // ========== ОНЛАЙН-ПОЛЬЗОВАТЕЛИ ==========
+        async function loadOnlineUsers() {
+            // Получаем все активности за последние 5 минут (считаем их онлайн)
+            const fiveMinutesAgo = new Date();
+            fiveMinutesAgo.setMinutes(fiveMinutesAgo.getMinutes() - 5);
+            
+            // Получаем активность с доски
+            const { data: boardActivity } = await sb
+                .from('board_submissions')
+                .select('chief_id, created_at')
+                .gte('created_at', fiveMinutesAgo.toISOString());
+            
+            // Получаем активность с распушей
+            const { data: raspushActivity } = await sb
+                .from('operations_history')
+                .select('chief_id, created_at')
+                .gte('created_at', fiveMinutesAgo.toISOString());
+            
+            // Собираем уникальных пользователей
+            const activeChiefs = new Set();
+            
+            if (boardActivity) {
+                for (let a of boardActivity) {
+                    activeChiefs.add(a.chief_id);
+                }
+            }
+            if (raspushActivity) {
+                for (let a of raspushActivity) {
+                    activeChiefs.add(a.chief_id);
+                }
+            }
+            
+            const onlineCount = activeChiefs.size;
+            document.getElementById('onlineNow').innerText = onlineCount;
+            
+            // Получаем детали по типам
+            if (onlineCount > 0) {
+                const { data: chiefs } = await sb
+                    .from('chiefs')
+                    .select('id, branch_type')
+                    .in('id', Array.from(activeChiefs));
+                
+                let activistOnline = 0, primaryOnline = 0, mainOnline = 0;
+                if (chiefs) {
+                    for (let c of chiefs) {
+                        if (c.branch_type === 'activist') activistOnline++;
+                        else if (c.branch_type === 'primary') primaryOnline++;
+                        else mainOnline++;
+                    }
+                }
+                
+                document.getElementById('onlineDetail').innerHTML = `
+                    <span>⭐ Активисты: ${activistOnline}</span>
+                    <span>📌 Первички: ${primaryOnline}</span>
+                    <span>🏛️ Местные: ${mainOnline}</span>
+                `;
+            } else {
+                document.getElementById('onlineDetail').innerHTML = '<span>Нет активных пользователей</span>';
+            }
+            
+            return onlineCount;
         }
 
         // ========== ОБЩАЯ СТАТИСТИКА ==========
@@ -323,7 +415,7 @@
                 .gte('created_at', dayAgo.toISOString());
             
             const uniqueActive = new Set(activeSubmissions?.map(s => s.chief_id) || []);
-            document.getElementById('activeChiefs').innerText = uniqueActive.size;
+            document.getElementById('activeToday').innerText = uniqueActive.size;
 
             // Всего выполненных заданий (отправленных ссылок с доски + выполненных распушей)
             const { count: boardSubmissions } = await sb.from('board_submissions').select('*', { count: 'exact', head: true });
@@ -355,11 +447,11 @@
                 score: scoreMap[d.id] || 0
             })).sort((a, b) => b.score - a.score).slice(0, 10);
             
-            let html = '<table class="ranking-table"><thead> <tr><th>Округ</th><th>Баллы</th> </tr></thead><tbody>';
+            let html = '<table class="ranking-table"><thead>  </thead><tbody>';
             for (let r of rating) {
-                html += `<tr><td>${escapeHtml(r.name)}</td><td style="color:#6c8cff;">${r.score} баллов</td></tr>`;
+                html += `  <td style="font-weight:500;">${escapeHtml(r.name)}</td><td style="color:#6c8cff;">${r.score} баллов</td>  `;
             }
-            html += '</tbody></table>';
+            html += '</tbody> </div>';
             document.getElementById('districtRating').innerHTML = html;
         }
 
@@ -482,13 +574,14 @@
             document.getElementById('districtProgress').innerHTML = html;
         }
 
-        function updateAll() {
-            loadStats();
-            loadDistrictRating();
-            loadTypeStats();
-            loadRecentActivity();
-            loadTasksStats();
-            loadDistrictProgress();
+        async function updateAll() {
+            await loadOnlineUsers();
+            await loadStats();
+            await loadDistrictRating();
+            await loadTypeStats();
+            await loadRecentActivity();
+            await loadTasksStats();
+            await loadDistrictProgress();
             document.getElementById('updateTime').innerHTML = `Обновлено: ${formatTime(new Date())}`;
         }
 
