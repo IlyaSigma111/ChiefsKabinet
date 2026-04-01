@@ -492,7 +492,7 @@
                             ${myLinks.length ? `<div><strong>✅ Отправлено (${myLinks.length}):</strong><br>${myLinks.map(l => `<a href="${l}" target="_blank" class="sent-link">🔗 ${l.length > 30 ? l.substring(0,30)+'...' : l}</a>`).join('')}</div>` : ''}
                             ${!expired ? `
                                 <input type="text" id="link_${task.id}" class="link-input" placeholder="Вставьте ссылку на выполненную работу (Google Drive, Яндекс Диск, ВК)">
-                                <button class="btn-submit" onclick="event.stopPropagation(); submitTaskLink(${task.id})">📤 Отправить ссылку +1 балл</button>
+                                <button class="btn-submit" onclick="submitTaskLink(${task.id}, event)">📤 Отправить ссылку +1 балл</button>
                             ` : ''}
                         </div>
                     </div>
@@ -503,11 +503,15 @@
         }
 
         window.toggleCard = (event, el) => {
-            event.stopPropagation();
+            // Останавливаем всплытие, чтобы клик по кнопке не закрывал
+            if (event.target.tagName === 'INPUT' || event.target.tagName === 'BUTTON') {
+                return;
+            }
             el.classList.toggle('open');
         };
 
-        window.submitTaskLink = async (taskId) => {
+        window.submitTaskLink = async (taskId, event) => {
+            event.stopPropagation();
             const link = document.getElementById(`link_${taskId}`)?.value.trim();
             if (!link) { alert('Вставьте ссылку'); return; }
 
@@ -642,20 +646,29 @@
             container.innerHTML = html;
         }
 
-        // ========== РЕЙТИНГ ==========
+        // ========== РЕЙТИНГ (БЕЗ КИТАЙСКИХ СИМВОЛОВ) ==========
         async function loadRating() {
             const { data } = await sb.from('district_scores').select('*, districts(name)').order('total_score', { ascending: false });
             const container = document.getElementById('ratingList');
-            if (!data?.length) {
+            
+            if (!data || data.length === 0) {
                 container.innerHTML = '发展<td colspan="2" class="empty-state">Нет данных<\/td><\/tr>';
                 return;
             }
+            
             let html = '';
+            let hasData = false;
             for (let d of data) {
                 if (!d.districts?.name) continue;
+                hasData = true;
                 html += `发展<td style="font-weight:500;">${escapeHtml(d.districts.name)}<\/td><td style="color:#6c8cff;">${d.total_score} баллов<\/td><\/tr>`;
             }
-            container.innerHTML = html;
+            
+            if (!hasData) {
+                container.innerHTML = '发展<td colspan="2" class="empty-state">Нет данных<\/td><\/tr>';
+            } else {
+                container.innerHTML = html;
+            }
         }
 
         function showToast(msg) {
