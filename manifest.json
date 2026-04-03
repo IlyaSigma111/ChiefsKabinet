@@ -1,20 +1,23 @@
 {
-  "name": "Шеф-редактор",
+  "name": "Кабинет шеф-редактора",
   "short_name": "Шеф",
-  "start_url": "/chief.html",
+  "description": "Рабочий кабинет для шеф-редакторов местных отделений",
+  "start_url": "/ChiefsKabinet/index.html",
   "display": "standalone",
   "theme_color": "#0a0c10",
   "background_color": "#0a0c10",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "/ChiefsKabinet/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "/ChiefsKabinet/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
